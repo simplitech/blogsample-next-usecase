@@ -1,0 +1,143 @@
+{
+  "lang": {
+    "code": "en-US",
+    "name": "English"
+  },
+  "app": {
+    "title": "Blogsample"
+  },
+  "dateFormat": {
+    "date": "MM/DD/YYYY",
+    "datePretty": "MMMM DD, YYYY",
+    "datetime": "MM/DD/YYYY HH:mm",
+    "time": "HH:mm"
+  },
+  "boolean": {
+    "true": "Yes",
+    "false": "No"
+  },
+  "action": {
+    "logout": "Logout",
+    "menu": "Menu",
+    "add": "Add",
+    "export": "Export",
+    "select": "Select",
+    "remove": "Remove",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "downloadXlsx": "Download XLSX",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "moreFilters": "More Filters",
+    "submit": "Submit",
+    "viewMore": "View more",
+    "apply": "apply"
+  },
+  "list": {
+    "noDataToShow": "No data to show",
+    "noResultFound": "No result found",
+    "emptyList": "List is empty",
+    "totalLines": "{total} total lines"
+  },
+  "dialog": {
+    "remove": {
+      "confirmRemove": "Are you sure you want to remove this item?",
+      "yes": "Yes!",
+      "yesRemove": "Yes, remove!"
+    }
+  },
+  "currency": {
+    "USD": {
+      "prefix": "$",
+      "precision": "2"
+    },
+    "BRL": {
+      "prefix": "BRL$",
+      "precision": "2"
+    }
+  },
+  "mask": {
+    "date": "##/##/####",
+    "datetime": "##/##/#### ##:##",
+    "zipcode": "#####",
+    "zipcodeAlt": "#####-####",
+    "phone": "(###) ###-####",
+    "phoneAlt": "(###) ###-####",
+    "cpf": "###.###.###-##",
+    "cnpj": "##.###.###/####-##",
+    "rg": "##.###.###-#"
+  },
+  "filter": {
+    "phone": {
+      "regex": "(\\d{3})(\\d{3})(\\d{4})$",
+      "format": "($1) $2-$3"
+    },
+    "zipcode": {
+      "regex": "(\\d{5})$",
+      "format": "$1"
+    }
+  },
+  "validation": {
+    "messages": {
+      "_default": "The {0} value is not valid",
+      "after": "The {0} must be after or equal to {1}",
+      "alpha": "The {0} field may only contain alphabetic characters",
+      "alpha_dash": "The {0} field may contain alpha-numeric characters as well as dashes and underscores",
+      "alpha_num": "The {0} field may only contain alpha-numeric characters",
+      "alpha_spaces": "The {0} field may only contain alphabetic characters as well as spaces",
+      "before": "The {0} must be before or equal to {1}",
+      "between": "The {0} field must be between {1} and {2}",
+      "confirmed": "The {0} confirmation does not match",
+      "credit_card": "The {0} field is invalid",
+      "date_between": "The {0} must be between {1} and {2}",
+      "date_format": "The {0} must be in the format {1}",
+      "decimal": "The {0} field must be numeric and may contain {1} decimal points",
+      "digits": "The {0} field must be numeric and contains exactly {1} digits",
+      "dimensions": "The {0} field must be {1} pixels by {2} pixels",
+      "email": "The {0} field must be a valid email",
+      "excluded": "The {0} field must be a valid value",
+      "ext": "The {0} field must be a valid file",
+      "image": "The {0} field must be an image",
+      "included": "The {0} field must be a valid value",
+      "integer": "The {0} field must be an integer",
+      "ip": "The {0} field must be a valid ip address",
+      "ip_or_fqdn": "The {0} field must be a valid ip address or FQDN",
+      "length": "The {0} length must be between {1} and {2}",
+      "max": "The {0} field may not be greater than {1} characters",
+      "max_value": "The {0} field must be {1} or less",
+      "mimes": "The {0} field must have a valid file type",
+      "min": "The {0} field must be at least {1} characters",
+      "min_value": "The {0} field must be {1} or more",
+      "numeric": "The {0} field may only contain numeric characters",
+      "regex": "The {0} field format is invalid",
+      "required": "The {0} field is required",
+      "required_if": "The {0} field is required when the {1} field has this value",
+      "size": "The {0} size must be less than NaN undefined",
+      "url": "The {0} field is not a valid URL",
+      "cpf": "The field {0} must be a valid CPF",
+      "cnpj": "The field {0} must be a valid CNPJ",
+      "phone": "The field {0} must be a valid phone number",
+      "cep": "The field {0} must be a valid CEP",
+      "boleto": "The field {0} must be a valid Boleto",
+      "unauthorized": "Restricted Access",
+      "noServer": "Could not connect to server",
+      "validation": "There are fields with validation errors"
+    }
+  },
+  "comp": {
+    "LoginCard": {
+      "emailAddress": "Email address",
+      "password": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "signIn": "Sign in"
+    }
+  },
+  "page": {
+    "index": {
+      "signInToYourAccount": "Sign in to your account",
+      "caption": "to enjoy all of our cool <1>features</1> ✌"
+    }
+  }
+}
