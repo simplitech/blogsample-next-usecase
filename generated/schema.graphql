@@ -66,10 +66,10 @@ input IntNullableFilter {
 }
 
 type Mutation {
-  bigRedButton: String
   createOnePost(data: PostCreateInput!): Post!
   deleteManyPost(where: PostWhereInput): AffectedRowsOutput!
   deleteOnePost(where: PostWhereUniqueInput!): Post
+  signin(email: String!, passwordSha256: String!): SigninResp
   updateManyPost(data: PostUpdateManyMutationInput!, where: PostWhereInput): AffectedRowsOutput!
   updateOnePost(data: PostUpdateInput!, where: PostWhereUniqueInput!): Post
 }
@@ -213,6 +213,11 @@ enum Role {
   USER
 }
 
+type SigninResp {
+  token: String
+  user: User
+}
+
 input StringFieldUpdateOperationsInput {
   set: String
 }
@@ -245,6 +250,11 @@ input StringNullableFilter {
   startsWith: String
 }
 
+type User {
+  email: String!
+  id: Int!
+}
+
 input UserCreateNestedOneWithoutPostsInput {
   connect: UserWhereUniqueInput
   connectOrCreate: UserCreateOrConnectWithoutPostsInput
@@ -260,6 +270,7 @@ input UserCreateWithoutPostsInput {
   createdAt: DateTime
   email: String!
   name: String
+  password: String
   role: Role
 }
 
@@ -277,6 +288,7 @@ input UserUpdateWithoutPostsInput {
   createdAt: DateTimeFieldUpdateOperationsInput
   email: StringFieldUpdateOperationsInput
   name: NullableStringFieldUpdateOperationsInput
+  password: NullableStringFieldUpdateOperationsInput
   role: EnumRoleFieldUpdateOperationsInput
 }
 
@@ -293,6 +305,7 @@ input UserWhereInput {
   email: StringFilter
   id: IntFilter
   name: StringNullableFilter
+  password: StringNullableFilter
   posts: PostListRelationFilter
   role: EnumRoleFilter
 }

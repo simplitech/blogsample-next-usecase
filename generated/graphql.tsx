@@ -80,12 +80,18 @@ export type IntNullableFilter = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  bigRedButton?: Maybe<Scalars['String']>;
+  signin?: Maybe<SigninResp>;
   createOnePost: Post;
   deleteOnePost?: Maybe<Post>;
   deleteManyPost: AffectedRowsOutput;
   updateOnePost?: Maybe<Post>;
   updateManyPost: AffectedRowsOutput;
+};
+
+
+export type MutationSigninArgs = {
+  email: Scalars['String'];
+  passwordSha256: Scalars['String'];
 };
 
 
@@ -269,6 +275,12 @@ export enum Role {
   Admin = 'ADMIN'
 }
 
+export type SigninResp = {
+  __typename?: 'SigninResp';
+  user?: Maybe<User>;
+  token?: Maybe<Scalars['String']>;
+};
+
 export type StringFieldUpdateOperationsInput = {
   set?: Maybe<Scalars['String']>;
 };
@@ -301,6 +313,12 @@ export type StringNullableFilter = {
   not?: Maybe<NestedStringNullableFilter>;
 };
 
+export type User = {
+  __typename?: 'User';
+  id: Scalars['Int'];
+  email: Scalars['String'];
+};
+
 export type UserCreateNestedOneWithoutPostsInput = {
   create?: Maybe<UserCreateWithoutPostsInput>;
   connectOrCreate?: Maybe<UserCreateOrConnectWithoutPostsInput>;
@@ -315,6 +333,7 @@ export type UserCreateOrConnectWithoutPostsInput = {
 export type UserCreateWithoutPostsInput = {
   createdAt?: Maybe<Scalars['DateTime']>;
   email: Scalars['String'];
+  password?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   role?: Maybe<Role>;
 };
@@ -332,6 +351,7 @@ export type UserUpdateOneWithoutPostsInput = {
 export type UserUpdateWithoutPostsInput = {
   createdAt?: Maybe<DateTimeFieldUpdateOperationsInput>;
   email?: Maybe<StringFieldUpdateOperationsInput>;
+  password?: Maybe<NullableStringFieldUpdateOperationsInput>;
   name?: Maybe<NullableStringFieldUpdateOperationsInput>;
   role?: Maybe<EnumRoleFieldUpdateOperationsInput>;
 };
@@ -348,6 +368,7 @@ export type UserWhereInput = {
   id?: Maybe<IntFilter>;
   createdAt?: Maybe<DateTimeFilter>;
   email?: Maybe<StringFilter>;
+  password?: Maybe<StringNullableFilter>;
   name?: Maybe<StringNullableFilter>;
   role?: Maybe<EnumRoleFilter>;
   posts?: Maybe<PostListRelationFilter>;
@@ -358,12 +379,35 @@ export type UserWhereUniqueInput = {
   email?: Maybe<Scalars['String']>;
 };
 
+export type SignInMutationVariables = Exact<{
+  email: Scalars['String'];
+  passwordSha256: Scalars['String'];
+}>;
+
+
+export type SignInMutation = { __typename?: 'Mutation', signin?: Maybe<{ __typename?: 'SigninResp', token?: Maybe<string>, user?: Maybe<{ __typename?: 'User', id: number, email: string }> }> };
+
 export type AllPostsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AllPostsQuery = { __typename?: 'Query', allPosts?: Maybe<Array<Maybe<{ __typename?: 'Post', id: number, title: string }>>> };
 
 
+export const SignInDocument = gql`
+    mutation SignIn($email: String!, $passwordSha256: String!) {
+  signin(email: $email, passwordSha256: $passwordSha256) {
+    token
+    user {
+      id
+      email
+    }
+  }
+}
+    `;
+
+export function useSignInMutation() {
+  return Urql.useMutation<SignInMutation, SignInMutationVariables>(SignInDocument);
+};
 export const AllPostsDocument = gql`
     query AllPosts {
   allPosts {

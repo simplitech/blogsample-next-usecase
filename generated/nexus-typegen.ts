@@ -219,6 +219,7 @@ export interface NexusGenInputs {
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     email: string; // String!
     name?: string | null; // String
+    password?: string | null; // String
     role?: NexusGenEnums['Role'] | null; // Role
   }
   UserUpdateOneWithoutPostsInput: { // input type
@@ -234,6 +235,7 @@ export interface NexusGenInputs {
     createdAt?: NexusGenInputs['DateTimeFieldUpdateOperationsInput'] | null; // DateTimeFieldUpdateOperationsInput
     email?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     name?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
+    password?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     role?: NexusGenInputs['EnumRoleFieldUpdateOperationsInput'] | null; // EnumRoleFieldUpdateOperationsInput
   }
   UserUpsertWithoutPostsInput: { // input type
@@ -248,6 +250,7 @@ export interface NexusGenInputs {
     email?: NexusGenInputs['StringFilter'] | null; // StringFilter
     id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     name?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    password?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     posts?: NexusGenInputs['PostListRelationFilter'] | null; // PostListRelationFilter
     role?: NexusGenInputs['EnumRoleFilter'] | null; // EnumRoleFilter
   }
@@ -280,6 +283,14 @@ export interface NexusGenObjects {
     title: string; // String!
   }
   Query: {};
+  SigninResp: { // root type
+    token?: string | null; // String
+    user?: NexusGenRootTypes['User'] | null; // User
+  }
+  User: { // root type
+    email: string; // String!
+    id: number; // Int!
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -297,10 +308,10 @@ export interface NexusGenFieldTypes {
     count: number; // Int!
   }
   Mutation: { // field return type
-    bigRedButton: string | null; // String
     createOnePost: NexusGenRootTypes['Post']; // Post!
     deleteManyPost: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     deleteOnePost: NexusGenRootTypes['Post'] | null; // Post
+    signin: NexusGenRootTypes['SigninResp'] | null; // SigninResp
     updateManyPost: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     updateOnePost: NexusGenRootTypes['Post'] | null; // Post
   }
@@ -313,6 +324,14 @@ export interface NexusGenFieldTypes {
     post: NexusGenRootTypes['Post'] | null; // Post
     posts: NexusGenRootTypes['Post'][]; // [Post!]!
   }
+  SigninResp: { // field return type
+    token: string | null; // String
+    user: NexusGenRootTypes['User'] | null; // User
+  }
+  User: { // field return type
+    email: string; // String!
+    id: number; // Int!
+  }
 }
 
 export interface NexusGenFieldTypeNames {
@@ -320,10 +339,10 @@ export interface NexusGenFieldTypeNames {
     count: 'Int'
   }
   Mutation: { // field return type name
-    bigRedButton: 'String'
     createOnePost: 'Post'
     deleteManyPost: 'AffectedRowsOutput'
     deleteOnePost: 'Post'
+    signin: 'SigninResp'
     updateManyPost: 'AffectedRowsOutput'
     updateOnePost: 'Post'
   }
@@ -335,6 +354,14 @@ export interface NexusGenFieldTypeNames {
     allPosts: 'Post'
     post: 'Post'
     posts: 'Post'
+  }
+  SigninResp: { // field return type name
+    token: 'String'
+    user: 'User'
+  }
+  User: { // field return type name
+    email: 'String'
+    id: 'Int'
   }
 }
 
@@ -348,6 +375,10 @@ export interface NexusGenArgTypes {
     }
     deleteOnePost: { // args
       where: NexusGenInputs['PostWhereUniqueInput']; // PostWhereUniqueInput!
+    }
+    signin: { // args
+      email: string; // String!
+      passwordSha256: string; // String!
     }
     updateManyPost: { // args
       data: NexusGenInputs['PostUpdateManyMutationInput']; // PostUpdateManyMutationInput!
