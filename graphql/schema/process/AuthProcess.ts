@@ -2,12 +2,13 @@ import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import {extendType, nonNull, stringArg} from "nexus";
 import {UserInputError} from "apollo-server-micro";
+import {SigninInfo, User} from "../../../generated/graphql";
 
 export const AuthMutation = extendType({
   type: 'Mutation',
   definition(t) {
     t.field('signin', {
-      type: 'SigninResp',
+      type: 'SigninInfo',
       args: {
         email: nonNull(stringArg()),
         passwordSha256: nonNull(stringArg())
@@ -24,3 +25,12 @@ export const AuthMutation = extendType({
     });
   }
 });
+
+export const getUserFromToken = async (prisma, token: string): Promise<User> => {
+  const userFromToken = jwt.verify(token, process.env.JWT_SECRET) as User
+  return await prisma.user.findFirst({where: {email: userFromToken.email}});
+}
+
+export const getUserFromAuthorizationHeader = async (prisma, authorization?: string) => {
+  return authorization ? await getUserFromToken(prisma, authorization.replace('Bearer ', '')) : null
+}

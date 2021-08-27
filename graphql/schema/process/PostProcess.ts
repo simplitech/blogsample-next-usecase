@@ -1,16 +1,11 @@
 import {queryType} from '@nexus/schema';
 import {extendType} from "nexus";
+import {freePass, isAuthenticated} from "../rules/AuthRules";
 
 export const PostQuery = queryType({
   definition(t) {
-    t.list.field('allPosts', {
-      type: 'Post',
-      resolve(_parent, _args, ctx) {
-        return ctx.prisma.post.findMany({});
-      }
-    });
     t.crud.post();
-    t.crud.posts();
+    t.crud.posts({shield: isAuthenticated});
   }
 });
 

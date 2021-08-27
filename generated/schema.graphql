@@ -69,7 +69,7 @@ type Mutation {
   createOnePost(data: PostCreateInput!): Post!
   deleteManyPost(where: PostWhereInput): AffectedRowsOutput!
   deleteOnePost(where: PostWhereUniqueInput!): Post
-  signin(email: String!, passwordSha256: String!): SigninResp
+  signin(email: String!, passwordSha256: String!): SigninInfo
   updateManyPost(data: PostUpdateManyMutationInput!, where: PostWhereInput): AffectedRowsOutput!
   updateOnePost(data: PostUpdateInput!, where: PostWhereUniqueInput!): Post
 }
@@ -203,7 +203,6 @@ input PostWhereUniqueInput {
 }
 
 type Query {
-  allPosts: [Post]
   post(where: PostWhereUniqueInput!): Post
   posts(after: PostWhereUniqueInput, before: PostWhereUniqueInput, first: Int, last: Int): [Post!]!
 }
@@ -213,7 +212,7 @@ enum Role {
   USER
 }
 
-type SigninResp {
+type SigninInfo {
   token: String
   user: User
 }
@@ -253,6 +252,7 @@ input StringNullableFilter {
 type User {
   email: String!
   id: Int!
+  name: String
 }
 
 input UserCreateNestedOneWithoutPostsInput {

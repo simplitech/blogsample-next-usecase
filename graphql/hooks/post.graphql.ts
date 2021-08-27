@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
-export const AllPostsQuery = gql`
-    query AllPosts {
-        allPosts {
+export const postsQuery = gql`
+    query posts {
+        posts {
             id
             title
         }

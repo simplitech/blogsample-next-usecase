@@ -80,7 +80,7 @@ export type IntNullableFilter = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  signin?: Maybe<SigninResp>;
+  signin?: Maybe<SigninInfo>;
   createOnePost: Post;
   deleteOnePost?: Maybe<Post>;
   deleteManyPost: AffectedRowsOutput;
@@ -252,7 +252,6 @@ export type PostWhereUniqueInput = {
 
 export type Query = {
   __typename?: 'Query';
-  allPosts?: Maybe<Array<Maybe<Post>>>;
   post?: Maybe<Post>;
   posts: Array<Post>;
 };
@@ -275,8 +274,8 @@ export enum Role {
   Admin = 'ADMIN'
 }
 
-export type SigninResp = {
-  __typename?: 'SigninResp';
+export type SigninInfo = {
+  __typename?: 'SigninInfo';
   user?: Maybe<User>;
   token?: Maybe<Scalars['String']>;
 };
@@ -317,6 +316,7 @@ export type User = {
   __typename?: 'User';
   id: Scalars['Int'];
   email: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
 };
 
 export type UserCreateNestedOneWithoutPostsInput = {
@@ -385,12 +385,12 @@ export type SignInMutationVariables = Exact<{
 }>;
 
 
-export type SignInMutation = { __typename?: 'Mutation', signin?: Maybe<{ __typename?: 'SigninResp', token?: Maybe<string>, user?: Maybe<{ __typename?: 'User', id: number, email: string }> }> };
+export type SignInMutation = { __typename?: 'Mutation', signin?: Maybe<{ __typename?: 'SigninInfo', token?: Maybe<string>, user?: Maybe<{ __typename?: 'User', id: number, email: string }> }> };
 
-export type AllPostsQueryVariables = Exact<{ [key: string]: never; }>;
+export type PostsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllPostsQuery = { __typename?: 'Query', allPosts?: Maybe<Array<Maybe<{ __typename?: 'Post', id: number, title: string }>>> };
+export type PostsQuery = { __typename?: 'Query', posts: Array<{ __typename?: 'Post', id: number, title: string }> };
 
 
 export const SignInDocument = gql`
@@ -408,15 +408,15 @@ export const SignInDocument = gql`
 export function useSignInMutation() {
   return Urql.useMutation<SignInMutation, SignInMutationVariables>(SignInDocument);
 };
-export const AllPostsDocument = gql`
-    query AllPosts {
-  allPosts {
+export const PostsDocument = gql`
+    query posts {
+  posts {
     id
     title
   }
 }
     `;
 
-export function useAllPostsQuery(options: Omit<Urql.UseQueryArgs<AllPostsQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<AllPostsQuery>({ query: AllPostsDocument, ...options });
+export function usePostsQuery(options: Omit<Urql.UseQueryArgs<PostsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<PostsQuery>({ query: PostsDocument, ...options });
 };

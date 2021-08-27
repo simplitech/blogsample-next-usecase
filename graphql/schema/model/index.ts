@@ -1,3 +1,3 @@
 export * from "./Post";
-export * from "./SigninResp";
+export * from "./SigninInfo";
 export * from "./User";

@@ -1,11 +1,17 @@
 import { PrismaClient } from '@prisma/client';
+import {IncomingMessage} from "http";
+import {getUserFromAuthorizationHeader} from "./schema/process";
+import {User} from "../generated/graphql";
 
 const prisma = new PrismaClient();
 
 export interface Context {
-  prisma: PrismaClient;
+  prisma: PrismaClient
+  request: IncomingMessage,
+  user: User
 }
 
-export function createContext(): Context {
-  return { prisma };
+export async function createContext({req}: {req: IncomingMessage}) {
+  const user = await getUserFromAuthorizationHeader(prisma, req.headers.authorization)
+  return { prisma, request: req, user };
 }

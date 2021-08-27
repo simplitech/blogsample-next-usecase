@@ -4,6 +4,7 @@ import NextApp, { AppProps } from 'next/app';
 import fetch from 'isomorphic-unfetch';
 import { ChakraProvider } from "@chakra-ui/react"
 import Setup from "../setup";
+import {getToken} from "../state/AuthState";
 
 Setup();
 
@@ -23,10 +24,13 @@ App.getInitialProps = async (ctx: NextUrqlAppContext) => {
   return { ...appProps };
 };
 
-export default withUrqlClient((_ssrExchange, _ctx) => ({
+export default withUrqlClient((_ssrExchange, ctx) => ({
   url: GRAPHQL_ENDPOINT,
-  fetch
-}))(
-  // @ts-ignore
-  App
-);
+  fetch,
+  fetchOptions: () => {
+    const token = getToken(ctx)
+    return {
+      headers: { authorization: token ? `Bearer ${token}` : '' },
+    };
+  },
+}), { ssr: true })(App);

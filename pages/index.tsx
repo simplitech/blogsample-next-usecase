@@ -12,7 +12,7 @@ const IndexPage: React.FC = () => {
   const router = useRouter()
 
   useEffect(() => {
-    if (authState.token) {
+    if (authState.user) {
       router.push('/home')
     }
   }, [authState, router])

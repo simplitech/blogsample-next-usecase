@@ -4,7 +4,7 @@
  */
 
 import * as Context from "./../graphql/context"
-
+import { FieldShieldResolver, ObjectTypeShieldResolver } from "nexus-shield"
 
 
 declare global {
@@ -283,13 +283,14 @@ export interface NexusGenObjects {
     title: string; // String!
   }
   Query: {};
-  SigninResp: { // root type
+  SigninInfo: { // root type
     token?: string | null; // String
     user?: NexusGenRootTypes['User'] | null; // User
   }
   User: { // root type
     email: string; // String!
     id: number; // Int!
+    name?: string | null; // String
   }
 }
 
@@ -311,7 +312,7 @@ export interface NexusGenFieldTypes {
     createOnePost: NexusGenRootTypes['Post']; // Post!
     deleteManyPost: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     deleteOnePost: NexusGenRootTypes['Post'] | null; // Post
-    signin: NexusGenRootTypes['SigninResp'] | null; // SigninResp
+    signin: NexusGenRootTypes['SigninInfo'] | null; // SigninInfo
     updateManyPost: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     updateOnePost: NexusGenRootTypes['Post'] | null; // Post
   }
@@ -320,17 +321,17 @@ export interface NexusGenFieldTypes {
     title: string; // String!
   }
   Query: { // field return type
-    allPosts: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
     post: NexusGenRootTypes['Post'] | null; // Post
     posts: NexusGenRootTypes['Post'][]; // [Post!]!
   }
-  SigninResp: { // field return type
+  SigninInfo: { // field return type
     token: string | null; // String
     user: NexusGenRootTypes['User'] | null; // User
   }
   User: { // field return type
     email: string; // String!
     id: number; // Int!
+    name: string | null; // String
   }
 }
 
@@ -342,7 +343,7 @@ export interface NexusGenFieldTypeNames {
     createOnePost: 'Post'
     deleteManyPost: 'AffectedRowsOutput'
     deleteOnePost: 'Post'
-    signin: 'SigninResp'
+    signin: 'SigninInfo'
     updateManyPost: 'AffectedRowsOutput'
     updateOnePost: 'Post'
   }
@@ -351,17 +352,17 @@ export interface NexusGenFieldTypeNames {
     title: 'String'
   }
   Query: { // field return type name
-    allPosts: 'Post'
     post: 'Post'
     posts: 'Post'
   }
-  SigninResp: { // field return type name
+  SigninInfo: { // field return type name
     token: 'String'
     user: 'User'
   }
   User: { // field return type name
     email: 'String'
     id: 'Int'
+    name: 'String'
   }
 }
 
@@ -460,8 +461,16 @@ export interface NexusGenTypes {
 
 declare global {
   interface NexusGenPluginTypeConfig<TypeName extends string> {
+    /**
+     * Default authorization rule to execute on all fields of this object
+     */
+    shield?: ObjectTypeShieldResolver<TypeName>
   }
   interface NexusGenPluginFieldConfig<TypeName extends string, FieldName extends string> {
+    /**
+     * Authorization rule to execute for this field
+     */
+    shield?: FieldShieldResolver<TypeName, FieldName>
     /**
      * Whether the type can be null
      * @default (depends on whether nullability is configured in type or schema)

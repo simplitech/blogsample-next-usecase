@@ -10,7 +10,7 @@ const IndexPage = () => {
   const router = useRouter()
 
   useEffect(() => {
-    if (!authState.token) {
+    if (!authState.user) {
       router.push('/')
     }
   }, [authState, router])
