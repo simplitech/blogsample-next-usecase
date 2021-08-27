@@ -3,7 +3,7 @@ import LoginCard from "../components/LoginCard";
 import {Trans, useTranslation} from "react-i18next";
 import React, {useEffect} from "react";
 import useTranslationWithPrefix from "../helper/useTranslationWithPrefix";
-import {useAuthState} from "../state/AuthState";
+import {useAuthState} from "../state/auth.state";
 import {useRouter} from "next/router";
 
 const IndexPage: React.FC = () => {

@@ -4,7 +4,7 @@ import path from 'path';
 import * as types from './facade'
 import {nexusShield} from "nexus-shield";
 import {ForbiddenError} from "apollo-server-micro";
-import {freePass} from "./rules/AuthRules";
+import {freePass} from "./rules/auth.rules";
 
 export const schema = makeSchema({
   types,

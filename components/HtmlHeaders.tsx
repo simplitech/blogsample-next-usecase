@@ -7,7 +7,7 @@ type Props = {
   title?: string
 }
 
-const Layout = ({ children, title = 'This is the default title' }: Props) => (
+const HtmlHeaders = ({ children, title = 'This is the default title' }: Props) => (
   <div>
     <Head>
       <title>{title}</title>
@@ -18,4 +18,4 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => (
   </div>
 )
 
-export default Layout
+export default HtmlHeaders

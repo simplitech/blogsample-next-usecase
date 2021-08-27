@@ -16,7 +16,7 @@ import {useForm} from 'react-hook-form'
 import crypto from 'crypto'
 import {errorHandler, validations} from '../helper/errorHandler'
 import FormError from './FormError'
-import {useAuthState} from '../state/AuthState'
+import {useAuthState} from '../state/auth.state'
 import useTranslationWithPrefix from '../helper/useTranslationWithPrefix'
 import { useRouter } from 'next/router'
 

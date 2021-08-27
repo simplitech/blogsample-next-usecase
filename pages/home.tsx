@@ -1,13 +1,17 @@
-import Layout from '../components/Layout'
-import AllPosts from "../components/AllPosts";
-import {Link} from "@chakra-ui/react";
-import {useAuthState} from "../state/AuthState";
+import HtmlHeaders from '../components/HtmlHeaders'
+import {useAuthState} from "../state/auth.state";
 import {useRouter} from "next/router";
-import {useEffect} from "react";
+import React, {useEffect} from "react";
+import AdminLayout from "../components/AdminLayout";
+import {usePostsQuery} from "../generated/graphql";
 
 const IndexPage = () => {
   const authState = useAuthState()
   const router = useRouter()
+  const [{ data, fetching, error }] = usePostsQuery();
+
+  if (fetching) return <p>Loading...</p>;
+  if (error) return <p>Oh no... {error.message}</p>;
 
   useEffect(() => {
     if (!authState.user) {
@@ -16,10 +20,16 @@ const IndexPage = () => {
   }, [authState, router])
 
   return (
-    <Layout title="Home | Next.js + TypeScript Example">
-      <Link onClick={authState.removeSigninInfo}>Logout</Link>
-      <AllPosts />
-    </Layout>
+    <HtmlHeaders title="Home | Blogsample">
+      <AdminLayout>
+        <p>There are {data?.posts.length} user(s) in the database:</p>
+        <ul>
+          {data?.posts.map(user => (
+            <li key={user.id}>{user.title}</li>
+          ))}
+        </ul>
+      </AdminLayout>
+    </HtmlHeaders>
   )
 }
 

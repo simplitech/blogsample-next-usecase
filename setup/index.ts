@@ -1,5 +1,5 @@
-import SetupI18next from "./SetupI18next";
+import setupI18next from "./setupI18next";
 
-export default function Setup () {
-  SetupI18next()
+export default function setup () {
+  setupI18next()
 }
