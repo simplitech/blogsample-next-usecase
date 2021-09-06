@@ -379,7 +379,7 @@ export interface NexusGenArgTypes {
     }
     signin: { // args
       email: string; // String!
-      passwordSha256: string; // String!
+      password: string; // String!
     }
     updateManyPost: { // args
       data: NexusGenInputs['PostUpdateManyMutationInput']; // PostUpdateManyMutationInput!

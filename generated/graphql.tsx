@@ -29,7 +29,6 @@ export type BoolFilter = {
   not?: Maybe<NestedBoolFilter>;
 };
 
-
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Maybe<Scalars['DateTime']>;
 };
@@ -91,7 +90,7 @@ export type Mutation = {
 
 export type MutationSigninArgs = {
   email: Scalars['String'];
-  passwordSha256: Scalars['String'];
+  password: Scalars['String'];
 };
 
 
@@ -381,7 +380,7 @@ export type UserWhereUniqueInput = {
 
 export type SignInMutationVariables = Exact<{
   email: Scalars['String'];
-  passwordSha256: Scalars['String'];
+  password: Scalars['String'];
 }>;
 
 
@@ -394,8 +393,8 @@ export type PostsQuery = { __typename?: 'Query', posts: Array<{ __typename?: 'Po
 
 
 export const SignInDocument = gql`
-    mutation SignIn($email: String!, $passwordSha256: String!) {
-  signin(email: $email, passwordSha256: $passwordSha256) {
+    mutation SignIn($email: String!, $password: String!) {
+  signin(email: $email, password: $password) {
     token
     user {
       id

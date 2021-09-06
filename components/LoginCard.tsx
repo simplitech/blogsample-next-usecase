@@ -1,6 +1,5 @@
 import React from 'react'
 import {
-  Box,
   FormControl,
   FormLabel,
   Input,
@@ -8,29 +7,33 @@ import {
   Stack,
   Link,
   Button,
-  useColorModeValue, useToast,
+  useColorModeValue, useToast, FormErrorMessage,
 } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import {useSignInMutation} from '../generated/graphql'
 import {useForm} from 'react-hook-form'
 import crypto from 'crypto'
-import {errorHandler, validations} from '../helper/errorHandler'
-import FormError from './FormError'
-import {useAuthState} from '../state/auth.state'
+import {errorHandler} from '../helper/errorHandler'
+import {useAuthState} from '../state/AuthState'
 import useTranslationWithPrefix from '../helper/useTranslationWithPrefix'
 import { useRouter } from 'next/router'
+import EmailAndPassword from "../types/EmailAndPassword";
+import {yupResolver} from "@hookform/resolvers/yup";
+import EmailAndPasswordValidation from "../validations/EmailAndPasswordValidation";
 
 const LoginCard: React.FC = () => {
   const { tp } = useTranslationWithPrefix('comp.LoginCard')
   const [_, signIn] = useSignInMutation()
-  const { register, handleSubmit, setError, formState: { errors } } = useForm<{email: string, password: string}>()
+  const { register, handleSubmit, setError, formState: { errors } } = useForm<EmailAndPassword>({
+    resolver: yupResolver(EmailAndPasswordValidation)
+  })
   const toast = useToast()
   const authState = useAuthState()
   const router = useRouter()
 
   const submit = async (data) => {
-    const passwordSha256 = crypto.createHash('sha256').update(data.password).digest('hex')
-    const resp = await signIn({email: data.email, passwordSha256})
+    const password = crypto.createHash('sha256').update(data.password).digest('hex')
+    const resp = await signIn({email: data.email, password})
     if (resp.error) {
       errorHandler(resp.error, { setError, toast })
       return
@@ -49,13 +52,17 @@ const LoginCard: React.FC = () => {
       spacing={4}>
       <FormControl isInvalid={!!errors.email}>
         <FormLabel>{tp('email')}</FormLabel>
-        <Input type="email" {...register('email', validations({ required: true }))} />
-        <FormError errors={errors} field={'email'} />
+        <Input type="email" {...register('email')} />
+        <FormErrorMessage>
+          {errors.email && errors.email.message }
+        </FormErrorMessage>
       </FormControl>
       <FormControl isInvalid={!!errors.password}>
         <FormLabel>{tp('password')}</FormLabel>
-        <Input type="password" {...register('password', validations({required: true, minLength: 3})) } />
-        <FormError errors={errors} field={'password'} />
+        <Input type="password" {...register('password') } />
+        <FormErrorMessage>
+          {errors.password && errors.password.message }
+        </FormErrorMessage>
       </FormControl>
       <Stack spacing={10}>
         <Stack

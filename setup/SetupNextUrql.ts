@@ -1,12 +1,12 @@
 import {NextUrqlAppContext, withUrqlClient} from "next-urql";
 import NextApp from "next/app";
 import fetch from "isomorphic-unfetch";
-import {getToken} from "../state/auth.state";
+import {getToken} from "../state/AuthState";
 
 // the URL to /api/graphql
 const GRAPHQL_ENDPOINT = `http://localhost:3000/api/graphql`;
 
-export default function setupNextUrql(App: any) {
+export default function SetupNextUrql(App: any) {
   App.getInitialProps = async (ctx: NextUrqlAppContext) => {
     const appProps = await NextApp.getInitialProps(ctx);
     return { ...appProps };

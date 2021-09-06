@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import {IncomingMessage} from "http";
-import {getUserFromAuthorizationHeader} from "./schema/process";
+import {getUserFromAuthorizationHeader} from "./nexus/process";
 import {User} from "../generated/graphql";
 
 const prisma = new PrismaClient();

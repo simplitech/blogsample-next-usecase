@@ -1,17 +1,15 @@
 import HtmlHeaders from '../components/HtmlHeaders'
-import {useAuthState} from "../state/auth.state";
+import {useAuthState} from "../state/AuthState";
 import {useRouter} from "next/router";
-import React, {useEffect} from "react";
+import React, {useEffect, useMemo} from "react";
 import AdminLayout from "../components/AdminLayout";
 import {usePostsQuery} from "../generated/graphql";
+import DataTable from "../components/DataTable";
 
 const IndexPage = () => {
   const authState = useAuthState()
   const router = useRouter()
   const [{ data, fetching, error }] = usePostsQuery();
-
-  if (fetching) return <p>Loading...</p>;
-  if (error) return <p>Oh no... {error.message}</p>;
 
   useEffect(() => {
     if (!authState.user) {
@@ -19,15 +17,34 @@ const IndexPage = () => {
     }
   }, [authState, router])
 
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'ID',
+        accessor: 'id', // accessor is the "key" in the data
+      },
+      {
+        Header: 'Title',
+        accessor: 'title',
+      },
+    ],
+    []
+  )
+
+  const datat = useMemo(
+    () => data ? data.posts : [],
+    []
+  )
+
+  if (fetching) return <p>Loading...</p>;
+  if (error) return <p>Oh no... {error.message}</p>;
+
   return (
     <HtmlHeaders title="Home | Blogsample">
       <AdminLayout>
-        <p>There are {data?.posts.length} user(s) in the database:</p>
-        <ul>
-          {data?.posts.map(user => (
-            <li key={user.id}>{user.title}</li>
-          ))}
-        </ul>
+        {data &&
+          <DataTable columns={columns} data={datat}/>
+        }
       </AdminLayout>
     </HtmlHeaders>
   )

@@ -24,7 +24,7 @@ import {
 } from 'react-icons/fi';
 import { IconType } from 'react-icons';
 import { ReactText } from 'react';
-import {useAuthState} from "../state/auth.state";
+import {useAuthState} from "../state/AuthState";
 import NextLink from 'next/link'
 
 interface LinkItemProps {
@@ -103,7 +103,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
           </NextLink>
         )
         : (
-            <NavItem key={link.name} icon={link.icon} onClick={link.onClick}>
+            <NavItem key={link.name} icon={link.icon} onClick={() => link.onClick()}>
               {link.name}
             </NavItem>
           )
