@@ -1,5 +1,5 @@
 import {NonEmptyArray} from "type-graphql";
-import generated from "../../generated/type-graphql";
+import * as generated from "../../generated/type-graphql";
 import {AuthResolver} from "./AuthResolver";
 
 const resolvers: NonEmptyArray<Function> = [
