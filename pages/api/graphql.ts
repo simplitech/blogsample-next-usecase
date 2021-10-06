@@ -2,8 +2,9 @@ import 'reflect-metadata';
 import { ApolloServer } from "apollo-server-micro";
 import { NextApiRequest, NextApiResponse } from "next";
 import { buildSchema } from 'type-graphql';
-import {createContext} from "../../graphql/context";
+import {createContext} from "../../graphql/Context";
 import resolvers from "../../graphql/resolvers";
+import {appAuthChecker} from "../../graphql/AppAuthChecker";
 
 export const config = {
   api: {
@@ -14,6 +15,8 @@ export const config = {
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const schema = await buildSchema({
     resolvers,
+    authChecker: appAuthChecker,
+    authMode: 'null',
     validate: false,
   });
 

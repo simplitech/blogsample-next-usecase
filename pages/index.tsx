@@ -2,7 +2,7 @@ import {Flex, Heading, Stack, Text, Link, useColorModeValue} from "@chakra-ui/re
 import LoginCard from "../components/LoginCard";
 import {Trans, useTranslation} from "react-i18next";
 import React, {useEffect} from "react";
-import useTranslationWithPrefix from "../helper/useTranslationWithPrefix";
+import useTranslationWithPrefix from "../helpers/useTranslationWithPrefix";
 import {useAuthState} from "../state/AuthState";
 import {useRouter} from "next/router";
 

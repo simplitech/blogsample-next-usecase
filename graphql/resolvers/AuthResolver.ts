@@ -1,7 +1,7 @@
 import {Arg, Ctx, Mutation, Resolver} from "type-graphql";
 import {SigninInfo} from "../models/SigninInfo";
-import {PrismaClient} from "@prisma/client";
 import {UserProcess} from "../process/UserProcess";
+import {Context} from "../Context";
 
 @Resolver()
 export class AuthResolver {
@@ -9,8 +9,8 @@ export class AuthResolver {
   async signin(
     @Arg("email") email: string,
     @Arg("password") password: string,
-    @Ctx("prisma") prisma: PrismaClient
+    @Ctx() ctx: Context
   ) {
-    return await new UserProcess(prisma).signin(email, password)
+    return await new UserProcess(ctx).signin(email, password)
   }
 }

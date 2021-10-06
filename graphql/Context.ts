@@ -8,10 +8,15 @@ const prisma = new PrismaClient();
 export interface Context {
   prisma: PrismaClient
   request: IncomingMessage
-  user: User
+  user: User | null
 }
 
+/**
+ * created the context to be used on every endpoint
+ * @param req HttpRequest info
+ */
 export async function createContext({req}: {req: IncomingMessage}) {
-  const user = await new UserProcess(prisma).getUserFromAuthorizationHeader(req.headers.authorization)
-  return { prisma, user, request: req };
+  const ctx: Context = { prisma, request: req, user: null }
+  ctx.user = await new UserProcess(ctx).getUserFromAuthorizationHeader(req.headers.authorization)
+  return ctx
 }
