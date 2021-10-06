@@ -1,15 +1,15 @@
 import {useLocalStorage} from 'react-use-storage'
-import {SigninInfo, User} from "../generated/graphql";
+import {User} from "../generated/graphql";
 import Cookies from 'js-cookie'
 import cookies from "next-cookies";
 
 export const scopeKey = 'authState'
 export function useAuthState() {
-  const [user, setUser, removeUser] = useLocalStorage<User>(`${scopeKey}.user`)
+  const [user, setUser, removeUser] = useLocalStorage<Partial<User>>(`${scopeKey}.user`)
 
-  const setSigninInfo = (signin: SigninInfo) => {
-    Cookies.set(`${scopeKey}.token`, signin.token)
-    setUser(signin.user)
+  const setSigninInfo = (token: string, user: Partial<User>) => {
+    Cookies.set(`${scopeKey}.token`, token)
+    setUser(user)
   }
 
   const removeSigninInfo = () => {

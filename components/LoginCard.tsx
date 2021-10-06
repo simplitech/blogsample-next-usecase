@@ -39,7 +39,7 @@ const LoginCard: React.FC = () => {
       return
     }
 
-    authState.setSigninInfo(resp.data?.signin)
+    authState.setSigninInfo(resp.data?.signin.token, resp.data?.signin.user)
     await router.push('/home')
   }
 

@@ -27,12 +27,11 @@ const IndexPage = () => {
         Header: 'Title',
         accessor: 'title',
       },
+      {
+        Header: 'Author',
+        accessor: 'author.email',
+      },
     ],
-    []
-  )
-
-  const datat = useMemo(
-    () => data ? data.posts : [],
     []
   )
 
@@ -43,7 +42,7 @@ const IndexPage = () => {
     <HtmlHeaders title="Home | Blogsample">
       <AdminLayout>
         {data &&
-          <DataTable columns={columns} data={datat}/>
+          <DataTable columns={columns} data={data.posts}/>
         }
       </AdminLayout>
     </HtmlHeaders>
