@@ -91,7 +91,7 @@
     }
   },
   "page": {
-    "index": {
+    "login": {
       "signInToYourAccount": "Sign in to your account",
       "caption": "to enjoy all of our cool <1>features</1> ✌"
     }

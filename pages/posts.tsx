@@ -1,8 +1,8 @@
-import HtmlHeaders from '../components/HtmlHeaders'
+import HtmlHeaders from '../layouts/HtmlHeaders'
 import {useAuthState} from "../state/AuthState";
 import {useRouter} from "next/router";
 import React, {useEffect, useMemo} from "react";
-import AdminLayout from "../components/AdminLayout";
+import AdminLayout from "../layouts/AdminLayout";
 import {usePostsQuery} from "../generated/graphql";
 import DataTable from "../components/DataTable";
 

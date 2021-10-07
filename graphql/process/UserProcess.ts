@@ -19,6 +19,7 @@ export class UserProcess {
     if (!user) {
       throw new UserInputError(i18next.t('error.wrongLoginInput'), {path: 'password'})
     }
+    this.ctx.user = user
     const token = jwt.sign(user, process.env.JWT_SECRET)
     return {user, token}
   }
