@@ -4,6 +4,8 @@ This folder contains React components that are used on other components or on [p
 
 Components that are used to create the main structure of the application are on [layout folder](../layouts) 
 
+Every component must have also a [story](../stories) to facilitate tests and documentation.
+
 Note:
 - Generic components should be on the root folders
 - Components that are used only and specifically for a page should be on a folder with the page's name, it's name should

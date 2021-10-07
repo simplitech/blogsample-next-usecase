@@ -14,7 +14,8 @@ DB_USER="root"
 DB_PASS="root"
 DATABASE_URL="mysql://${DB_USER}:${DB_PASS}@${DB_HOST}:3306/${DB_NAME}?useSSL=false"
 
-JWT_SECRET="anysecrethere"
+JWT_SECRET="<any secret here>"
+STORYBOOK_ZEPLIN_TOKEN="<zeplin access token here, create one here: https://app.zeplin.io/profile/developer >"
 ```
 
 Create the database
@@ -33,9 +34,17 @@ To visualize and edit the database data
 yarn studio
 ```
 
+## Storybook
+To visualize the Components and their different states and documentation
+```shell
+yarn storybook
+```
+
 ## Recommended IntelliJ Plugins
 - JS GraphQL
 - Prisma Support
+- MDX
+- PlantUML integration
 
 ## Code Guide Documentation
 The starting point of the application is on [pages](pages), follow this link to understand everything.
