@@ -82,18 +82,145 @@
     "wrongLoginInput": "Invalid E-mail or Password"
   },
   "comp": {
+    "IndexFeatures": {
+      "technology": "Technology",
+      "21stCenturyAgriculture": {
+        "title": "21st century agriculture",
+        "content": "The NewLife™ technology allows you to monitor your crops and get complete insights at real time. The proprietary software/hardware ecosystem prevents your plants from getting neglected."
+      },
+      "10p": {
+        "title": "10+",
+        "content": "<1>Software modules</1> for detailed monitoring and real-time analytics"
+      },
+      "24by7": {
+        "title": "24/7",
+        "content": "<1>Analytics</1> enabled right in your dashboard without history limitations"
+      },
+      "13pct": {
+        "title": "13%",
+        "content": "<1>Farms</1> in North America has chosen NewLife™ as their management solution"
+      },
+      "250mp": {
+        "title": "250M+",
+        "content": "<1>Plants</1> currently connected and monitored by the NewLife™ software"
+      }
+    },
+    "IndexHero": {
+      "heading": "Make money from<1>your audience</1>",
+      "monetizeYourContent": "Monetize your content by charging your most loyal readers and reward them loyalty points. Give back to your loyal readers by granting them access to your pre-releases and sneak-peaks.",
+      "getStarted": "Get Started",
+      "learnMore": "Learn more",
+      "startingAt15pmo": "Starting at $15/mo"
+    },
+    "IndexPricing": {
+      "plansThatFitYourNeed": "Plans that fit your need",
+      "currency": "$",
+      "perMonth": "/month",
+      "hobby": "Hobby",
+      "growth": "Growth",
+      "scale": "Scale",
+      "mostPopular": "Most Popular",
+      "startTrial": "Start trial"
+    },
+    "IndexTestimonials": {
+      "ourClientsSpeak": "Our Clients Speak",
+      "weHaveBeenWorking": "We have been working with clients around the world",
+      "efficientCollab": "Efficient Collaborating",
+      "intuitiveDesign": "Intuitive Design",
+      "mindblowingService": "Mindblowing Service"
+    },
     "LoginCard": {
       "email": "Email address",
       "password": "Password",
       "rememberMe": "Remember me",
       "forgotPassword": "Forgot password?",
       "signIn": "Sign in"
+    },
+    "PublicFooter": {
+      "rights": "© 2020 Chakra Templates. All rights reserved",
+      "twitter": "Twitter",
+      "youtube": "Youtube",
+      "instagram": "Instagram",
+      "company":  "Company",
+      "aboutUs": "About us",
+      "blog":  "Blog",
+      "contactUs": "Contact us",
+      "pricing":  "Pricing",
+      "testimonials": "Testimonials",
+      "support":  "Support",
+      "helpCenter": "Help Center",
+      "termsOfService":  "Terms of Service",
+      "legal": "Legal",
+      "privacyPolicy":  "Privacy Policy",
+      "satus": "Satus",
+      "stayUpToDate": "Stay up to date",
+      "yourEmailAddress": "Your email address"
+    },
+    "PublicHeader": {
+      "signIn": "Sign In",
+      "signUp": "Sign Up",
+      "navItems": [
+        {
+          "label": "Inspiration",
+          "children": [
+            {
+              "label": "Explore Design Work",
+              "subLabel": "Trending Design to inspire you",
+              "href": "#"
+            },
+            {
+              "label": "New & Noteworthy",
+              "subLabel": "Up-and-coming Designers",
+              "href": "#"
+            }
+          ]
+        },
+        {
+          "label": "Find Work",
+          "children": [
+            {
+              "label": "Job Board",
+              "subLabel": "Find your dream design job",
+              "href": "#"
+            },
+            {
+              "label": "Freelance Projects",
+              "subLabel": "An exclusive list for contract work",
+              "href": "#"
+            }
+          ]
+        },
+        {
+          "label": "Learn Design",
+          "href": "#"
+        },
+        {
+          "label": "Hire Designers",
+          "href": "#"
+        }
+      ]
+    },
+    "AdminLayout": {
+      "title": "{{page}} - Blogsample Admin Panel",
+      "dashboard":  "Dashboard",
+      "posts": "Posts",
+      "logout": "Logout"
     }
   },
   "page": {
     "login": {
       "signInToYourAccount": "Sign in to your account",
       "caption": "to enjoy all of our cool <1>features</1> ✌"
+    },
+    "admin": {
+      "list": {
+        "posts": {
+          "title": "Posts"
+        }
+      },
+      "dashboard": {
+        "title": "Dashboard"
+      }
     }
   }
 }

@@ -2,9 +2,12 @@ import {useLocalStorage} from 'react-use-storage'
 import {User} from "../generated/graphql";
 import Cookies from 'js-cookie'
 import cookies from "next-cookies";
+import {useEffect} from "react";
+import {useRouter} from "next/router";
 
 export const scopeKey = 'authState'
 export function useAuthState() {
+  const router = useRouter()
   const [user, setUser, removeUser] = useLocalStorage<Partial<User>>(`${scopeKey}.user`)
 
   const setSigninInfo = (token: string, user: Partial<User>) => {
@@ -17,10 +20,28 @@ export function useAuthState() {
     removeUser()
   }
 
+  const pushUnauthorizedUser = () => {
+    useEffect(() => {
+      if (!user) {
+        router.push('/')
+      }
+    }, [router])
+  }
+
+  const pushAuthorizedUser = () => {
+    useEffect(() => {
+      if (user) {
+        router.push('/admin/dashboard')
+      }
+    }, [router])
+  }
+
   return {
     user,
     setSigninInfo,
     removeSigninInfo,
+    pushUnauthorizedUser,
+    pushAuthorizedUser,
   }
 }
 

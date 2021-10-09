@@ -1,21 +1,15 @@
 import {Flex, Heading, Stack, Text, Link, useColorModeValue} from "@chakra-ui/react";
 import LoginCard from "../components/login/LoginCard";
 import {Trans} from "react-i18next";
-import React, {useEffect} from "react";
+import React from "react";
 import useTranslationWithPrefix from "../helpers/useTranslationWithPrefix";
 import {useAuthState} from "../state/AuthState";
-import {useRouter} from "next/router";
 
 const IndexPage: React.FC = () => {
   const {tp} = useTranslationWithPrefix('page.login')
   const authState = useAuthState()
-  const router = useRouter()
 
-  useEffect(() => {
-    if (authState.user) {
-      router.push('/posts')
-    }
-  }, [authState, router])
+  authState.pushAuthorizedUser()
 
   return <Flex
     minH={'100vh'}

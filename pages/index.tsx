@@ -1,17 +1,33 @@
-import {Flex, useColorModeValue} from "@chakra-ui/react";
-import React, {useEffect} from "react";
+import {Container, Stack} from "@chakra-ui/react";
+import React from "react";
+import IndexHero from "../components/index/IndexHero";
+import IndexFeatures from "../components/index/IndexFeatures";
+import IndexTestimonials from "../components/index/IndexTestimonials";
+import IndexPricing from "../components/index/IndexPricing";
+import PublicFooter from "../components/PublicFooter";
+import PublicHeader from "../components/PublicHeader";
+import Head from "next/head";
 import useTranslationWithPrefix from "../helpers/useTranslationWithPrefix";
-import {useRouter} from "next/router";
-import NextLink from 'next/link'
 
 const IndexPage: React.FC = () => {
-  return <Flex
-    minH={'100vh'}
-    align={'center'}
-    justify={'center'}
-    bg={useColorModeValue('gray.50', 'gray.800')}>
-      <NextLink href="login">Login</NextLink>
-  </Flex>
+  const { t, tp } = useTranslationWithPrefix('page.index')
+  return <>
+    <Head>
+      <title>{t('app.title')}</title>
+      <meta charSet="utf-8" />
+      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    </Head>
+    <Stack>
+      <PublicHeader />
+      <Container maxW={'3xl'} alignSelf="center">
+        <IndexHero />
+      </Container>
+      <IndexFeatures />
+      <IndexTestimonials />
+      <IndexPricing />
+      <PublicFooter />
+    </Stack>
+  </>
 }
 
 export default IndexPage;

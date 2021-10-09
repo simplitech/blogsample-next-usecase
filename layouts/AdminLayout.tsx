@@ -15,17 +15,16 @@ import {
   FlexProps,
 } from '@chakra-ui/react';
 import {
-  FiHome,
-  FiTrendingUp,
-  FiCompass,
-  FiStar,
-  FiSettings,
+  FiGrid,
+  FiList,
   FiMenu, FiLogOut,
 } from 'react-icons/fi';
 import { IconType } from 'react-icons';
 import { ReactText } from 'react';
 import {useAuthState} from "../state/AuthState";
 import NextLink from 'next/link'
+import useTranslationWithPrefix from "../helpers/useTranslationWithPrefix";
+import Head from 'next/head';
 
 interface LinkItemProps {
   name: string;
@@ -34,32 +33,40 @@ interface LinkItemProps {
   onClick?: () => void
 }
 
-export default function AdminLayout({ children }: { children: ReactNode }) {
+export default function AdminLayout({ page, children }: { page: string, children: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { tp } = useTranslationWithPrefix('comp.AdminLayout')
   return (
-    <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
-      <SidebarContent
-        onClose={() => onClose}
-        display={{ base: 'none', md: 'block' }}
-      />
-      <Drawer
-        autoFocus={false}
-        isOpen={isOpen}
-        placement="left"
-        onClose={onClose}
-        returnFocusOnClose={false}
-        onOverlayClick={onClose}
-        size="full">
-        <DrawerContent>
-          <SidebarContent onClose={onClose} />
-        </DrawerContent>
-      </Drawer>
-      {/* mobilenav */}
-      <MobileNav display={{ base: 'flex', md: 'none' }} onOpen={onOpen} />
-      <Box ml={{ base: 0, md: 60 }} p="4">
-        {children}
+    <>
+      <Head>
+        <title>{tp('title', { page })}</title>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+      <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
+        <SidebarContent
+          onClose={() => onClose}
+          display={{ base: 'none', md: 'block' }}
+        />
+        <Drawer
+          autoFocus={false}
+          isOpen={isOpen}
+          placement="left"
+          onClose={onClose}
+          returnFocusOnClose={false}
+          onOverlayClick={onClose}
+          size="full">
+          <DrawerContent>
+            <SidebarContent onClose={onClose} />
+          </DrawerContent>
+        </Drawer>
+        {/* mobilenav */}
+        <MobileNav display={{ base: 'flex', md: 'none' }} onOpen={onOpen} />
+        <Box ml={{ base: 0, md: 60 }} p="4">
+          {children}
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 }
 
@@ -69,14 +76,12 @@ interface SidebarProps extends BoxProps {
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   const authState = useAuthState()
+  const { tp } = useTranslationWithPrefix('comp.AdminLayout')
 
-  const LinkItems: Array<LinkItemProps> = [
-    { name: 'Home', icon: FiHome },
-    { name: 'Trending', icon: FiTrendingUp },
-    { name: 'Explore', icon: FiCompass },
-    { name: 'Favourites', icon: FiStar },
-    { name: 'Settings', icon: FiSettings },
-    { name: 'Logout', icon: FiLogOut, onClick: () => authState.removeSigninInfo() },
+  const linkItems: Array<LinkItemProps> = [
+    { name: tp('dashboard'), icon: FiGrid, path: '/admin/dashboard' },
+    { name: tp('posts'), icon: FiList, path: '/admin/list/posts' },
+    { name: tp('logout'), icon: FiLogOut, onClick: () => authState.removeSigninInfo() },
   ];
 
   return (
@@ -94,7 +99,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         </Text>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
-      {LinkItems.map((link) => (
+      {linkItems.map((link) => (
         link.path ? (
           <NextLink href={link.path}>
             <NavItem key={link.name} icon={link.icon}>

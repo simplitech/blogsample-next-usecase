@@ -40,7 +40,7 @@ const LoginCard: React.FC = () => {
     }
 
     authState.setSigninInfo(resp.data?.signin.token, resp.data?.signin.user)
-    await router.push('/posts')
+    await router.push('/admin/dashboard')
   }
 
   return (

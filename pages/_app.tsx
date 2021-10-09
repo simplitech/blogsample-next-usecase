@@ -6,7 +6,7 @@ import setup from "../setup";
 export default setup(({ Component, pageProps }: AppProps) => {
   return (
     <ChakraProvider>
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
     </ChakraProvider>
   )
 })
