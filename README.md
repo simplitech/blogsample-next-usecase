@@ -34,6 +34,12 @@ To visualize and edit the database data
 yarn studio
 ```
 
+## Prisma Generate
+Execute this command everytime you change the schema.prisma file:
+```shell
+yarn prisma
+```
+
 ## Storybook
 To visualize the Components and their different states and documentation
 ```shell
@@ -44,12 +50,11 @@ yarn storybook
 - JS GraphQL
 - Prisma Support
 - MDX
-- PlantUML integration
 
 ## Code Guide Documentation
 The starting point of the application is on [pages](pages), follow this link to understand everything.
 
-## Project Structure
+## Technologies
 This is a [Next](https://nextjs.org/) Application, which is a [React](https://reactjs.org/) web application with
 Server-side Rendering capabilities.
 
@@ -59,3 +64,6 @@ For the Back-end API we are using [GraphQL protocol](https://graphql.org/) imple
 For the Database we are using [Prisma](https://www.prisma.io/) with [MySQL](https://www.mysql.com/).
 
 For the Front-end styling we are using [ChakraUI](https://chakra-ui.com/).
+
+## Database Class Diagram
+![](prisma/schema.png)

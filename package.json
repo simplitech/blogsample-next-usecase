@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "dev": "concurrently -r \"next dev\" \"npx graphql-codegen --watch\"",
-    "generate": "npx prisma generate",
+    "prisma": "npx prisma generate && prisma-uml prisma/schema.prisma -o png -f prisma/schema.png",
     "migrate": "npx prisma migrate dev",
     "studio": "npx prisma studio",
     "build": "next build",
@@ -71,6 +71,7 @@
     "cross-env": "^7.0.2",
     "faker": "^5.5.3",
     "prisma": "3.1.1",
+    "prisma-uml": "^1.1.17",
     "storybook-react-i18next": "^1.0.10",
     "storybook-zeplin": "^1.5.1",
     "ts-node": "^10.0.0",
