@@ -68,6 +68,18 @@ __decorate([
     __metadata("design:type", String)
 ], PostGroupBy.prototype, "title", void 0);
 __decorate([
+    TypeGraphQL.Field(_type => String, {
+        nullable: true
+    }),
+    __metadata("design:type", String)
+], PostGroupBy.prototype, "body", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => String, {
+        nullable: true
+    }),
+    __metadata("design:type", String)
+], PostGroupBy.prototype, "bannerUrl", void 0);
+__decorate([
     TypeGraphQL.Field(_type => TypeGraphQL.Int, {
         nullable: true
     }),

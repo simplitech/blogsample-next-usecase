@@ -1,13 +1,13 @@
 import {useAuthState} from "../../../state/AuthState";
 import React, {useMemo} from "react";
 import AdminLayout from "../../../layouts/AdminLayout";
-import {usePostsQuery} from "../../../generated/graphql";
+import {usePostsAdminQuery} from "../../../generated/graphql";
 import DataTable from "../../../components/DataTable";
 import useTranslationWithPrefix from "../../../helpers/useTranslationWithPrefix";
 
 const Posts = () => {
   const authState = useAuthState()
-  const [{ data, fetching, error }] = usePostsQuery();
+  const [{ data, fetching, error }] = usePostsAdminQuery();
   const { tp } = useTranslationWithPrefix('page.admin.list.posts')
 
   authState.pushUnauthorizedUser()

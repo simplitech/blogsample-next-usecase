@@ -32,6 +32,7 @@ exports.PostUpdateWithoutAuthorInput = void 0;
 const TypeGraphQL = __importStar(require("type-graphql"));
 const BoolFieldUpdateOperationsInput_1 = require("../inputs/BoolFieldUpdateOperationsInput");
 const DateTimeFieldUpdateOperationsInput_1 = require("../inputs/DateTimeFieldUpdateOperationsInput");
+const NullableStringFieldUpdateOperationsInput_1 = require("../inputs/NullableStringFieldUpdateOperationsInput");
 const StringFieldUpdateOperationsInput_1 = require("../inputs/StringFieldUpdateOperationsInput");
 let PostUpdateWithoutAuthorInput = class PostUpdateWithoutAuthorInput {
 };
@@ -59,6 +60,18 @@ __decorate([
     }),
     __metadata("design:type", StringFieldUpdateOperationsInput_1.StringFieldUpdateOperationsInput)
 ], PostUpdateWithoutAuthorInput.prototype, "title", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => NullableStringFieldUpdateOperationsInput_1.NullableStringFieldUpdateOperationsInput, {
+        nullable: true
+    }),
+    __metadata("design:type", NullableStringFieldUpdateOperationsInput_1.NullableStringFieldUpdateOperationsInput)
+], PostUpdateWithoutAuthorInput.prototype, "body", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => NullableStringFieldUpdateOperationsInput_1.NullableStringFieldUpdateOperationsInput, {
+        nullable: true
+    }),
+    __metadata("design:type", NullableStringFieldUpdateOperationsInput_1.NullableStringFieldUpdateOperationsInput)
+], PostUpdateWithoutAuthorInput.prototype, "bannerUrl", void 0);
 PostUpdateWithoutAuthorInput = __decorate([
     TypeGraphQL.InputType({
         isAbstract: true

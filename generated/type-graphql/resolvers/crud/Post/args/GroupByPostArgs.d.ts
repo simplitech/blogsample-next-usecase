@@ -4,7 +4,7 @@ import { PostWhereInput } from "../../../inputs/PostWhereInput";
 export declare class GroupByPostArgs {
     where?: PostWhereInput | undefined;
     orderBy?: PostOrderByWithAggregationInput[] | undefined;
-    by: Array<"id" | "createdAt" | "updatedAt" | "published" | "title" | "authorId">;
+    by: Array<"id" | "createdAt" | "updatedAt" | "published" | "title" | "body" | "bannerUrl" | "authorId">;
     having?: PostScalarWhereWithAggregatesInput | undefined;
     take?: number | undefined;
     skip?: number | undefined;

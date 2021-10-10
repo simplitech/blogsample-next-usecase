@@ -9,7 +9,7 @@ const postCrud: CrudDefinition = {
   ],
   enhanceMap: {
     Post: {
-      posts: [Authorized()]
+      // TODO: disallow post insert, edit or delete to non authorized users
     }
   }
 }

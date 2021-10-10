@@ -32,6 +32,7 @@ exports.PostUpdateManyMutationInput = void 0;
 const TypeGraphQL = __importStar(require("type-graphql"));
 const BoolFieldUpdateOperationsInput_1 = require("../inputs/BoolFieldUpdateOperationsInput");
 const DateTimeFieldUpdateOperationsInput_1 = require("../inputs/DateTimeFieldUpdateOperationsInput");
+const NullableStringFieldUpdateOperationsInput_1 = require("../inputs/NullableStringFieldUpdateOperationsInput");
 const StringFieldUpdateOperationsInput_1 = require("../inputs/StringFieldUpdateOperationsInput");
 let PostUpdateManyMutationInput = class PostUpdateManyMutationInput {
 };
@@ -59,6 +60,18 @@ __decorate([
     }),
     __metadata("design:type", StringFieldUpdateOperationsInput_1.StringFieldUpdateOperationsInput)
 ], PostUpdateManyMutationInput.prototype, "title", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => NullableStringFieldUpdateOperationsInput_1.NullableStringFieldUpdateOperationsInput, {
+        nullable: true
+    }),
+    __metadata("design:type", NullableStringFieldUpdateOperationsInput_1.NullableStringFieldUpdateOperationsInput)
+], PostUpdateManyMutationInput.prototype, "body", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => NullableStringFieldUpdateOperationsInput_1.NullableStringFieldUpdateOperationsInput, {
+        nullable: true
+    }),
+    __metadata("design:type", NullableStringFieldUpdateOperationsInput_1.NullableStringFieldUpdateOperationsInput)
+], PostUpdateManyMutationInput.prototype, "bannerUrl", void 0);
 PostUpdateManyMutationInput = __decorate([
     TypeGraphQL.InputType({
         isAbstract: true

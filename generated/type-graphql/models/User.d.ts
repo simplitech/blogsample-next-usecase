@@ -6,6 +6,7 @@ export declare class User {
     email: string;
     password?: string | null;
     name?: string | null;
+    avatarUrl?: string | null;
     role: "USER" | "ADMIN";
     posts?: Post[];
     _count?: UserCount | null;

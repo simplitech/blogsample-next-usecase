@@ -36,6 +36,7 @@ const DateTimeFilter_1 = require("../inputs/DateTimeFilter");
 const IntFilter_1 = require("../inputs/IntFilter");
 const IntNullableFilter_1 = require("../inputs/IntNullableFilter");
 const StringFilter_1 = require("../inputs/StringFilter");
+const StringNullableFilter_1 = require("../inputs/StringNullableFilter");
 let PostScalarWhereInput = PostScalarWhereInput_1 = class PostScalarWhereInput {
 };
 __decorate([
@@ -86,6 +87,18 @@ __decorate([
     }),
     __metadata("design:type", StringFilter_1.StringFilter)
 ], PostScalarWhereInput.prototype, "title", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => StringNullableFilter_1.StringNullableFilter, {
+        nullable: true
+    }),
+    __metadata("design:type", StringNullableFilter_1.StringNullableFilter)
+], PostScalarWhereInput.prototype, "body", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => StringNullableFilter_1.StringNullableFilter, {
+        nullable: true
+    }),
+    __metadata("design:type", StringNullableFilter_1.StringNullableFilter)
+], PostScalarWhereInput.prototype, "bannerUrl", void 0);
 __decorate([
     TypeGraphQL.Field(_type => IntNullableFilter_1.IntNullableFilter, {
         nullable: true

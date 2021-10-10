@@ -67,6 +67,18 @@ __decorate([
         nullable: false
     }),
     __metadata("design:type", Number)
+], PostCountAggregate.prototype, "body", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => TypeGraphQL.Int, {
+        nullable: false
+    }),
+    __metadata("design:type", Number)
+], PostCountAggregate.prototype, "bannerUrl", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => TypeGraphQL.Int, {
+        nullable: false
+    }),
+    __metadata("design:type", Number)
 ], PostCountAggregate.prototype, "authorId", void 0);
 __decorate([
     TypeGraphQL.Field(_type => TypeGraphQL.Int, {

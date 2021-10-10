@@ -35,6 +35,7 @@ const BoolWithAggregatesFilter_1 = require("../inputs/BoolWithAggregatesFilter")
 const DateTimeWithAggregatesFilter_1 = require("../inputs/DateTimeWithAggregatesFilter");
 const IntNullableWithAggregatesFilter_1 = require("../inputs/IntNullableWithAggregatesFilter");
 const IntWithAggregatesFilter_1 = require("../inputs/IntWithAggregatesFilter");
+const StringNullableWithAggregatesFilter_1 = require("../inputs/StringNullableWithAggregatesFilter");
 const StringWithAggregatesFilter_1 = require("../inputs/StringWithAggregatesFilter");
 let PostScalarWhereWithAggregatesInput = PostScalarWhereWithAggregatesInput_1 = class PostScalarWhereWithAggregatesInput {
 };
@@ -86,6 +87,18 @@ __decorate([
     }),
     __metadata("design:type", StringWithAggregatesFilter_1.StringWithAggregatesFilter)
 ], PostScalarWhereWithAggregatesInput.prototype, "title", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => StringNullableWithAggregatesFilter_1.StringNullableWithAggregatesFilter, {
+        nullable: true
+    }),
+    __metadata("design:type", StringNullableWithAggregatesFilter_1.StringNullableWithAggregatesFilter)
+], PostScalarWhereWithAggregatesInput.prototype, "body", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => StringNullableWithAggregatesFilter_1.StringNullableWithAggregatesFilter, {
+        nullable: true
+    }),
+    __metadata("design:type", StringNullableWithAggregatesFilter_1.StringNullableWithAggregatesFilter)
+], PostScalarWhereWithAggregatesInput.prototype, "bannerUrl", void 0);
 __decorate([
     TypeGraphQL.Field(_type => IntNullableWithAggregatesFilter_1.IntNullableWithAggregatesFilter, {
         nullable: true

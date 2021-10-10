@@ -4,5 +4,7 @@ export declare enum PostScalarFieldEnum {
     updatedAt = "updatedAt",
     published = "published",
     title = "title",
+    body = "body",
+    bannerUrl = "bannerUrl",
     authorId = "authorId"
 }

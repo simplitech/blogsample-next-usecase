@@ -68,6 +68,18 @@ __decorate([
         nullable: true
     }),
     __metadata("design:type", String)
+], PostCountOrderByAggregateInput.prototype, "body", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => SortOrder_1.SortOrder, {
+        nullable: true
+    }),
+    __metadata("design:type", String)
+], PostCountOrderByAggregateInput.prototype, "bannerUrl", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => SortOrder_1.SortOrder, {
+        nullable: true
+    }),
+    __metadata("design:type", String)
 ], PostCountOrderByAggregateInput.prototype, "authorId", void 0);
 PostCountOrderByAggregateInput = __decorate([
     TypeGraphQL.InputType({

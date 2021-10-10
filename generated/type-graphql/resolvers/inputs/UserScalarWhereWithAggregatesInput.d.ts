@@ -12,5 +12,6 @@ export declare class UserScalarWhereWithAggregatesInput {
     email?: StringWithAggregatesFilter | undefined;
     password?: StringNullableWithAggregatesFilter | undefined;
     name?: StringNullableWithAggregatesFilter | undefined;
+    avatarUrl?: StringNullableWithAggregatesFilter | undefined;
     role?: EnumRoleWithAggregatesFilter | undefined;
 }

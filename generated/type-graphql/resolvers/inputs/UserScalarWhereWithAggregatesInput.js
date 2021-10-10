@@ -87,6 +87,12 @@ __decorate([
     __metadata("design:type", StringNullableWithAggregatesFilter_1.StringNullableWithAggregatesFilter)
 ], UserScalarWhereWithAggregatesInput.prototype, "name", void 0);
 __decorate([
+    TypeGraphQL.Field(_type => StringNullableWithAggregatesFilter_1.StringNullableWithAggregatesFilter, {
+        nullable: true
+    }),
+    __metadata("design:type", StringNullableWithAggregatesFilter_1.StringNullableWithAggregatesFilter)
+], UserScalarWhereWithAggregatesInput.prototype, "avatarUrl", void 0);
+__decorate([
     TypeGraphQL.Field(_type => EnumRoleWithAggregatesFilter_1.EnumRoleWithAggregatesFilter, {
         nullable: true
     }),

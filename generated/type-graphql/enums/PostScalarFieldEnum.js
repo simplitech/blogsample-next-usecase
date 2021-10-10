@@ -28,6 +28,8 @@ var PostScalarFieldEnum;
     PostScalarFieldEnum["updatedAt"] = "updatedAt";
     PostScalarFieldEnum["published"] = "published";
     PostScalarFieldEnum["title"] = "title";
+    PostScalarFieldEnum["body"] = "body";
+    PostScalarFieldEnum["bannerUrl"] = "bannerUrl";
     PostScalarFieldEnum["authorId"] = "authorId";
 })(PostScalarFieldEnum = exports.PostScalarFieldEnum || (exports.PostScalarFieldEnum = {}));
 TypeGraphQL.registerEnumType(PostScalarFieldEnum, {

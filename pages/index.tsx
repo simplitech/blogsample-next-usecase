@@ -1,4 +1,4 @@
-import {Container, Stack} from "@chakra-ui/react";
+import {Container, Flex, Stack} from "@chakra-ui/react";
 import React from "react";
 import IndexHero from "../components/index/IndexHero";
 import IndexFeatures from "../components/index/IndexFeatures";
@@ -17,7 +17,7 @@ const IndexPage: React.FC = () => {
       <meta charSet="utf-8" />
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
     </Head>
-    <Stack>
+    <Flex>
       <PublicHeader />
       <Container maxW={'3xl'} alignSelf="center">
         <IndexHero />
@@ -26,7 +26,7 @@ const IndexPage: React.FC = () => {
       <IndexTestimonials />
       <IndexPricing />
       <PublicFooter />
-    </Stack>
+    </Flex>
   </>
 }
 

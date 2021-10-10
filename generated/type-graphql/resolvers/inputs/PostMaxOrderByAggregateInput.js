@@ -68,6 +68,18 @@ __decorate([
         nullable: true
     }),
     __metadata("design:type", String)
+], PostMaxOrderByAggregateInput.prototype, "body", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => SortOrder_1.SortOrder, {
+        nullable: true
+    }),
+    __metadata("design:type", String)
+], PostMaxOrderByAggregateInput.prototype, "bannerUrl", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => SortOrder_1.SortOrder, {
+        nullable: true
+    }),
+    __metadata("design:type", String)
 ], PostMaxOrderByAggregateInput.prototype, "authorId", void 0);
 PostMaxOrderByAggregateInput = __decorate([
     TypeGraphQL.InputType({

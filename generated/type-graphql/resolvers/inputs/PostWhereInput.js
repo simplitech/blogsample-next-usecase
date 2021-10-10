@@ -36,6 +36,7 @@ const DateTimeFilter_1 = require("../inputs/DateTimeFilter");
 const IntFilter_1 = require("../inputs/IntFilter");
 const IntNullableFilter_1 = require("../inputs/IntNullableFilter");
 const StringFilter_1 = require("../inputs/StringFilter");
+const StringNullableFilter_1 = require("../inputs/StringNullableFilter");
 const UserRelationFilter_1 = require("../inputs/UserRelationFilter");
 let PostWhereInput = PostWhereInput_1 = class PostWhereInput {
 };
@@ -87,6 +88,18 @@ __decorate([
     }),
     __metadata("design:type", StringFilter_1.StringFilter)
 ], PostWhereInput.prototype, "title", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => StringNullableFilter_1.StringNullableFilter, {
+        nullable: true
+    }),
+    __metadata("design:type", StringNullableFilter_1.StringNullableFilter)
+], PostWhereInput.prototype, "body", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => StringNullableFilter_1.StringNullableFilter, {
+        nullable: true
+    }),
+    __metadata("design:type", StringNullableFilter_1.StringNullableFilter)
+], PostWhereInput.prototype, "bannerUrl", void 0);
 __decorate([
     TypeGraphQL.Field(_type => UserRelationFilter_1.UserRelationFilter, {
         nullable: true

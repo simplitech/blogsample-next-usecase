@@ -62,6 +62,18 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], PostCreateManyAuthorInput.prototype, "title", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => String, {
+        nullable: true
+    }),
+    __metadata("design:type", String)
+], PostCreateManyAuthorInput.prototype, "body", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => String, {
+        nullable: true
+    }),
+    __metadata("design:type", String)
+], PostCreateManyAuthorInput.prototype, "bannerUrl", void 0);
 PostCreateManyAuthorInput = __decorate([
     TypeGraphQL.InputType({
         isAbstract: true

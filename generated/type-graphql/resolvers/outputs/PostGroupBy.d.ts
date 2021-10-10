@@ -9,6 +9,8 @@ export declare class PostGroupBy {
     updatedAt: Date;
     published: boolean;
     title: string;
+    body: string | null;
+    bannerUrl: string | null;
     authorId: number | null;
     _count: PostCountAggregate | null;
     _avg: PostAvgAggregate | null;

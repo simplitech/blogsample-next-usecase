@@ -8,6 +8,7 @@ export declare class UserUpdateInput {
     email?: StringFieldUpdateOperationsInput | undefined;
     password?: NullableStringFieldUpdateOperationsInput | undefined;
     name?: NullableStringFieldUpdateOperationsInput | undefined;
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | undefined;
     role?: EnumRoleFieldUpdateOperationsInput | undefined;
     posts?: PostUpdateManyWithoutAuthorInput | undefined;
 }

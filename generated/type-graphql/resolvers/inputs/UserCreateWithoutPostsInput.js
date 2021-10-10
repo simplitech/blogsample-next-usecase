@@ -58,6 +58,12 @@ __decorate([
     __metadata("design:type", String)
 ], UserCreateWithoutPostsInput.prototype, "name", void 0);
 __decorate([
+    TypeGraphQL.Field(_type => String, {
+        nullable: true
+    }),
+    __metadata("design:type", String)
+], UserCreateWithoutPostsInput.prototype, "avatarUrl", void 0);
+__decorate([
     TypeGraphQL.Field(_type => Role_1.Role, {
         nullable: true
     }),

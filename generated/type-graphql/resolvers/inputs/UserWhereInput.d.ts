@@ -13,6 +13,7 @@ export declare class UserWhereInput {
     email?: StringFilter | undefined;
     password?: StringNullableFilter | undefined;
     name?: StringNullableFilter | undefined;
+    avatarUrl?: StringNullableFilter | undefined;
     role?: EnumRoleFilter | undefined;
     posts?: PostListRelationFilter | undefined;
 }

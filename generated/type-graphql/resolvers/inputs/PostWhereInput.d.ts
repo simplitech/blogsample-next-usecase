@@ -3,6 +3,7 @@ import { DateTimeFilter } from "../inputs/DateTimeFilter";
 import { IntFilter } from "../inputs/IntFilter";
 import { IntNullableFilter } from "../inputs/IntNullableFilter";
 import { StringFilter } from "../inputs/StringFilter";
+import { StringNullableFilter } from "../inputs/StringNullableFilter";
 import { UserRelationFilter } from "../inputs/UserRelationFilter";
 export declare class PostWhereInput {
     AND?: PostWhereInput[] | undefined;
@@ -13,6 +14,8 @@ export declare class PostWhereInput {
     updatedAt?: DateTimeFilter | undefined;
     published?: BoolFilter | undefined;
     title?: StringFilter | undefined;
+    body?: StringNullableFilter | undefined;
+    bannerUrl?: StringNullableFilter | undefined;
     author?: UserRelationFilter | undefined;
     authorId?: IntNullableFilter | undefined;
 }

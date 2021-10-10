@@ -30,6 +30,15 @@ export type AggregatePost = {
   _max?: Maybe<PostMaxAggregate>;
 };
 
+export type AggregateUser = {
+  __typename?: 'AggregateUser';
+  _count?: Maybe<UserCountAggregate>;
+  _avg?: Maybe<UserAvgAggregate>;
+  _sum?: Maybe<UserSumAggregate>;
+  _min?: Maybe<UserMinAggregate>;
+  _max?: Maybe<UserMaxAggregate>;
+};
+
 export type BoolFieldUpdateOperationsInput = {
   set?: Maybe<Scalars['Boolean']>;
 };
@@ -85,6 +94,16 @@ export type EnumRoleFilter = {
   in?: Maybe<Array<Role>>;
   notIn?: Maybe<Array<Role>>;
   not?: Maybe<NestedEnumRoleFilter>;
+};
+
+export type EnumRoleWithAggregatesFilter = {
+  equals?: Maybe<Role>;
+  in?: Maybe<Array<Role>>;
+  notIn?: Maybe<Array<Role>>;
+  not?: Maybe<NestedEnumRoleWithAggregatesFilter>;
+  _count?: Maybe<NestedIntFilter>;
+  _min?: Maybe<NestedEnumRoleFilter>;
+  _max?: Maybe<NestedEnumRoleFilter>;
 };
 
 export type IntFilter = {
@@ -150,6 +169,13 @@ export type Mutation = {
   deleteManyPost: AffectedRowsOutput;
   updateManyPost: AffectedRowsOutput;
   upsertPost: Post;
+  createUser: User;
+  createManyUser: AffectedRowsOutput;
+  deleteUser?: Maybe<User>;
+  updateUser?: Maybe<User>;
+  deleteManyUser: AffectedRowsOutput;
+  updateManyUser: AffectedRowsOutput;
+  upsertUser: User;
   signin: SigninInfo;
 };
 
@@ -191,6 +217,46 @@ export type MutationUpsertPostArgs = {
   where: PostWhereUniqueInput;
   create: PostCreateInput;
   update: PostUpdateInput;
+};
+
+
+export type MutationCreateUserArgs = {
+  data: UserCreateInput;
+};
+
+
+export type MutationCreateManyUserArgs = {
+  data: Array<UserCreateManyInput>;
+  skipDuplicates?: Maybe<Scalars['Boolean']>;
+};
+
+
+export type MutationDeleteUserArgs = {
+  where: UserWhereUniqueInput;
+};
+
+
+export type MutationUpdateUserArgs = {
+  data: UserUpdateInput;
+  where: UserWhereUniqueInput;
+};
+
+
+export type MutationDeleteManyUserArgs = {
+  where?: Maybe<UserWhereInput>;
+};
+
+
+export type MutationUpdateManyUserArgs = {
+  data: UserUpdateManyMutationInput;
+  where?: Maybe<UserWhereInput>;
+};
+
+
+export type MutationUpsertUserArgs = {
+  where: UserWhereUniqueInput;
+  create: UserCreateInput;
+  update: UserUpdateInput;
 };
 
 
@@ -242,6 +308,16 @@ export type NestedEnumRoleFilter = {
   in?: Maybe<Array<Role>>;
   notIn?: Maybe<Array<Role>>;
   not?: Maybe<NestedEnumRoleFilter>;
+};
+
+export type NestedEnumRoleWithAggregatesFilter = {
+  equals?: Maybe<Role>;
+  in?: Maybe<Array<Role>>;
+  notIn?: Maybe<Array<Role>>;
+  not?: Maybe<NestedEnumRoleWithAggregatesFilter>;
+  _count?: Maybe<NestedIntFilter>;
+  _min?: Maybe<NestedEnumRoleFilter>;
+  _max?: Maybe<NestedEnumRoleFilter>;
 };
 
 export type NestedFloatFilter = {
@@ -348,6 +424,23 @@ export type NestedStringNullableFilter = {
   not?: Maybe<NestedStringNullableFilter>;
 };
 
+export type NestedStringNullableWithAggregatesFilter = {
+  equals?: Maybe<Scalars['String']>;
+  in?: Maybe<Array<Scalars['String']>>;
+  notIn?: Maybe<Array<Scalars['String']>>;
+  lt?: Maybe<Scalars['String']>;
+  lte?: Maybe<Scalars['String']>;
+  gt?: Maybe<Scalars['String']>;
+  gte?: Maybe<Scalars['String']>;
+  contains?: Maybe<Scalars['String']>;
+  startsWith?: Maybe<Scalars['String']>;
+  endsWith?: Maybe<Scalars['String']>;
+  not?: Maybe<NestedStringNullableWithAggregatesFilter>;
+  _count?: Maybe<NestedIntNullableFilter>;
+  _min?: Maybe<NestedStringNullableFilter>;
+  _max?: Maybe<NestedStringNullableFilter>;
+};
+
 export type NestedStringWithAggregatesFilter = {
   equals?: Maybe<Scalars['String']>;
   in?: Maybe<Array<Scalars['String']>>;
@@ -376,6 +469,8 @@ export type Post = {
   updatedAt: Scalars['DateTime'];
   published: Scalars['Boolean'];
   title: Scalars['String'];
+  body?: Maybe<Scalars['String']>;
+  bannerUrl?: Maybe<Scalars['String']>;
   authorId?: Maybe<Scalars['Int']>;
   author?: Maybe<User>;
 };
@@ -398,6 +493,8 @@ export type PostCountAggregate = {
   updatedAt: Scalars['Int'];
   published: Scalars['Int'];
   title: Scalars['Int'];
+  body: Scalars['Int'];
+  bannerUrl: Scalars['Int'];
   authorId: Scalars['Int'];
   _all: Scalars['Int'];
 };
@@ -408,6 +505,8 @@ export type PostCountOrderByAggregateInput = {
   updatedAt?: Maybe<SortOrder>;
   published?: Maybe<SortOrder>;
   title?: Maybe<SortOrder>;
+  body?: Maybe<SortOrder>;
+  bannerUrl?: Maybe<SortOrder>;
   authorId?: Maybe<SortOrder>;
 };
 
@@ -416,7 +515,24 @@ export type PostCreateInput = {
   updatedAt?: Maybe<Scalars['DateTime']>;
   published?: Maybe<Scalars['Boolean']>;
   title: Scalars['String'];
+  body?: Maybe<Scalars['String']>;
+  bannerUrl?: Maybe<Scalars['String']>;
   author?: Maybe<UserCreateNestedOneWithoutPostsInput>;
+};
+
+export type PostCreateManyAuthorInput = {
+  id?: Maybe<Scalars['Int']>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  published?: Maybe<Scalars['Boolean']>;
+  title: Scalars['String'];
+  body?: Maybe<Scalars['String']>;
+  bannerUrl?: Maybe<Scalars['String']>;
+};
+
+export type PostCreateManyAuthorInputEnvelope = {
+  data: Array<PostCreateManyAuthorInput>;
+  skipDuplicates?: Maybe<Scalars['Boolean']>;
 };
 
 export type PostCreateManyInput = {
@@ -425,7 +541,30 @@ export type PostCreateManyInput = {
   updatedAt?: Maybe<Scalars['DateTime']>;
   published?: Maybe<Scalars['Boolean']>;
   title: Scalars['String'];
+  body?: Maybe<Scalars['String']>;
+  bannerUrl?: Maybe<Scalars['String']>;
   authorId?: Maybe<Scalars['Int']>;
+};
+
+export type PostCreateNestedManyWithoutAuthorInput = {
+  create?: Maybe<Array<PostCreateWithoutAuthorInput>>;
+  connectOrCreate?: Maybe<Array<PostCreateOrConnectWithoutAuthorInput>>;
+  createMany?: Maybe<PostCreateManyAuthorInputEnvelope>;
+  connect?: Maybe<Array<PostWhereUniqueInput>>;
+};
+
+export type PostCreateOrConnectWithoutAuthorInput = {
+  where: PostWhereUniqueInput;
+  create: PostCreateWithoutAuthorInput;
+};
+
+export type PostCreateWithoutAuthorInput = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  published?: Maybe<Scalars['Boolean']>;
+  title: Scalars['String'];
+  body?: Maybe<Scalars['String']>;
+  bannerUrl?: Maybe<Scalars['String']>;
 };
 
 export type PostGroupBy = {
@@ -435,6 +574,8 @@ export type PostGroupBy = {
   updatedAt: Scalars['DateTime'];
   published: Scalars['Boolean'];
   title: Scalars['String'];
+  body?: Maybe<Scalars['String']>;
+  bannerUrl?: Maybe<Scalars['String']>;
   authorId?: Maybe<Scalars['Int']>;
   _count?: Maybe<PostCountAggregate>;
   _avg?: Maybe<PostAvgAggregate>;
@@ -456,6 +597,8 @@ export type PostMaxAggregate = {
   updatedAt?: Maybe<Scalars['DateTime']>;
   published?: Maybe<Scalars['Boolean']>;
   title?: Maybe<Scalars['String']>;
+  body?: Maybe<Scalars['String']>;
+  bannerUrl?: Maybe<Scalars['String']>;
   authorId?: Maybe<Scalars['Int']>;
 };
 
@@ -465,6 +608,8 @@ export type PostMaxOrderByAggregateInput = {
   updatedAt?: Maybe<SortOrder>;
   published?: Maybe<SortOrder>;
   title?: Maybe<SortOrder>;
+  body?: Maybe<SortOrder>;
+  bannerUrl?: Maybe<SortOrder>;
   authorId?: Maybe<SortOrder>;
 };
 
@@ -475,6 +620,8 @@ export type PostMinAggregate = {
   updatedAt?: Maybe<Scalars['DateTime']>;
   published?: Maybe<Scalars['Boolean']>;
   title?: Maybe<Scalars['String']>;
+  body?: Maybe<Scalars['String']>;
+  bannerUrl?: Maybe<Scalars['String']>;
   authorId?: Maybe<Scalars['Int']>;
 };
 
@@ -484,6 +631,8 @@ export type PostMinOrderByAggregateInput = {
   updatedAt?: Maybe<SortOrder>;
   published?: Maybe<SortOrder>;
   title?: Maybe<SortOrder>;
+  body?: Maybe<SortOrder>;
+  bannerUrl?: Maybe<SortOrder>;
   authorId?: Maybe<SortOrder>;
 };
 
@@ -497,6 +646,8 @@ export type PostOrderByWithAggregationInput = {
   updatedAt?: Maybe<SortOrder>;
   published?: Maybe<SortOrder>;
   title?: Maybe<SortOrder>;
+  body?: Maybe<SortOrder>;
+  bannerUrl?: Maybe<SortOrder>;
   authorId?: Maybe<SortOrder>;
   _count?: Maybe<PostCountOrderByAggregateInput>;
   _avg?: Maybe<PostAvgOrderByAggregateInput>;
@@ -511,6 +662,8 @@ export type PostOrderByWithRelationInput = {
   updatedAt?: Maybe<SortOrder>;
   published?: Maybe<SortOrder>;
   title?: Maybe<SortOrder>;
+  body?: Maybe<SortOrder>;
+  bannerUrl?: Maybe<SortOrder>;
   author?: Maybe<UserOrderByWithRelationInput>;
   authorId?: Maybe<SortOrder>;
 };
@@ -521,8 +674,24 @@ export enum PostScalarFieldEnum {
   UpdatedAt = 'updatedAt',
   Published = 'published',
   Title = 'title',
+  Body = 'body',
+  BannerUrl = 'bannerUrl',
   AuthorId = 'authorId'
 }
+
+export type PostScalarWhereInput = {
+  AND?: Maybe<Array<PostScalarWhereInput>>;
+  OR?: Maybe<Array<PostScalarWhereInput>>;
+  NOT?: Maybe<Array<PostScalarWhereInput>>;
+  id?: Maybe<IntFilter>;
+  createdAt?: Maybe<DateTimeFilter>;
+  updatedAt?: Maybe<DateTimeFilter>;
+  published?: Maybe<BoolFilter>;
+  title?: Maybe<StringFilter>;
+  body?: Maybe<StringNullableFilter>;
+  bannerUrl?: Maybe<StringNullableFilter>;
+  authorId?: Maybe<IntNullableFilter>;
+};
 
 export type PostScalarWhereWithAggregatesInput = {
   AND?: Maybe<Array<PostScalarWhereWithAggregatesInput>>;
@@ -533,6 +702,8 @@ export type PostScalarWhereWithAggregatesInput = {
   updatedAt?: Maybe<DateTimeWithAggregatesFilter>;
   published?: Maybe<BoolWithAggregatesFilter>;
   title?: Maybe<StringWithAggregatesFilter>;
+  body?: Maybe<StringNullableWithAggregatesFilter>;
+  bannerUrl?: Maybe<StringNullableWithAggregatesFilter>;
   authorId?: Maybe<IntNullableWithAggregatesFilter>;
 };
 
@@ -552,6 +723,8 @@ export type PostUpdateInput = {
   updatedAt?: Maybe<DateTimeFieldUpdateOperationsInput>;
   published?: Maybe<BoolFieldUpdateOperationsInput>;
   title?: Maybe<StringFieldUpdateOperationsInput>;
+  body?: Maybe<NullableStringFieldUpdateOperationsInput>;
+  bannerUrl?: Maybe<NullableStringFieldUpdateOperationsInput>;
   author?: Maybe<UserUpdateOneWithoutPostsInput>;
 };
 
@@ -560,6 +733,47 @@ export type PostUpdateManyMutationInput = {
   updatedAt?: Maybe<DateTimeFieldUpdateOperationsInput>;
   published?: Maybe<BoolFieldUpdateOperationsInput>;
   title?: Maybe<StringFieldUpdateOperationsInput>;
+  body?: Maybe<NullableStringFieldUpdateOperationsInput>;
+  bannerUrl?: Maybe<NullableStringFieldUpdateOperationsInput>;
+};
+
+export type PostUpdateManyWithWhereWithoutAuthorInput = {
+  where: PostScalarWhereInput;
+  data: PostUpdateManyMutationInput;
+};
+
+export type PostUpdateManyWithoutAuthorInput = {
+  create?: Maybe<Array<PostCreateWithoutAuthorInput>>;
+  connectOrCreate?: Maybe<Array<PostCreateOrConnectWithoutAuthorInput>>;
+  upsert?: Maybe<Array<PostUpsertWithWhereUniqueWithoutAuthorInput>>;
+  createMany?: Maybe<PostCreateManyAuthorInputEnvelope>;
+  connect?: Maybe<Array<PostWhereUniqueInput>>;
+  set?: Maybe<Array<PostWhereUniqueInput>>;
+  disconnect?: Maybe<Array<PostWhereUniqueInput>>;
+  delete?: Maybe<Array<PostWhereUniqueInput>>;
+  update?: Maybe<Array<PostUpdateWithWhereUniqueWithoutAuthorInput>>;
+  updateMany?: Maybe<Array<PostUpdateManyWithWhereWithoutAuthorInput>>;
+  deleteMany?: Maybe<Array<PostScalarWhereInput>>;
+};
+
+export type PostUpdateWithWhereUniqueWithoutAuthorInput = {
+  where: PostWhereUniqueInput;
+  data: PostUpdateWithoutAuthorInput;
+};
+
+export type PostUpdateWithoutAuthorInput = {
+  createdAt?: Maybe<DateTimeFieldUpdateOperationsInput>;
+  updatedAt?: Maybe<DateTimeFieldUpdateOperationsInput>;
+  published?: Maybe<BoolFieldUpdateOperationsInput>;
+  title?: Maybe<StringFieldUpdateOperationsInput>;
+  body?: Maybe<NullableStringFieldUpdateOperationsInput>;
+  bannerUrl?: Maybe<NullableStringFieldUpdateOperationsInput>;
+};
+
+export type PostUpsertWithWhereUniqueWithoutAuthorInput = {
+  where: PostWhereUniqueInput;
+  update: PostUpdateWithoutAuthorInput;
+  create: PostCreateWithoutAuthorInput;
 };
 
 export type PostWhereInput = {
@@ -571,6 +785,8 @@ export type PostWhereInput = {
   updatedAt?: Maybe<DateTimeFilter>;
   published?: Maybe<BoolFilter>;
   title?: Maybe<StringFilter>;
+  body?: Maybe<StringNullableFilter>;
+  bannerUrl?: Maybe<StringNullableFilter>;
   author?: Maybe<UserRelationFilter>;
   authorId?: Maybe<IntNullableFilter>;
 };
@@ -586,6 +802,11 @@ export type Query = {
   posts: Array<Post>;
   aggregatePost: AggregatePost;
   groupByPost: Array<PostGroupBy>;
+  user?: Maybe<User>;
+  findFirstUser?: Maybe<User>;
+  users: Array<User>;
+  aggregateUser: AggregateUser;
+  groupByUser: Array<UserGroupBy>;
 };
 
 
@@ -628,6 +849,50 @@ export type QueryGroupByPostArgs = {
   orderBy?: Maybe<Array<PostOrderByWithAggregationInput>>;
   by: Array<PostScalarFieldEnum>;
   having?: Maybe<PostScalarWhereWithAggregatesInput>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryUserArgs = {
+  where: UserWhereUniqueInput;
+};
+
+
+export type QueryFindFirstUserArgs = {
+  where?: Maybe<UserWhereInput>;
+  orderBy?: Maybe<Array<UserOrderByWithRelationInput>>;
+  cursor?: Maybe<UserWhereUniqueInput>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  distinct?: Maybe<Array<UserScalarFieldEnum>>;
+};
+
+
+export type QueryUsersArgs = {
+  where?: Maybe<UserWhereInput>;
+  orderBy?: Maybe<Array<UserOrderByWithRelationInput>>;
+  cursor?: Maybe<UserWhereUniqueInput>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  distinct?: Maybe<Array<UserScalarFieldEnum>>;
+};
+
+
+export type QueryAggregateUserArgs = {
+  where?: Maybe<UserWhereInput>;
+  orderBy?: Maybe<Array<UserOrderByWithRelationInput>>;
+  cursor?: Maybe<UserWhereUniqueInput>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryGroupByUserArgs = {
+  where?: Maybe<UserWhereInput>;
+  orderBy?: Maybe<Array<UserOrderByWithAggregationInput>>;
+  by: Array<UserScalarFieldEnum>;
+  having?: Maybe<UserScalarWhereWithAggregatesInput>;
   take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
 };
@@ -680,6 +945,23 @@ export type StringNullableFilter = {
   not?: Maybe<NestedStringNullableFilter>;
 };
 
+export type StringNullableWithAggregatesFilter = {
+  equals?: Maybe<Scalars['String']>;
+  in?: Maybe<Array<Scalars['String']>>;
+  notIn?: Maybe<Array<Scalars['String']>>;
+  lt?: Maybe<Scalars['String']>;
+  lte?: Maybe<Scalars['String']>;
+  gt?: Maybe<Scalars['String']>;
+  gte?: Maybe<Scalars['String']>;
+  contains?: Maybe<Scalars['String']>;
+  startsWith?: Maybe<Scalars['String']>;
+  endsWith?: Maybe<Scalars['String']>;
+  not?: Maybe<NestedStringNullableWithAggregatesFilter>;
+  _count?: Maybe<NestedIntNullableFilter>;
+  _min?: Maybe<NestedStringNullableFilter>;
+  _max?: Maybe<NestedStringNullableFilter>;
+};
+
 export type StringWithAggregatesFilter = {
   equals?: Maybe<Scalars['String']>;
   in?: Maybe<Array<Scalars['String']>>;
@@ -704,13 +986,76 @@ export type User = {
   email: Scalars['String'];
   password?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  avatarUrl?: Maybe<Scalars['String']>;
   role: Role;
   _count?: Maybe<UserCount>;
+  posts: Array<Post>;
+};
+
+
+export type UserPostsArgs = {
+  where?: Maybe<PostWhereInput>;
+  orderBy?: Maybe<Array<PostOrderByWithRelationInput>>;
+  cursor?: Maybe<PostWhereUniqueInput>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  distinct?: Maybe<Array<PostScalarFieldEnum>>;
+};
+
+export type UserAvgAggregate = {
+  __typename?: 'UserAvgAggregate';
+  id?: Maybe<Scalars['Float']>;
+};
+
+export type UserAvgOrderByAggregateInput = {
+  id?: Maybe<SortOrder>;
 };
 
 export type UserCount = {
   __typename?: 'UserCount';
   posts: Scalars['Int'];
+};
+
+export type UserCountAggregate = {
+  __typename?: 'UserCountAggregate';
+  id: Scalars['Int'];
+  createdAt: Scalars['Int'];
+  email: Scalars['Int'];
+  password: Scalars['Int'];
+  name: Scalars['Int'];
+  avatarUrl: Scalars['Int'];
+  role: Scalars['Int'];
+  _all: Scalars['Int'];
+};
+
+export type UserCountOrderByAggregateInput = {
+  id?: Maybe<SortOrder>;
+  createdAt?: Maybe<SortOrder>;
+  email?: Maybe<SortOrder>;
+  password?: Maybe<SortOrder>;
+  name?: Maybe<SortOrder>;
+  avatarUrl?: Maybe<SortOrder>;
+  role?: Maybe<SortOrder>;
+};
+
+export type UserCreateInput = {
+  createdAt?: Maybe<Scalars['DateTime']>;
+  email: Scalars['String'];
+  password?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  avatarUrl?: Maybe<Scalars['String']>;
+  role?: Maybe<Role>;
+  posts?: Maybe<PostCreateNestedManyWithoutAuthorInput>;
+};
+
+export type UserCreateManyInput = {
+  id?: Maybe<Scalars['Int']>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  email: Scalars['String'];
+  password?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  avatarUrl?: Maybe<Scalars['String']>;
+  role?: Maybe<Role>;
 };
 
 export type UserCreateNestedOneWithoutPostsInput = {
@@ -729,7 +1074,81 @@ export type UserCreateWithoutPostsInput = {
   email: Scalars['String'];
   password?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  avatarUrl?: Maybe<Scalars['String']>;
   role?: Maybe<Role>;
+};
+
+export type UserGroupBy = {
+  __typename?: 'UserGroupBy';
+  id: Scalars['Int'];
+  createdAt: Scalars['DateTime'];
+  email: Scalars['String'];
+  password?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  avatarUrl?: Maybe<Scalars['String']>;
+  role: Role;
+  _count?: Maybe<UserCountAggregate>;
+  _avg?: Maybe<UserAvgAggregate>;
+  _sum?: Maybe<UserSumAggregate>;
+  _min?: Maybe<UserMinAggregate>;
+  _max?: Maybe<UserMaxAggregate>;
+};
+
+export type UserMaxAggregate = {
+  __typename?: 'UserMaxAggregate';
+  id?: Maybe<Scalars['Int']>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  email?: Maybe<Scalars['String']>;
+  password?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  avatarUrl?: Maybe<Scalars['String']>;
+  role?: Maybe<Role>;
+};
+
+export type UserMaxOrderByAggregateInput = {
+  id?: Maybe<SortOrder>;
+  createdAt?: Maybe<SortOrder>;
+  email?: Maybe<SortOrder>;
+  password?: Maybe<SortOrder>;
+  name?: Maybe<SortOrder>;
+  avatarUrl?: Maybe<SortOrder>;
+  role?: Maybe<SortOrder>;
+};
+
+export type UserMinAggregate = {
+  __typename?: 'UserMinAggregate';
+  id?: Maybe<Scalars['Int']>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  email?: Maybe<Scalars['String']>;
+  password?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  avatarUrl?: Maybe<Scalars['String']>;
+  role?: Maybe<Role>;
+};
+
+export type UserMinOrderByAggregateInput = {
+  id?: Maybe<SortOrder>;
+  createdAt?: Maybe<SortOrder>;
+  email?: Maybe<SortOrder>;
+  password?: Maybe<SortOrder>;
+  name?: Maybe<SortOrder>;
+  avatarUrl?: Maybe<SortOrder>;
+  role?: Maybe<SortOrder>;
+};
+
+export type UserOrderByWithAggregationInput = {
+  id?: Maybe<SortOrder>;
+  createdAt?: Maybe<SortOrder>;
+  email?: Maybe<SortOrder>;
+  password?: Maybe<SortOrder>;
+  name?: Maybe<SortOrder>;
+  avatarUrl?: Maybe<SortOrder>;
+  role?: Maybe<SortOrder>;
+  _count?: Maybe<UserCountOrderByAggregateInput>;
+  _avg?: Maybe<UserAvgOrderByAggregateInput>;
+  _max?: Maybe<UserMaxOrderByAggregateInput>;
+  _min?: Maybe<UserMinOrderByAggregateInput>;
+  _sum?: Maybe<UserSumOrderByAggregateInput>;
 };
 
 export type UserOrderByWithRelationInput = {
@@ -738,6 +1157,7 @@ export type UserOrderByWithRelationInput = {
   email?: Maybe<SortOrder>;
   password?: Maybe<SortOrder>;
   name?: Maybe<SortOrder>;
+  avatarUrl?: Maybe<SortOrder>;
   role?: Maybe<SortOrder>;
   posts?: Maybe<PostOrderByRelationAggregateInput>;
 };
@@ -745,6 +1165,57 @@ export type UserOrderByWithRelationInput = {
 export type UserRelationFilter = {
   is?: Maybe<UserWhereInput>;
   isNot?: Maybe<UserWhereInput>;
+};
+
+export enum UserScalarFieldEnum {
+  Id = 'id',
+  CreatedAt = 'createdAt',
+  Email = 'email',
+  Password = 'password',
+  Name = 'name',
+  AvatarUrl = 'avatarUrl',
+  Role = 'role'
+}
+
+export type UserScalarWhereWithAggregatesInput = {
+  AND?: Maybe<Array<UserScalarWhereWithAggregatesInput>>;
+  OR?: Maybe<Array<UserScalarWhereWithAggregatesInput>>;
+  NOT?: Maybe<Array<UserScalarWhereWithAggregatesInput>>;
+  id?: Maybe<IntWithAggregatesFilter>;
+  createdAt?: Maybe<DateTimeWithAggregatesFilter>;
+  email?: Maybe<StringWithAggregatesFilter>;
+  password?: Maybe<StringNullableWithAggregatesFilter>;
+  name?: Maybe<StringNullableWithAggregatesFilter>;
+  avatarUrl?: Maybe<StringNullableWithAggregatesFilter>;
+  role?: Maybe<EnumRoleWithAggregatesFilter>;
+};
+
+export type UserSumAggregate = {
+  __typename?: 'UserSumAggregate';
+  id?: Maybe<Scalars['Int']>;
+};
+
+export type UserSumOrderByAggregateInput = {
+  id?: Maybe<SortOrder>;
+};
+
+export type UserUpdateInput = {
+  createdAt?: Maybe<DateTimeFieldUpdateOperationsInput>;
+  email?: Maybe<StringFieldUpdateOperationsInput>;
+  password?: Maybe<NullableStringFieldUpdateOperationsInput>;
+  name?: Maybe<NullableStringFieldUpdateOperationsInput>;
+  avatarUrl?: Maybe<NullableStringFieldUpdateOperationsInput>;
+  role?: Maybe<EnumRoleFieldUpdateOperationsInput>;
+  posts?: Maybe<PostUpdateManyWithoutAuthorInput>;
+};
+
+export type UserUpdateManyMutationInput = {
+  createdAt?: Maybe<DateTimeFieldUpdateOperationsInput>;
+  email?: Maybe<StringFieldUpdateOperationsInput>;
+  password?: Maybe<NullableStringFieldUpdateOperationsInput>;
+  name?: Maybe<NullableStringFieldUpdateOperationsInput>;
+  avatarUrl?: Maybe<NullableStringFieldUpdateOperationsInput>;
+  role?: Maybe<EnumRoleFieldUpdateOperationsInput>;
 };
 
 export type UserUpdateOneWithoutPostsInput = {
@@ -762,6 +1233,7 @@ export type UserUpdateWithoutPostsInput = {
   email?: Maybe<StringFieldUpdateOperationsInput>;
   password?: Maybe<NullableStringFieldUpdateOperationsInput>;
   name?: Maybe<NullableStringFieldUpdateOperationsInput>;
+  avatarUrl?: Maybe<NullableStringFieldUpdateOperationsInput>;
   role?: Maybe<EnumRoleFieldUpdateOperationsInput>;
 };
 
@@ -779,6 +1251,7 @@ export type UserWhereInput = {
   email?: Maybe<StringFilter>;
   password?: Maybe<StringNullableFilter>;
   name?: Maybe<StringNullableFilter>;
+  avatarUrl?: Maybe<StringNullableFilter>;
   role?: Maybe<EnumRoleFilter>;
   posts?: Maybe<PostListRelationFilter>;
 };
@@ -796,10 +1269,15 @@ export type SignInMutationVariables = Exact<{
 
 export type SignInMutation = { __typename?: 'Mutation', signin: { __typename?: 'SigninInfo', token: string, user: { __typename?: 'User', id: number, createdAt: any, email: string, name?: Maybe<string>, role: Role } } };
 
+export type PostsAdminQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PostsAdminQuery = { __typename?: 'Query', posts: Array<{ __typename?: 'Post', id: number, createdAt: any, updatedAt: any, published: boolean, title: string, body?: Maybe<string>, bannerUrl?: Maybe<string>, author?: Maybe<{ __typename?: 'User', id: number, name?: Maybe<string>, email: string, avatarUrl?: Maybe<string> }> }> };
+
 export type PostsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PostsQuery = { __typename?: 'Query', posts: Array<{ __typename?: 'Post', id: number, title: string, author?: Maybe<{ __typename?: 'User', email: string }> }> };
+export type PostsQuery = { __typename?: 'Query', posts: Array<{ __typename?: 'Post', id: number, createdAt: any, updatedAt: any, title: string, body?: Maybe<string>, bannerUrl?: Maybe<string>, author?: Maybe<{ __typename?: 'User', id: number, name?: Maybe<string>, avatarUrl?: Maybe<string> }> }> };
 
 
 export const SignInDocument = gql`
@@ -820,13 +1298,42 @@ export const SignInDocument = gql`
 export function useSignInMutation() {
   return Urql.useMutation<SignInMutation, SignInMutationVariables>(SignInDocument);
 };
+export const PostsAdminDocument = gql`
+    query postsAdmin {
+  posts {
+    id
+    createdAt
+    updatedAt
+    published
+    title
+    body
+    bannerUrl
+    author {
+      id
+      name
+      email
+      avatarUrl
+    }
+  }
+}
+    `;
+
+export function usePostsAdminQuery(options: Omit<Urql.UseQueryArgs<PostsAdminQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<PostsAdminQuery>({ query: PostsAdminDocument, ...options });
+};
 export const PostsDocument = gql`
     query posts {
   posts {
     id
+    createdAt
+    updatedAt
     title
+    body
+    bannerUrl
     author {
-      email
+      id
+      name
+      avatarUrl
     }
   }
 }

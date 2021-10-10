@@ -17,7 +17,8 @@ import {
 import {
   FiGrid,
   FiList,
-  FiMenu, FiLogOut,
+  FiMenu,
+  FiLogOut,
 } from 'react-icons/fi';
 import { IconType } from 'react-icons';
 import { ReactText } from 'react';
@@ -101,8 +102,8 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       </Flex>
       {linkItems.map((link) => (
         link.path ? (
-          <NextLink href={link.path}>
-            <NavItem key={link.name} icon={link.icon}>
+          <NextLink key={link.name} href={link.path}>
+            <NavItem icon={link.icon}>
               {link.name}
             </NavItem>
           </NextLink>

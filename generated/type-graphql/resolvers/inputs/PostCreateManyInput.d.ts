@@ -4,5 +4,7 @@ export declare class PostCreateManyInput {
     updatedAt?: Date | undefined;
     published?: boolean | undefined;
     title: string;
+    body?: string | undefined;
+    bannerUrl?: string | undefined;
     authorId?: number | undefined;
 }

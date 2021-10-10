@@ -68,6 +68,18 @@ __decorate([
         nullable: true
     }),
     __metadata("design:type", String)
+], PostMinOrderByAggregateInput.prototype, "body", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => SortOrder_1.SortOrder, {
+        nullable: true
+    }),
+    __metadata("design:type", String)
+], PostMinOrderByAggregateInput.prototype, "bannerUrl", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => SortOrder_1.SortOrder, {
+        nullable: true
+    }),
+    __metadata("design:type", String)
 ], PostMinOrderByAggregateInput.prototype, "authorId", void 0);
 PostMinOrderByAggregateInput = __decorate([
     TypeGraphQL.InputType({

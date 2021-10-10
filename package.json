@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "dev": "concurrently -r \"next dev\" \"npx graphql-codegen --watch\"",
-    "prisma": "npx prisma generate && prisma-uml prisma/schema.prisma -o png -f prisma/schema.png",
+    "prisma": "npx prisma db push && prisma-uml prisma/schema.prisma -o png -f prisma/schema.png",
     "migrate": "npx prisma migrate dev",
     "studio": "npx prisma studio",
     "build": "next build",

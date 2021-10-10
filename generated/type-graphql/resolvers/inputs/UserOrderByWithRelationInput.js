@@ -69,6 +69,12 @@ __decorate([
         nullable: true
     }),
     __metadata("design:type", String)
+], UserOrderByWithRelationInput.prototype, "avatarUrl", void 0);
+__decorate([
+    TypeGraphQL.Field(_type => SortOrder_1.SortOrder, {
+        nullable: true
+    }),
+    __metadata("design:type", String)
 ], UserOrderByWithRelationInput.prototype, "role", void 0);
 __decorate([
     TypeGraphQL.Field(_type => PostOrderByRelationAggregateInput_1.PostOrderByRelationAggregateInput, {

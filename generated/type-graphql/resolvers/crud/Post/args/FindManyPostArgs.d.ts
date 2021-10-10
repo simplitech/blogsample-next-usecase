@@ -7,5 +7,5 @@ export declare class FindManyPostArgs {
     cursor?: PostWhereUniqueInput | undefined;
     take?: number | undefined;
     skip?: number | undefined;
-    distinct?: Array<"id" | "createdAt" | "updatedAt" | "published" | "title" | "authorId"> | undefined;
+    distinct?: Array<"id" | "createdAt" | "updatedAt" | "published" | "title" | "body" | "bannerUrl" | "authorId"> | undefined;
 }

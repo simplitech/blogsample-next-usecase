@@ -88,6 +88,12 @@ __decorate([
     __metadata("design:type", StringNullableFilter_1.StringNullableFilter)
 ], UserWhereInput.prototype, "name", void 0);
 __decorate([
+    TypeGraphQL.Field(_type => StringNullableFilter_1.StringNullableFilter, {
+        nullable: true
+    }),
+    __metadata("design:type", StringNullableFilter_1.StringNullableFilter)
+], UserWhereInput.prototype, "avatarUrl", void 0);
+__decorate([
     TypeGraphQL.Field(_type => EnumRoleFilter_1.EnumRoleFilter, {
         nullable: true
     }),

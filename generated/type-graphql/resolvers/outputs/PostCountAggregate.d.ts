@@ -4,6 +4,8 @@ export declare class PostCountAggregate {
     updatedAt: number;
     published: number;
     title: number;
+    body: number;
+    bannerUrl: number;
     authorId: number;
     _all: number;
 }

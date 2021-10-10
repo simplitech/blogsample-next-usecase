@@ -9,6 +9,7 @@ export declare class UserGroupBy {
     email: string;
     password: string | null;
     name: string | null;
+    avatarUrl: string | null;
     role: "USER" | "ADMIN";
     _count: UserCountAggregate | null;
     _avg: UserAvgAggregate | null;

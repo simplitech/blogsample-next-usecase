@@ -9,6 +9,7 @@ export declare class UserOrderByWithAggregationInput {
     email?: "asc" | "desc" | undefined;
     password?: "asc" | "desc" | undefined;
     name?: "asc" | "desc" | undefined;
+    avatarUrl?: "asc" | "desc" | undefined;
     role?: "asc" | "desc" | undefined;
     _count?: UserCountOrderByAggregateInput | undefined;
     _avg?: UserAvgOrderByAggregateInput | undefined;

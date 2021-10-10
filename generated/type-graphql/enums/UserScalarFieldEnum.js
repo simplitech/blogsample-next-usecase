@@ -28,6 +28,7 @@ var UserScalarFieldEnum;
     UserScalarFieldEnum["email"] = "email";
     UserScalarFieldEnum["password"] = "password";
     UserScalarFieldEnum["name"] = "name";
+    UserScalarFieldEnum["avatarUrl"] = "avatarUrl";
     UserScalarFieldEnum["role"] = "role";
 })(UserScalarFieldEnum = exports.UserScalarFieldEnum || (exports.UserScalarFieldEnum = {}));
 TypeGraphQL.registerEnumType(UserScalarFieldEnum, {

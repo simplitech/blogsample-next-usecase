@@ -4,5 +4,7 @@ export declare class PostMinAggregate {
     updatedAt: Date | null;
     published: boolean | null;
     title: string | null;
+    body: string | null;
+    bannerUrl: string | null;
     authorId: number | null;
 }

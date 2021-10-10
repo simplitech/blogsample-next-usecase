@@ -4,5 +4,6 @@ export declare class UserCreateManyInput {
     email: string;
     password?: string | undefined;
     name?: string | undefined;
+    avatarUrl?: string | undefined;
     role?: "USER" | "ADMIN" | undefined;
 }
