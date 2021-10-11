@@ -1,8 +1,42 @@
 import gql from 'graphql-tag';
 
 export const postsAdminQuery = gql`
-    query postsAdmin {
-        posts {
+    query postsCount(
+        $where: PostWhereInput,
+        $orderBy: [PostOrderByWithRelationInput!],
+        $cursor: PostWhereUniqueInput,
+        $take: Int,
+        $skip: Int,
+    ) {
+        aggregatePost(
+            where: $where,
+            orderBy: $orderBy,
+            cursor: $cursor,
+            take: $take,
+            skip: $skip,
+        ) {
+            _count {
+                id
+            }
+        }
+    }
+    
+    query postsAdmin(
+        $where: PostWhereInput,
+        $orderBy: [PostOrderByWithRelationInput!],
+        $cursor: PostWhereUniqueInput,
+        $take: Int = 20,
+        $skip: Int,
+        $distinct: [PostScalarFieldEnum!]
+    ) {
+        posts(
+            where: $where,
+            orderBy: $orderBy,
+            cursor: $cursor,
+            take: $take,
+            skip: $skip,
+            distinct: $distinct
+        ) {
             id
             createdAt
             updatedAt
@@ -21,8 +55,22 @@ export const postsAdminQuery = gql`
 `
 
 export const postsQuery = gql`
-    query posts {
-        posts {
+    query posts(
+        $where: PostWhereInput,
+        $orderBy: [PostOrderByWithRelationInput!],
+        $cursor: PostWhereUniqueInput,
+        $take: Int = 20,
+        $skip: Int,
+        $distinct: [PostScalarFieldEnum!]
+    ) {
+        posts(
+            where: $where,
+            orderBy: $orderBy,
+            cursor: $cursor,
+            take: $take,
+            skip: $skip,
+            distinct: $distinct
+        ) {
             id
             createdAt
             updatedAt

@@ -1,5 +1,5 @@
 import React from "react";
-import {usePostsQuery} from "../generated/graphql";
+import {SortOrder, usePostsQuery} from "../generated/graphql";
 import useTranslationWithPrefix from "../helpers/useTranslationWithPrefix";
 import Head from "next/head";
 import {Flex, Grid, Text} from "@chakra-ui/react";
@@ -9,7 +9,7 @@ import BlogPostCard from "../components/blog/BlogPostCard";
 import BlogPostSpotlightCard from "../components/blog/BlogPostSpotlightCard";
 
 const Posts = () => {
-  const [{ data, fetching, error }] = usePostsQuery();
+  const [{ data, fetching, error }] = usePostsQuery({ variables: { orderBy: { createdAt: SortOrder.Desc } } });
   const { tp } = useTranslationWithPrefix('page.blog')
 
   if (fetching) return <p>Loading...</p>;

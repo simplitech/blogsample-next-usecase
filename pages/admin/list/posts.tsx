@@ -1,12 +1,13 @@
 import {useAuthState} from "../../../state/AuthState";
 import React, {useMemo} from "react";
 import AdminLayout from "../../../layouts/AdminLayout";
-import {usePostsAdminQuery} from "../../../generated/graphql";
+import {usePostsAdminQuery, usePostsCountQuery} from "../../../generated/graphql";
 import DataTable from "../../../components/DataTable";
 import useTranslationWithPrefix from "../../../helpers/useTranslationWithPrefix";
 
 const Posts = () => {
   const authState = useAuthState()
+  const [{ data: countData }] = usePostsCountQuery();
   const [{ data, fetching, error }] = usePostsAdminQuery();
   const { tp } = useTranslationWithPrefix('page.admin.list.posts')
 
@@ -36,7 +37,7 @@ const Posts = () => {
   return (
     <AdminLayout page={tp('title')}>
       {data &&
-        <DataTable columns={columns} data={data.posts}/>
+        <DataTable columns={columns} data={data.posts} count={countData?.aggregatePost._count.id ?? 0}/>
       }
     </AdminLayout>
   )

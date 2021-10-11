@@ -18,9 +18,9 @@ JWT_SECRET="<any secret here>"
 STORYBOOK_ZEPLIN_TOKEN="<zeplin access token here, create one here: https://app.zeplin.io/profile/developer >"
 ```
 
-Create the database
+Create the database and seed with random data
 ```shell
-npx prisma db push
+yarn setup
 ```
 
 ## Run

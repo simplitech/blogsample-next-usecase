@@ -1,7 +1,7 @@
 import {useTable, useSortBy} from 'react-table'
 import {Box, Table, Tbody, Td, Th, Thead, Tr} from "@chakra-ui/react";
 
-const DataTable = ({columns, data}) => {
+const DataTable = ({columns, data, count}) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -62,7 +62,7 @@ const DataTable = ({columns, data}) => {
         </Tbody>
       </Table>
       <br/>
-      <div>Showing the first 20 results of {rows.length} rows</div>
+      <div>Showing the first {rows.length} results of {count} rows</div>
     </Box>
   )
 }
