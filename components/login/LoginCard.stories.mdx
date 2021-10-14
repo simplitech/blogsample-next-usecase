@@ -1,15 +1,16 @@
 import { Meta, Story } from '@storybook/addon-docs';
 import {Box} from "@chakra-ui/react";
-import LoginCard from "../components/login/LoginCard";
+import LoginCard from "./LoginCard";
 
 export const StoryComponent = ({ parentWidth, ...args }) => (<Box w={parentWidth}><LoginCard {...args} /></Box>);
 
 <Meta title="login/LoginCard" parameters={{
-    zeplinLink: "https://app.zeplin.io/project/5f578c25b9e36a14a2289f28/screen/5f7f27cdbb8931a5e2232219"
+    // zeplinLink: "https://app.zeplin.io/project/5f578c25b9e36a14a2289f28/screen/5f7f27cdbb8931a5e2232219"
   }}
 />
 
 # LoginCard
+This component has no properties, that is why it only has one Story. It's a Login form that can be used on any screen.
 
 <Story name="Primary"
   args={{

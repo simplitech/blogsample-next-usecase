@@ -1,0 +1,43 @@
+import { Meta, Story } from '@storybook/addon-docs';
+import {Box, Text} from "@chakra-ui/react";
+import OrderBy from "./OrderBy"; import {SortOrder} from "../generated/graphql";
+
+export const StoryComponent = ({ parentWidth, ...args }) => (<Box w={parentWidth}><OrderBy {...args} /></Box>);
+
+<Meta title="OrderBy" />
+
+# OrderBy
+
+## Primary
+OrderBys are components that shows the sorting controller and has callbacks to ask for the desired sorting.
+
+<Story name="Primary"
+       args={{
+         fieldname: "id",
+         children: "ID",
+         controller: {
+           orderBy: undefined,
+           sortOrder: undefined,
+           setOrderBy: (column) => {alert(column)}
+         },
+         parentWidth: 'lg'
+       }}>
+  {StoryComponent.bind({})}
+</Story>
+
+## Order by ID ASC
+The component is not responsible for the real sorting, that is why it has the setOrderBy callback.
+
+<Story name="Order by ID ASC"
+       args={{
+         fieldname: "id",
+         children: "ID",
+         controller: {
+           orderBy: "id",
+           sortOrder: SortOrder.Asc,
+           setOrderBy: (column) => {alert(column)}
+         },
+         parentWidth: 'lg'
+       }}>
+  {StoryComponent.bind({})}
+</Story>

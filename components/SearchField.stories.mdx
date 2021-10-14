@@ -1,0 +1,22 @@
+import { Meta, Story } from '@storybook/addon-docs';
+import {Box} from "@chakra-ui/react";
+import SearchField from "./SearchField";
+
+export const StoryComponent = ({ parentWidth, ...args }) => (<Box w={parentWidth}><SearchField {...args} /></Box>);
+
+<Meta title="SearchField" />
+
+# SearchField
+SeachField is the visual representation and input for searches it has callbacks to ask for the desired search.
+
+<Story name="Primary"
+       args={{
+         placeholder: "Search here...",
+         controller: {
+           search: undefined,
+           setSearch: (val) => {alert(val)}
+         },
+         parentWidth: 'lg'
+       }}>
+  {StoryComponent.bind({})}
+</Story>

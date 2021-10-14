@@ -38,7 +38,7 @@
     "noDataToShow": "No data to show",
     "noResultFound": "No result found",
     "emptyList": "List is empty",
-    "totalLines": "{total} total lines"
+    "totalLines": "{{total}} total lines"
   },
   "dialog": {
     "remove": {
@@ -208,7 +208,7 @@
     }
   },
   "page": {
-    "blog": { "title": "Blogsample's Blog" },
+    "blog": { "title": "Blogsample's Blog", "loadMore": "Load More" },
     "login": {
       "signInToYourAccount": "Sign in to your account",
       "caption": "to enjoy all of our cool <1>features</1> ✌"
@@ -216,7 +216,19 @@
     "admin": {
       "list": {
         "posts": {
-          "title": "Posts"
+          "title": "Posts",
+          "PostFields": {
+            "actions": "",
+            "id": "ID",
+            "createdAt": "Created At",
+            "updatedAt":  "Updated At",
+            "published": "Published",
+            "title":  "Title",
+            "body": "Body",
+            "bannerUrl":  "Banner URL",
+            "author": "Author",
+            "authorId":  "Author ID"
+          }
         }
       },
       "dashboard": {

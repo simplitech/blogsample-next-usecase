@@ -4,7 +4,7 @@ This folder contains React components that are used on other components or on [p
 
 Components that are used to create the main structure of the application are on [layout folder](../layouts) 
 
-Every component must have also a [story](../stories) to facilitate tests and documentation.
+Every component must have also a [Story](https://storybook.js.org/docs/react/get-started/whats-a-story) to facilitate tests and documentation.
 
 Note:
 - Generic components should be on the root folders

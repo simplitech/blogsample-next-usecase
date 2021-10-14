@@ -8,7 +8,7 @@
     "studio": "npx prisma studio",
     "build": "next build",
     "type-check": "tsc",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook -s ./public -p 6006",
     "build-storybook": "build-storybook"
   },
   "prisma": {
@@ -37,6 +37,7 @@
     "isomorphic-unfetch": "^3.1.0",
     "js-cookie": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
     "micro": "^9.3.4",
     "next": "^11.1.2",
     "next-cookies": "^2.0.3",
@@ -47,7 +48,6 @@
     "react-i18next": "^11.11.4",
     "react-icons": "^4.2.0",
     "react-is": "^17.0.2",
-    "react-table": "^7.7.0",
     "react-use-storage": "^0.5.1",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.1.1",

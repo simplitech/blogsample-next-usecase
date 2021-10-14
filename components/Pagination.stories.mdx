@@ -1,0 +1,72 @@
+import { Meta, Story } from '@storybook/addon-docs';
+import {Box} from "@chakra-ui/react";
+import Pagination from "./Pagination";
+
+export const StoryComponent = ({ parentWidth, ...args }) => (<Box w={parentWidth}><Pagination {...args} /></Box>);
+
+<Meta title="Pagination" />
+
+# Pagination
+The pagination component shows the visual controls of pagination, it's not responsible to tell if the user can paginate to previous or next page.
+
+## On first Page
+
+<Story name="Primary"
+       args={{
+         controller: {
+           pageIndex: 0,
+           pageSize: 20,
+           pageCount: 3,
+           hasNext: () => true,
+           hasPrev: () => false,
+           nextPage: () => alert("Next"),
+           prevPage: () => alert("Prev"),
+           goToPage: (val) => alert(`goto ${val}`),
+           setPageSize: (val) => alert(`size ${val}`),
+         },
+         parentWidth: '2xl'
+       }}>
+  {StoryComponent.bind({})}
+</Story>
+
+
+## On middle Page
+
+<Story name="Middle Page"
+       args={{
+         controller: {
+           pageIndex: 1,
+           pageSize: 20,
+           pageCount: 3,
+           hasNext: () => true,
+           hasPrev: () => true,
+           nextPage: () => alert("Next"),
+           prevPage: () => alert("Prev"),
+           goToPage: (val) => alert(`goto ${val}`),
+           setPageSize: (val) => alert(`size ${val}`),
+         },
+         parentWidth: '2xl'
+       }}>
+  {StoryComponent.bind({})}
+</Story>
+
+
+## On last Page
+
+<Story name="Last Page"
+       args={{
+         controller: {
+           pageIndex: 2,
+           pageSize: 20,
+           pageCount: 3,
+           hasNext: () => false,
+           hasPrev: () => true,
+           nextPage: () => alert("Next"),
+           prevPage: () => alert("Prev"),
+           goToPage: (val) => alert(`goto ${val}`),
+           setPageSize: (val) => alert(`size ${val}`),
+         },
+         parentWidth: '2xl'
+       }}>
+  {StoryComponent.bind({})}
+</Story>

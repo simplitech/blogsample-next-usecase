@@ -1,69 +1,52 @@
-import {useTable, useSortBy} from 'react-table'
-import {Box, Table, Tbody, Td, Th, Thead, Tr} from "@chakra-ui/react";
+import React from 'react';
+import {Table, TableProps, Tbody, Td, Th, Thead, Tr} from "@chakra-ui/react";
+import OrderBy, {OrderController} from "./OrderBy";
+import useTranslationWithPrefix from "../helpers/useTranslationWithPrefix";
 
-const DataTable = ({columns, data, count}) => {
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable(
-    {
-      columns,
-      data,
-    },
-    useSortBy
-  )
-
-  // We don't want to render all 2000 rows for this example, so cap
-  // it at 20 for this use case
-  const firstPageRows = rows.slice(0, 20)
-
-  return (
-    <Box background={"white"} borderRadius={8} border={1} borderStyle={"solid"} borderColor={"gray.300"}>
-      <Table {...getTableProps()} variant="striped">
-        <Thead>
-        {headerGroups.map(headerGroup => (
-          <Tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              // Add the sorting props to control sorting. For this example
-              // we can add them into the header props
-              <Th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                {column.render('Header')}
-                {/* Add a sort direction indicator */}
-                <span>
-                  {column.isSorted
-                    ? column.isSortedDesc
-                      ? ' 🔽'
-                      : ' 🔼'
-                    : ''}
-                </span>
-              </Th>
-            ))}
-          </Tr>
-        ))}
-        </Thead>
-        <Tbody {...getTableBodyProps()}>
-        {firstPageRows.map(
-          (row, i) => {
-            prepareRow(row);
-            return (
-              <Tr {...row.getRowProps()}>
-                {row.cells.map(cell => {
-                  return (
-                    <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td>
-                  )
-                })}
-              </Tr>
-            )
-          }
-        )}
-        </Tbody>
-      </Table>
-      <br/>
-      <div>Showing the first {rows.length} results of {count} rows</div>
-    </Box>
-  )
+type DataTableProps<T> = TableProps & {
+  headersPrefix: string,
+  controller: OrderController<T> & { list: T[] }
+  fields?: RenderMap<T>,
 }
-export default DataTable
+
+export type CellRenderProps<T, k extends keyof T> = { val: any, model?: T, key?: k };
+
+type FieldRenderMap<T> = {
+  [k in keyof T]?: React.FC<CellRenderProps<T, k>>;
+};
+
+export type RenderMap<T> = FieldRenderMap<T> & {
+  [k: string]: React.FC<{ model?: T, key?: any }>;
+};
+
+export default function DataTable<T> (
+  {
+    headersPrefix,
+    controller,
+    fields,
+    ...tableProps
+  }: DataTableProps<T>) {
+  const {tp} = useTranslationWithPrefix(headersPrefix)
+
+  return <Table variant={"striped"} bg={"white"} {...tableProps}>
+    <Thead>
+      <Tr>
+        {Object.keys(fields).map(f => <Th key={`header.${f}`}>
+          <OrderBy
+            controller={controller}
+            fieldname={f as keyof T}>
+            {tp(f as string)}
+          </OrderBy>
+        </Th>)}
+      </Tr>
+    </Thead>
+    <Tbody>
+      {controller.list.map((p, i) => <Tr key={`row.${i}`}>
+        {Object.keys(fields).map(f => {
+          const Comp: any = fields[f];
+          return <Td key={`cell.${i}.${f}`}><Comp val={p[f]} model={p} key={f} /></Td>
+        })}
+      </Tr>)}
+    </Tbody>
+  </Table>
+}

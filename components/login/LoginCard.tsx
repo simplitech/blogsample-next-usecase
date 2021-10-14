@@ -9,7 +9,6 @@ import {
   Button,
   useColorModeValue, useToast, FormErrorMessage,
 } from '@chakra-ui/react'
-import NextLink from 'next/link'
 import {useSignInMutation} from '../../generated/graphql'
 import {useForm} from 'react-hook-form'
 import crypto from 'crypto'

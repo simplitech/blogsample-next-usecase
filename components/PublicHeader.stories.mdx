@@ -1,0 +1,17 @@
+import { Meta, Story } from '@storybook/addon-docs';
+import {Box} from "@chakra-ui/react";
+import PublicHeader from "./PublicHeader";
+
+export const StoryComponent = ({ parentWidth, ...args }) => (<Box w={parentWidth}><PublicHeader {...args} /></Box>);
+
+<Meta title="PublicHeader" />
+
+# PublicHeader
+This component has no properties, that is why it only has one Story. It's the header for the public pages.
+
+<Story name="Primary"
+  args={{
+    parentWidth: '5xl'
+  }}>
+  {StoryComponent.bind({})}
+</Story>

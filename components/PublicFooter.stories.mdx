@@ -1,0 +1,17 @@
+import { Meta, Story } from '@storybook/addon-docs';
+import {Box} from "@chakra-ui/react";
+import PublicFooter from "./PublicFooter";
+
+export const StoryComponent = ({ parentWidth, ...args }) => (<Box w={parentWidth}><PublicFooter {...args} /></Box>);
+
+<Meta title="PublicFooter" />
+
+# PublicFooter
+This component has no properties, that is why it only has one Story. It's the footer for the public pages.
+
+<Story name="Primary"
+  args={{
+    parentWidth: '5xl'
+  }}>
+  {StoryComponent.bind({})}
+</Story>

@@ -1,0 +1,74 @@
+import { Meta, Story } from '@storybook/addon-docs';
+import {Box, Text} from "@chakra-ui/react";
+import DataTable from "./DataTable";
+import RenderText from "./RenderText"; import {SortOrder} from "../generated/graphql";
+
+export const StoryComponent = ({ parentWidth, ...args }) => (<Box w={parentWidth}><DataTable {...args} /></Box>);
+
+<Meta title="DataTable" />
+
+# DataTable
+
+DataTables are tables that renders and controls the content of ListControllers.
+
+## Primary
+An example without orderBy
+
+<Story name="Primary"
+       args={{
+         headersPrefix: 'page.admin.list.posts.PostFields',
+         fields: {
+           id: RenderText,
+           title: RenderText,
+           actions: ({model}) => <Text>Actions of {model.id}</Text>
+         },
+         controller: {
+           list: [{
+             id: 1,
+             title: "First",
+           },{
+             id: "2",
+             title: "Second",
+           },{
+             id: "3",
+             title: "Third",
+           }],
+           orderBy: undefined,
+           sortOrder: undefined,
+           setOrderBy: (column) => {alert(column)}
+         },
+         parentWidth: 'lg'
+       }}>
+  {StoryComponent.bind({})}
+</Story>
+
+## Order by ID ASC
+The component is not responsible for the real sorting, that is why it has the setOrderBy callback.
+
+<Story name="OrderBy ID Asc"
+       args={{
+         headersPrefix: 'page.admin.list.posts.PostFields',
+         fields: {
+           id: RenderText,
+           title: RenderText,
+           actions: ({model}) => <Text>Actions of {model.id}</Text>
+         },
+         controller: {
+           list: [{
+             id: 1,
+             title: "First",
+           },{
+             id: "2",
+             title: "Second",
+           },{
+             id: "3",
+             title: "Third",
+           }],
+           orderBy: "id",
+           sortOrder: SortOrder.Asc,
+           setOrderBy: (column) => {alert(column)}
+         },
+         parentWidth: 'lg'
+       }}>
+  {StoryComponent.bind({})}
+</Story>

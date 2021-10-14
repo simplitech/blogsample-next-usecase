@@ -1,0 +1,28 @@
+import { Meta, Story } from '@storybook/addon-docs';
+import {Box} from "@chakra-ui/react";
+import BlogPostSpotlightCard from "./BlogPostSpotlightCard";
+
+export const StoryComponent = ({ parentWidth, ...args }) => (<Box w={parentWidth}><BlogPostSpotlightCard {...args} /></Box>);
+
+<Meta title="blog/BlogPostSpotlightCard" />
+
+# BlogPostSpotlightCard
+
+The BlogPostSpotlightCard component is used to render a card of the post, but bigger than [BlogPostCard](/docs/blog-blogpostcard).
+
+<Story name="Primary"
+  args={{
+    post: {
+      title: 'Temperatures are dropping dramatically!',
+      bannerUrl: 'https://picsum.photos/seed/d/600/400',
+      body: 'Est architecto aut aut occaecati eos. Excepturi placeat voluptatum eveniet. Sint totam consequatur voluptates qui laborum molestiae sequi vitae optio.\n \rUnde soluta rerum facere adipisci. Id neque et et quasi. Ducimus quisquam quisquam error quibusdam quam nihil reprehenderit voluptas. Quisquam perferendis vitae unde rerum temporibus quas iusto.\n \rAlias minus mollitia. Soluta ea ea et ex ut. Quia molestiae quis.\n \rExcepturi voluptate eius et quo distinctio voluptate tempora laboriosam ut. Occaecati qui rerum similique esse inventore debitis tenetur culpa cumque. Libero hic deleniti veritatis aperiam eum. Officiis commodi beatae adipisci saepe enim alias maxime.\n \rExercitationem dolores quibusdam iste distinctio natus facilis incidunt consequatur. Velit labore et aut. Delectus ut aut saepe at illum nulla.',
+      createdAt: '2021-07-31T21:20:56.677Z',
+      author: {
+        name: 'John Albert Silva',
+        avatarUrl: 'https://i.pravatar.cc/150?u=b'
+      }
+    },
+    parentWidth: '4xl'
+  }}>
+  {StoryComponent.bind({})}
+</Story>

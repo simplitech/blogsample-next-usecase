@@ -1,0 +1,17 @@
+import { Meta, Story } from '@storybook/addon-docs';
+import {Box} from "@chakra-ui/react";
+import IndexFeatures from "./IndexFeatures";
+
+export const StoryComponent = ({ parentWidth, ...args }) => (<Box w={parentWidth}><IndexFeatures {...args} /></Box>);
+
+<Meta title="index/IndexFeatures" />
+
+# IndexFeatures
+An example of how the landingpage could be implemented.
+
+<Story name="Primary"
+  args={{
+    parentWidth: '6xl'
+  }}>
+  {StoryComponent.bind({})}
+</Story>
