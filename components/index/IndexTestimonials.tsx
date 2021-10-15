@@ -1,19 +1,10 @@
-import React, { ReactNode } from 'react';
-import {
-  Box,
-  Flex,
-  Heading,
-  Text,
-  Stack,
-  Container,
-  Avatar,
-  useColorModeValue,
-} from '@chakra-ui/react';
-import useTranslationWithPrefix from "../../helpers/useTranslationWithPrefix";
+import React, { ReactNode } from 'react'
+import { Box, Flex, Heading, Text, Stack, Container, Avatar, useColorModeValue } from '@chakra-ui/react'
+import useTranslationWithPrefix from '../../helpers/useTranslationWithPrefix'
 
 const Testimonial = ({ children }: { children: ReactNode }) => {
-  return <Box>{children}</Box>;
-};
+  return <Box>{children}</Box>
+}
 
 const TestimonialContent = ({ children }: { children: ReactNode }) => {
   return (
@@ -25,7 +16,7 @@ const TestimonialContent = ({ children }: { children: ReactNode }) => {
       align={'center'}
       pos={'relative'}
       _after={{
-        content: `""`,
+        content: '""',
         w: 0,
         h: 0,
         borderLeft: 'solid transparent',
@@ -39,40 +30,30 @@ const TestimonialContent = ({ children }: { children: ReactNode }) => {
         bottom: '-16px',
         left: '50%',
         transform: 'translateX(-50%)',
-      }}>
+      }}
+    >
       {children}
     </Stack>
-  );
-};
+  )
+}
 
 const TestimonialHeading = ({ children }: { children: ReactNode }) => {
   return (
     <Heading as={'h3'} fontSize={'xl'}>
       {children}
     </Heading>
-  );
-};
+  )
+}
 
 const TestimonialText = ({ children }: { children: ReactNode }) => {
   return (
-    <Text
-      textAlign={'center'}
-      color={useColorModeValue('gray.600', 'gray.400')}
-      fontSize={'sm'}>
+    <Text textAlign={'center'} color={useColorModeValue('gray.600', 'gray.400')} fontSize={'sm'}>
       {children}
     </Text>
-  );
-};
+  )
+}
 
-const TestimonialAvatar = ({
-                             src,
-                             name,
-                             title,
-                           }: {
-  src: string;
-  name: string;
-  title: string;
-}) => {
+const TestimonialAvatar = ({ src, name, title }: { src: string; name: string; title: string }) => {
   return (
     <Flex align={'center'} mt={8} direction={'column'}>
       <Avatar src={src} alt={name} mb={2} />
@@ -83,8 +64,8 @@ const TestimonialAvatar = ({
         </Text>
       </Stack>
     </Flex>
-  );
-};
+  )
+}
 
 const IndexTestimonials: React.FC = () => {
   const { tp } = useTranslationWithPrefix('comp.IndexTestimonials')
@@ -95,15 +76,13 @@ const IndexTestimonials: React.FC = () => {
           <Heading>{tp('ourClientsSpeak')}</Heading>
           <Text>{tp('weHaveBeenWorking')}</Text>
         </Stack>
-        <Stack
-          direction={{ base: 'column', md: 'row' }}
-          spacing={{ base: 10, md: 4, lg: 10 }}>
+        <Stack direction={{ base: 'column', md: 'row' }} spacing={{ base: 10, md: 4, lg: 10 }}>
           <Testimonial>
             <TestimonialContent>
               <TestimonialHeading>{tp('efficientCollab')}</TestimonialHeading>
               <TestimonialText>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Auctor
-                neque sed imperdiet nibh lectus feugiat nunc sem.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Auctor neque sed imperdiet nibh lectus feugiat
+                nunc sem.
               </TestimonialText>
             </TestimonialContent>
             <TestimonialAvatar
@@ -118,8 +97,8 @@ const IndexTestimonials: React.FC = () => {
             <TestimonialContent>
               <TestimonialHeading>{tp('intuitiveDesign')}</TestimonialHeading>
               <TestimonialText>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Auctor
-                neque sed imperdiet nibh lectus feugiat nunc sem.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Auctor neque sed imperdiet nibh lectus feugiat
+                nunc sem.
               </TestimonialText>
             </TestimonialContent>
             <TestimonialAvatar
@@ -134,8 +113,8 @@ const IndexTestimonials: React.FC = () => {
             <TestimonialContent>
               <TestimonialHeading>{tp('mindblowingService')}</TestimonialHeading>
               <TestimonialText>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Auctor
-                neque sed imperdiet nibh lectus feugiat nunc sem.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Auctor neque sed imperdiet nibh lectus feugiat
+                nunc sem.
               </TestimonialText>
             </TestimonialContent>
             <TestimonialAvatar
@@ -149,7 +128,7 @@ const IndexTestimonials: React.FC = () => {
         </Stack>
       </Container>
     </Box>
-  );
+  )
 }
 
-export default IndexTestimonials;
+export default IndexTestimonials

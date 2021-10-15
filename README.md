@@ -67,3 +67,9 @@ For the Front-end styling we are using [ChakraUI](https://chakra-ui.com/).
 
 ## Database Class Diagram
 ![](prisma/schema.png)
+
+## Lint
+We are using Eslint and Prettier to standardize the code style. Make sure to call `yarn lint` before commiting.
+
+If you are using IntelliJ, you can setup to automatically **Run eslint --fix on save**,
+just open `File > Settings` and setup it on the menu `Languages and Frameworks > Javascript > Code Quality Tools > ESLint`.

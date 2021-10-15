@@ -1,30 +1,32 @@
-import {useCallback, useEffect, useState} from "react";
-import {SortOrder} from "../generated/graphql";
-import {debounce} from "lodash"
+import { useCallback, useEffect, useState } from 'react'
+import { SortOrder } from '../generated/graphql'
+import { debounce } from 'lodash'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface Query<T> {
-  where?: unknown;
-  orderBy?: unknown[] | null;
-  take?: number | null;
-  skip?: number | null;
+  // TODO: use T and remove the comment above
+  where?: unknown
+  orderBy?: unknown[] | null
+  take?: number | null
+  skip?: number | null
 }
 
 interface QBOptions<T> {
-  search?: string,
-  pageSize?: number,
-  pageIndex?: number,
-  orderBy?: keyof T,
+  search?: string
+  pageSize?: number
+  pageIndex?: number
+  orderBy?: keyof T
   sortOrder?: SortOrder
 }
 
 function staticQueryBuilder<T>(opts: QBOptions<T>): Query<T> {
-  const query: Query<T> =  {
+  const query: Query<T> = {
     take: opts.pageSize,
-    skip: opts.pageIndex * opts.pageSize
+    skip: opts.pageIndex * opts.pageSize,
   }
 
   if (opts.orderBy && opts.sortOrder) {
-    query.orderBy = [{[opts.orderBy]: opts.sortOrder}]
+    query.orderBy = [{ [opts.orderBy]: opts.sortOrder }]
   }
 
   return query
@@ -35,7 +37,6 @@ function staticQueryBuilder<T>(opts: QBOptions<T>): Query<T> {
  * @param opts
  */
 export default function useListController<T>(opts: QBOptions<T> = {}) {
-
   opts.pageSize = opts.pageSize ?? 20
   opts.pageIndex = opts.pageIndex ?? 0
 
@@ -63,7 +64,7 @@ export default function useListController<T>(opts: QBOptions<T> = {}) {
       pageSize,
       pageIndex,
       orderBy,
-      sortOrder
+      sortOrder,
     })
   }, [search, pageIndex, pageSize, orderBy, sortOrder])
 
@@ -78,8 +79,9 @@ export default function useListController<T>(opts: QBOptions<T> = {}) {
   const setOrderBy = (newOrderBy: keyof T, newSortOrder?: SortOrder) => {
     setLoading(true)
     // if no sortOrder is provided it will use Asc unless the orderBy didn't change and sortOrder already is Asc
-    _setSortOrder(newSortOrder ??
-      (orderBy !== newOrderBy || sortOrder !== SortOrder.Asc ? SortOrder.Asc : SortOrder.Desc))
+    _setSortOrder(
+      newSortOrder ?? (orderBy !== newOrderBy || sortOrder !== SortOrder.Asc ? SortOrder.Asc : SortOrder.Desc),
+    )
     _setOrderBy(newOrderBy)
   }
 
@@ -115,17 +117,32 @@ export default function useListController<T>(opts: QBOptions<T> = {}) {
     _setQuery(staticQueryBuilder<T>(qbOptions))
   }
 
-  const buildQuery = useCallback(debounce(_buildQueryNow, 200), []);
+  const buildQuery = useCallback(debounce(_buildQueryNow, 200), [])
 
   return {
-    search, setSearch,
-    pageIndex, setPageIndex, nextPage, prevPage, hasNext, hasPrev, goToPage,
-    pageSize, setPageSize,
-    orderBy, sortOrder, setOrderBy,
-    loading, setLoading,
-    query, buildQuery,
+    search,
+    setSearch,
+    pageIndex,
+    setPageIndex,
+    nextPage,
+    prevPage,
+    hasNext,
+    hasPrev,
+    goToPage,
+    pageSize,
+    setPageSize,
+    orderBy,
+    sortOrder,
+    setOrderBy,
+    loading,
+    setLoading,
+    query,
+    buildQuery,
     pageCount,
-    list, setList, appendList,
-    count, setCount,
+    list,
+    setList,
+    appendList,
+    count,
+    setCount,
   }
 }

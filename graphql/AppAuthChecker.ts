@@ -1,5 +1,5 @@
-import {AuthChecker} from "type-graphql";
-import {Context} from "./Context";
+import { AuthChecker } from 'type-graphql'
+import { Context } from './Context'
 
 /**
  * Everytime the GraphQL endpoint hits a mutation, class or field that was marked by the annotation `@Authorized` it
@@ -11,9 +11,7 @@ import {Context} from "./Context";
  * @param info
  * @param roles the Param of `@Authorized` annotation that describes which authorization it needs
  */
-export const appAuthChecker: AuthChecker<Context> = (
-  { root, args, context, info },
-  roles,
-) => {
+export const appAuthChecker: AuthChecker<Context> = ({ context }) => {
+  // ({ root, args, context, info }, roles)
   return Boolean(context.user)
-};
+}

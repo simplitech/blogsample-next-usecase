@@ -1,9 +1,9 @@
-import {useLocalStorage} from 'react-use-storage'
-import {User} from "../generated/graphql";
+import { useLocalStorage } from 'react-use-storage'
+import { User } from '../generated/graphql'
 import Cookies from 'js-cookie'
-import cookies from "next-cookies";
-import {useEffect} from "react";
-import {useRouter} from "next/router";
+import cookies from 'next-cookies'
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 export const scopeKey = 'authState'
 export function useAuthState() {

@@ -14,26 +14,21 @@ import {
   useColorModeValue,
   useBreakpointValue,
   useDisclosure,
-} from '@chakra-ui/react';
-import {
-  HamburgerIcon,
-  CloseIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-} from '@chakra-ui/icons';
-import React from "react";
-import NextLink from "next/link";
-import useTranslationWithPrefix from "../helpers/useTranslationWithPrefix";
+} from '@chakra-ui/react'
+import { HamburgerIcon, CloseIcon, ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons'
+import React from 'react'
+import NextLink from 'next/link'
+import useTranslationWithPrefix from '../helpers/useTranslationWithPrefix'
 
 interface NavItem {
-  label: string;
-  subLabel?: string;
-  children?: Array<NavItem>;
-  href?: string;
+  label: string
+  subLabel?: string
+  children?: Array<NavItem>
+  href?: string
 }
 
 const PublicHeader: React.FC = () => {
-  const { isOpen, onToggle } = useDisclosure();
+  const { isOpen, onToggle } = useDisclosure()
   const { tp } = useTranslationWithPrefix('comp.PublicHeader')
 
   return (
@@ -47,16 +42,12 @@ const PublicHeader: React.FC = () => {
         borderBottom={1}
         borderStyle={'solid'}
         borderColor={useColorModeValue('gray.200', 'gray.900')}
-        align={'center'}>
-        <Flex
-          flex={{ base: 1, md: 'auto' }}
-          ml={{ base: -2 }}
-          display={{ base: 'flex', md: 'none' }}>
+        align={'center'}
+      >
+        <Flex flex={{ base: 1, md: 'auto' }} ml={{ base: -2 }} display={{ base: 'flex', md: 'none' }}>
           <IconButton
             onClick={onToggle}
-            icon={
-              isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
-            }
+            icon={isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />}
             variant={'ghost'}
             aria-label={'Toggle Navigation'}
           />
@@ -65,7 +56,8 @@ const PublicHeader: React.FC = () => {
           <Text
             textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
             fontFamily={'heading'}
-            color={useColorModeValue('gray.800', 'white')}>
+            color={useColorModeValue('gray.800', 'white')}
+          >
             Logo
           </Text>
 
@@ -74,18 +66,9 @@ const PublicHeader: React.FC = () => {
           </Flex>
         </Flex>
 
-        <Stack
-          flex={{ base: 1, md: 0 }}
-          justify={'flex-end'}
-          direction={'row'}
-          spacing={6}>
+        <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
           <NextLink href="login">
-            <Button
-              as={'a'}
-              fontSize={'sm'}
-              fontWeight={400}
-              variant={'link'}
-              href={'#'}>
+            <Button as={'a'} fontSize={'sm'} fontWeight={400} variant={'link'} href={'#'}>
               {tp('signIn')}
             </Button>
           </NextLink>
@@ -98,7 +81,8 @@ const PublicHeader: React.FC = () => {
             href={'#'}
             _hover={{
               bg: 'pink.300',
-            }}>
+            }}
+          >
             {tp('signUp')}
           </Button>
         </Stack>
@@ -108,13 +92,13 @@ const PublicHeader: React.FC = () => {
         <MobileNav />
       </Collapse>
     </Box>
-  );
+  )
 }
 
 const DesktopNav = () => {
-  const linkColor = useColorModeValue('gray.600', 'gray.200');
-  const linkHoverColor = useColorModeValue('gray.800', 'white');
-  const popoverContentBgColor = useColorModeValue('white', 'gray.800');
+  const linkColor = useColorModeValue('gray.600', 'gray.200')
+  const linkHoverColor = useColorModeValue('gray.800', 'white')
+  const popoverContentBgColor = useColorModeValue('white', 'gray.800')
   const { tp } = useTranslationWithPrefix('comp.PublicHeader')
 
   const navItems = tp('navItems', { returnObjects: true }) as NavItem[]
@@ -134,19 +118,14 @@ const DesktopNav = () => {
                 _hover={{
                   textDecoration: 'none',
                   color: linkHoverColor,
-                }}>
+                }}
+              >
                 {navItem.label}
               </Link>
             </PopoverTrigger>
 
             {navItem.children && (
-              <PopoverContent
-                border={0}
-                boxShadow={'xl'}
-                bg={popoverContentBgColor}
-                p={4}
-                rounded={'xl'}
-                minW={'sm'}>
+              <PopoverContent border={0} boxShadow={'xl'} bg={popoverContentBgColor} p={4} rounded={'xl'} minW={'sm'}>
                 <Stack>
                   {navItem.children.map((child) => (
                     <DesktopSubNav key={child.label} {...child} />
@@ -158,8 +137,8 @@ const DesktopNav = () => {
         </Box>
       ))}
     </Stack>
-  );
-};
+  )
+}
 
 const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
   return (
@@ -169,13 +148,11 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
       display={'block'}
       p={2}
       rounded={'md'}
-      _hover={{ bg: useColorModeValue('pink.50', 'gray.900') }}>
+      _hover={{ bg: useColorModeValue('pink.50', 'gray.900') }}
+    >
       <Stack direction={'row'} align={'center'}>
         <Box>
-          <Text
-            transition={'all .3s ease'}
-            _groupHover={{ color: 'pink.400' }}
-            fontWeight={500}>
+          <Text transition={'all .3s ease'} _groupHover={{ color: 'pink.400' }} fontWeight={500}>
             {label}
           </Text>
           <Text fontSize={'sm'}>{subLabel}</Text>
@@ -187,13 +164,14 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
           _groupHover={{ opacity: '100%', transform: 'translateX(0)' }}
           justify={'flex-end'}
           align={'center'}
-          flex={1}>
+          flex={1}
+        >
           <Icon color={'pink.400'} w={5} h={5} as={ChevronRightIcon} />
         </Flex>
       </Stack>
     </Link>
-  );
-};
+  )
+}
 
 const MobileNav = () => {
   const { tp } = useTranslationWithPrefix('comp.PublicHeader')
@@ -201,19 +179,16 @@ const MobileNav = () => {
   const navItems = tp('navItems', { returnObjects: true }) as NavItem[]
 
   return (
-    <Stack
-      bg={useColorModeValue('white', 'gray.800')}
-      p={4}
-      display={{ md: 'none' }}>
+    <Stack bg={useColorModeValue('white', 'gray.800')} p={4} display={{ md: 'none' }}>
       {navItems.map((navItem) => (
         <MobileNavItem key={navItem.label} {...navItem} />
       ))}
     </Stack>
-  );
-};
+  )
+}
 
 const MobileNavItem = ({ label, children, href }: NavItem) => {
-  const { isOpen, onToggle } = useDisclosure();
+  const { isOpen, onToggle } = useDisclosure()
 
   return (
     <Stack spacing={4} onClick={children && onToggle}>
@@ -225,10 +200,9 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
         align={'center'}
         _hover={{
           textDecoration: 'none',
-        }}>
-        <Text
-          fontWeight={600}
-          color={useColorModeValue('gray.600', 'gray.200')}>
+        }}
+      >
+        <Text fontWeight={600} color={useColorModeValue('gray.600', 'gray.200')}>
           {label}
         </Text>
         {children && (
@@ -249,17 +223,18 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
           borderLeft={1}
           borderStyle={'solid'}
           borderColor={useColorModeValue('gray.200', 'gray.700')}
-          align={'start'}>
+          align={'start'}
+        >
           {children &&
-          children.map((child) => (
-            <Link key={child.label} py={2} href={child.href}>
-              {child.label}
-            </Link>
-          ))}
+            children.map((child) => (
+              <Link key={child.label} py={2} href={child.href}>
+                {child.label}
+              </Link>
+            ))}
         </Stack>
       </Collapse>
     </Stack>
-  );
-};
+  )
+}
 
-export default PublicHeader;
+export default PublicHeader

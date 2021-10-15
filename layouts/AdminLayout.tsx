@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode } from 'react'
 import {
   IconButton,
   Box,
@@ -13,29 +13,24 @@ import {
   useDisclosure,
   BoxProps,
   FlexProps,
-} from '@chakra-ui/react';
-import {
-  FiGrid,
-  FiList,
-  FiMenu,
-  FiLogOut,
-} from 'react-icons/fi';
-import { IconType } from 'react-icons';
-import { ReactText } from 'react';
-import {useAuthState} from "../state/AuthState";
+} from '@chakra-ui/react'
+import { FiGrid, FiList, FiMenu, FiLogOut } from 'react-icons/fi'
+import { IconType } from 'react-icons'
+import { ReactText } from 'react'
+import { useAuthState } from '../state/AuthState'
 import NextLink from 'next/link'
-import useTranslationWithPrefix from "../helpers/useTranslationWithPrefix";
-import Head from 'next/head';
+import useTranslationWithPrefix from '../helpers/useTranslationWithPrefix'
+import Head from 'next/head'
 
 interface LinkItemProps {
-  name: string;
-  icon: IconType;
-  path?: string;
+  name: string
+  icon: IconType
+  path?: string
   onClick?: () => void
 }
 
-export default function AdminLayout({ page, children }: { page: string, children: ReactNode }) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+export default function AdminLayout({ page, children }: { page: string; children: ReactNode }) {
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const { tp } = useTranslationWithPrefix('comp.AdminLayout')
   return (
     <>
@@ -45,10 +40,7 @@ export default function AdminLayout({ page, children }: { page: string, children
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
-        <SidebarContent
-          onClose={() => onClose}
-          display={{ base: 'none', md: 'block' }}
-        />
+        <SidebarContent onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
         <Drawer
           autoFocus={false}
           isOpen={isOpen}
@@ -56,23 +48,22 @@ export default function AdminLayout({ page, children }: { page: string, children
           onClose={onClose}
           returnFocusOnClose={false}
           onOverlayClick={onClose}
-          size="full">
+          size="full"
+        >
           <DrawerContent>
             <SidebarContent onClose={onClose} />
           </DrawerContent>
         </Drawer>
         {/* mobilenav */}
         <MobileNav display={{ base: 'flex', md: 'none' }} onOpen={onOpen} />
-        <Box ml={{ base: 0, md: 60 }}>
-          {children}
-        </Box>
+        <Box ml={{ base: 0, md: 60 }}>{children}</Box>
       </Box>
     </>
-  );
+  )
 }
 
 interface SidebarProps extends BoxProps {
-  onClose: () => void;
+  onClose: () => void
 }
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
@@ -82,8 +73,12 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   const linkItems: Array<LinkItemProps> = [
     { name: tp('dashboard'), icon: FiGrid, path: '/admin/dashboard' },
     { name: tp('posts'), icon: FiList, path: '/admin/list/posts' },
-    { name: tp('logout'), icon: FiLogOut, onClick: () => authState.removeSigninInfo() },
-  ];
+    {
+      name: tp('logout'),
+      icon: FiLogOut,
+      onClick: () => authState.removeSigninInfo(),
+    },
+  ]
 
   return (
     <Box
@@ -93,34 +88,32 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       w={{ base: 'full', md: 60 }}
       pos="fixed"
       h="full"
-      {...rest}>
+      {...rest}
+    >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
           Logo
         </Text>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
-      {linkItems.map((link) => (
+      {linkItems.map((link) =>
         link.path ? (
           <NextLink key={link.name} href={link.path}>
-            <NavItem icon={link.icon}>
-              {link.name}
-            </NavItem>
+            <NavItem icon={link.icon}>{link.name}</NavItem>
           </NextLink>
-        )
-        : (
-            <NavItem key={link.name} icon={link.icon} onClick={() => link.onClick()}>
-              {link.name}
-            </NavItem>
-          )
-      ))}
+        ) : (
+          <NavItem key={link.name} icon={link.icon} onClick={() => link.onClick()}>
+            {link.name}
+          </NavItem>
+        ),
+      )}
     </Box>
-  );
-};
+  )
+}
 
 interface NavItemProps extends FlexProps {
-  icon: IconType;
-  children: ReactText;
+  icon: IconType
+  children: ReactText
 }
 const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
   return (
@@ -136,7 +129,8 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
           bg: 'cyan.400',
           color: 'white',
         }}
-        {...rest}>
+        {...rest}
+      >
         {icon && (
           <Icon
             mr="4"
@@ -150,11 +144,11 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
         {children}
       </Flex>
     </Link>
-  );
-};
+  )
+}
 
 interface MobileProps extends FlexProps {
-  onOpen: () => void;
+  onOpen: () => void
 }
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   return (
@@ -167,17 +161,13 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       borderBottomWidth="1px"
       borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
       justifyContent="flex-start"
-      {...rest}>
-      <IconButton
-        variant="outline"
-        onClick={onOpen}
-        aria-label="open menu"
-        icon={<FiMenu />}
-      />
+      {...rest}
+    >
+      <IconButton variant="outline" onClick={onOpen} aria-label="open menu" icon={<FiMenu />} />
 
       <Text fontSize="2xl" ml="8" fontFamily="monospace" fontWeight="bold">
         Logo
       </Text>
     </Flex>
-  );
-};
+  )
+}

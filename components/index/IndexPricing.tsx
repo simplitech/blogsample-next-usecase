@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode } from 'react'
 import {
   Box,
   Stack,
@@ -11,9 +11,9 @@ import {
   ListItem,
   ListIcon,
   Button,
-} from '@chakra-ui/react';
-import { FaCheckCircle } from 'react-icons/fa';
-import useTranslationWithPrefix from "../../helpers/useTranslationWithPrefix";
+} from '@chakra-ui/react'
+import { FaCheckCircle } from 'react-icons/fa'
+import useTranslationWithPrefix from '../../helpers/useTranslationWithPrefix'
 
 const PriceWrapper = ({ children }: { children: ReactNode }) => {
   return (
@@ -23,13 +23,14 @@ const PriceWrapper = ({ children }: { children: ReactNode }) => {
       borderWidth="1px"
       alignSelf={{ base: 'center', lg: 'flex-start' }}
       borderColor={useColorModeValue('gray.200', 'gray.500')}
-      borderRadius={'xl'}>
+      borderRadius={'xl'}
+    >
       {children}
     </Box>
-  );
+  )
 }
 
-const Price = ({value}: {value: number}) => {
+const Price = ({ value }: { value: number }) => {
   const { tp } = useTranslationWithPrefix('comp.IndexPricing')
   return (
     <HStack justifyContent="center">
@@ -43,7 +44,7 @@ const Price = ({value}: {value: number}) => {
         {tp('perMonth')}
       </Text>
     </HStack>
-  );
+  )
 }
 
 const IndexPricing: React.FC = () => {
@@ -63,7 +64,8 @@ const IndexPricing: React.FC = () => {
         textAlign="center"
         justify="center"
         spacing={{ base: 4, lg: 10 }}
-        py={10}>
+        py={10}
+      >
         <PriceWrapper>
           <Box py={4} px={12}>
             <Text fontWeight="500" fontSize="2xl">
@@ -71,10 +73,7 @@ const IndexPricing: React.FC = () => {
             </Text>
             <Price value={79} />
           </Box>
-          <VStack
-            bg={useColorModeValue('gray.50', 'gray.700')}
-            py={4}
-            borderBottomRadius={'xl'}>
+          <VStack bg={useColorModeValue('gray.50', 'gray.700')} py={4} borderBottomRadius={'xl'}>
             <List spacing={3} textAlign="start" px={12}>
               <ListItem>
                 <ListIcon as={FaCheckCircle} color="green.500" />
@@ -99,11 +98,7 @@ const IndexPricing: React.FC = () => {
 
         <PriceWrapper>
           <Box position="relative">
-            <Box
-              position="absolute"
-              top="-16px"
-              left="50%"
-              style={{ transform: 'translate(-50%)' }}>
+            <Box position="absolute" top="-16px" left="50%" style={{ transform: 'translate(-50%)' }}>
               <Text
                 textTransform="uppercase"
                 bg={useColorModeValue('red.300', 'red.700')}
@@ -112,7 +107,8 @@ const IndexPricing: React.FC = () => {
                 color={useColorModeValue('gray.900', 'gray.300')}
                 fontSize="sm"
                 fontWeight="600"
-                rounded="xl">
+                rounded="xl"
+              >
                 {tp('mostPopular')}
               </Text>
             </Box>
@@ -122,10 +118,7 @@ const IndexPricing: React.FC = () => {
               </Text>
               <Price value={149} />
             </Box>
-            <VStack
-              bg={useColorModeValue('gray.50', 'gray.700')}
-              py={4}
-              borderBottomRadius={'xl'}>
+            <VStack bg={useColorModeValue('gray.50', 'gray.700')} py={4} borderBottomRadius={'xl'}>
               <List spacing={3} textAlign="start" px={12}>
                 <ListItem>
                   <ListIcon as={FaCheckCircle} color="green.500" />
@@ -163,10 +156,7 @@ const IndexPricing: React.FC = () => {
             </Text>
             <Price value={349} />
           </Box>
-          <VStack
-            bg={useColorModeValue('gray.50', 'gray.700')}
-            py={4}
-            borderBottomRadius={'xl'}>
+          <VStack bg={useColorModeValue('gray.50', 'gray.700')} py={4} borderBottomRadius={'xl'}>
             <List spacing={3} textAlign="start" px={12}>
               <ListItem>
                 <ListIcon as={FaCheckCircle} color="green.500" />
@@ -190,7 +180,7 @@ const IndexPricing: React.FC = () => {
         </PriceWrapper>
       </Stack>
     </Box>
-  );
+  )
 }
 
-export default IndexPricing;
+export default IndexPricing

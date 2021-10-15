@@ -1,13 +1,19 @@
-import {CombinedError} from "@urql/core/dist/types/utils/error";
-import {UseFormSetError} from "react-hook-form/dist/types/form";
-import {UseToastOptions} from "@chakra-ui/react";
+import { CombinedError } from '@urql/core/dist/types/utils/error'
+import { UseFormSetError } from 'react-hook-form/dist/types/form'
+import { UseToastOptions } from '@chakra-ui/react'
 
 /**
  * Shows the GraphQL errors represented in multiple ways
  * @param error the CombinedError object
  * @param handlers react-form-hook's setError and/or Chakra's toast method
  */
-export function errorHandler(error: CombinedError, handlers: { setError?: UseFormSetError<any>, toast?: (options?: (UseToastOptions | undefined)) => (string | number | undefined) }) {
+export function errorHandler(
+  error: CombinedError,
+  handlers: {
+    setError?: UseFormSetError<any>
+    toast?: (options?: UseToastOptions | undefined) => string | number | undefined
+  },
+) {
   const gError = error.graphQLErrors[0]
   if (gError) {
     const oError: any = gError.originalError
@@ -22,7 +28,7 @@ export function errorHandler(error: CombinedError, handlers: { setError?: UseFor
     if (handlers.toast) {
       handlers.toast({
         title: gError.message,
-        status: "error",
+        status: 'error',
         duration: 6000,
         isClosable: true,
       })
