@@ -17,8 +17,11 @@ import {
 } from '@chakra-ui/react'
 import { HamburgerIcon, CloseIcon, ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import React from 'react'
-import NextLink from 'next/link'
 import useTranslationWithPrefix from '../helpers/useTranslationWithPrefix'
+import NavLink from './NavLink'
+import NavButton from './NavButton'
+import ColorModeToggleButton from './ColorModeToggleButton'
+import Logo from './Logo'
 
 interface NavItem {
   label: string
@@ -53,13 +56,7 @@ const PublicHeader: React.FC = () => {
           />
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
-          <Text
-            textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
-            fontFamily={'heading'}
-            color={useColorModeValue('gray.800', 'white')}
-          >
-            Logo
-          </Text>
+          <Logo color={useColorModeValue('gray.800', 'white')} height={24} />
 
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
             <DesktopNav />
@@ -67,24 +64,23 @@ const PublicHeader: React.FC = () => {
         </Flex>
 
         <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
-          <NextLink href="login">
-            <Button as={'a'} fontSize={'sm'} fontWeight={400} variant={'link'} href={'#'}>
-              {tp('signIn')}
-            </Button>
-          </NextLink>
+          <NavButton href="/login" fontSize={'sm'} fontWeight={400} variant={'link'}>
+            {tp('signIn')}
+          </NavButton>
           <Button
             display={{ base: 'none', md: 'inline-flex' }}
             fontSize={'sm'}
             fontWeight={600}
             color={'white'}
-            bg={'pink.400'}
+            bg={'brand.400'}
             href={'#'}
             _hover={{
-              bg: 'pink.300',
+              bg: 'brand.300',
             }}
           >
             {tp('signUp')}
           </Button>
+          <ColorModeToggleButton />
         </Stack>
       </Flex>
 
@@ -109,19 +105,20 @@ const DesktopNav = () => {
         <Box key={navItem.label}>
           <Popover trigger={'hover'} placement={'bottom-start'}>
             <PopoverTrigger>
-              <Link
+              <NavLink
+                href={navItem.href}
                 p={2}
-                href={navItem.href ?? '#'}
                 fontSize={'sm'}
                 fontWeight={500}
                 color={linkColor}
+                activeColor={'brand.300'}
                 _hover={{
                   textDecoration: 'none',
                   color: linkHoverColor,
                 }}
               >
                 {navItem.label}
-              </Link>
+              </NavLink>
             </PopoverTrigger>
 
             {navItem.children && (
@@ -148,11 +145,11 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
       display={'block'}
       p={2}
       rounded={'md'}
-      _hover={{ bg: useColorModeValue('pink.50', 'gray.900') }}
+      _hover={{ bg: useColorModeValue('brand.50', 'gray.900') }}
     >
       <Stack direction={'row'} align={'center'}>
         <Box>
-          <Text transition={'all .3s ease'} _groupHover={{ color: 'pink.400' }} fontWeight={500}>
+          <Text transition={'all .3s ease'} _groupHover={{ color: 'brand.400' }} fontWeight={500}>
             {label}
           </Text>
           <Text fontSize={'sm'}>{subLabel}</Text>
@@ -166,7 +163,7 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
           align={'center'}
           flex={1}
         >
-          <Icon color={'pink.400'} w={5} h={5} as={ChevronRightIcon} />
+          <Icon color={'brand.400'} w={5} h={5} as={ChevronRightIcon} />
         </Flex>
       </Stack>
     </Link>

@@ -72,14 +72,14 @@ const LoginCard: React.FC = () => {
       <Stack spacing={10}>
         <Stack direction={{ base: 'column', sm: 'row' }} align={'start'} justify={'space-between'}>
           <Checkbox>{tp('rememberMe')}</Checkbox>
-          <Link color={'blue.400'}>{tp('forgotPassword')}</Link>
+          <Link color={'brand.400'}>{tp('forgotPassword')}</Link>
         </Stack>
         <Button
           type="submit"
-          bg={'blue.400'}
+          bg={'brand.400'}
           color={'white'}
           _hover={{
-            bg: 'blue.500',
+            bg: 'brand.500',
           }}
         >
           {tp('signIn')}

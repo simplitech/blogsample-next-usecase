@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, TableProps, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
+import { Table, TableProps, Tbody, Td, Th, Thead, Tr, useColorModeValue } from '@chakra-ui/react'
 import OrderBy, { OrderController } from './OrderBy'
 import useTranslationWithPrefix from '../helpers/useTranslationWithPrefix'
 
@@ -27,7 +27,7 @@ export default function DataTable<T>({ headersPrefix, controller, fields, ...tab
   const { tp } = useTranslationWithPrefix(headersPrefix)
 
   return (
-    <Table variant={'striped'} bg={'white'} {...tableProps}>
+    <Table variant={'striped'} bg={useColorModeValue('white', 'gray.800')} {...tableProps}>
       <Thead>
         <Tr>
           {Object.keys(fields).map((f) => (

@@ -161,22 +161,15 @@
       "signUp": "Sign Up",
       "navItems": [
         {
-          "label": "Inspiration",
-          "children": [
-            {
-              "label": "Explore Design Work",
-              "subLabel": "Trending Design to inspire you",
-              "href": "#"
-            },
-            {
-              "label": "New & Noteworthy",
-              "subLabel": "Up-and-coming Designers",
-              "href": "#"
-            }
-          ]
+          "label": "Home",
+          "href": "/"
         },
         {
-          "label": "Find Work",
+          "label": "Blog",
+          "href": "/blog"
+        },
+        {
+          "label": "Submenu Example",
           "children": [
             {
               "label": "Job Board",
@@ -189,14 +182,6 @@
               "href": "#"
             }
           ]
-        },
-        {
-          "label": "Learn Design",
-          "href": "#"
-        },
-        {
-          "label": "Hire Designers",
-          "href": "#"
         }
       ]
     },

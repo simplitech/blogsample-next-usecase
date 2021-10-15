@@ -59,7 +59,7 @@ const Posts = () => {
                 .fill(0)
                 .map((p, i) => <BlogPostCard key={`placeholder${i}`} />)}
             {listController.hasNext() && (
-              <Button bg={'#8dd'} onClick={() => listController.nextPage()}>
+              <Button bg={'brand.300'} onClick={() => listController.nextPage()}>
                 {tp('loadMore')}
               </Button>
             )}

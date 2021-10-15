@@ -6,7 +6,6 @@ import {
   Flex,
   Icon,
   useColorModeValue,
-  Link,
   Drawer,
   DrawerContent,
   Text,
@@ -16,11 +15,11 @@ import {
 } from '@chakra-ui/react'
 import { FiGrid, FiList, FiMenu, FiLogOut } from 'react-icons/fi'
 import { IconType } from 'react-icons'
-import { ReactText } from 'react'
 import { useAuthState } from '../state/AuthState'
-import NextLink from 'next/link'
 import useTranslationWithPrefix from '../helpers/useTranslationWithPrefix'
 import Head from 'next/head'
+import NavLink from '../components/NavLink'
+import Logo from '../components/Logo'
 
 interface LinkItemProps {
   name: string
@@ -91,59 +90,37 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       {...rest}
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Logo
-        </Text>
+        <Logo color={useColorModeValue('gray.700', 'white')} height={32} />
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
-      {linkItems.map((link) =>
-        link.path ? (
-          <NextLink key={link.name} href={link.path}>
-            <NavItem icon={link.icon}>{link.name}</NavItem>
-          </NextLink>
-        ) : (
-          <NavItem key={link.name} icon={link.icon} onClick={() => link.onClick()}>
-            {link.name}
-          </NavItem>
-        ),
-      )}
-    </Box>
-  )
-}
-
-interface NavItemProps extends FlexProps {
-  icon: IconType
-  children: ReactText
-}
-const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
-  return (
-    <Link style={{ textDecoration: 'none' }}>
-      <Flex
-        align="center"
-        p="4"
-        mx="4"
-        borderRadius="lg"
-        role="group"
-        cursor="pointer"
-        _hover={{
-          bg: 'cyan.400',
-          color: 'white',
-        }}
-        {...rest}
-      >
-        {icon && (
+      {linkItems.map((link) => (
+        <NavLink
+          key={link.name}
+          href={link.path}
+          activeBg={useColorModeValue('gray.300', 'gray.700')}
+          display={'flex'}
+          alignItems={'center'}
+          p="4"
+          mx="4"
+          borderRadius="lg"
+          onClick={() => link.onClick && link.onClick()}
+          _hover={{
+            bg: 'brand.300',
+            color: 'white',
+          }}
+        >
           <Icon
             mr="4"
             fontSize="16"
             _groupHover={{
               color: 'white',
             }}
-            as={icon}
+            as={link.icon}
           />
-        )}
-        {children}
-      </Flex>
-    </Link>
+          {link.name}
+        </NavLink>
+      ))}
+    </Box>
   )
 }
 

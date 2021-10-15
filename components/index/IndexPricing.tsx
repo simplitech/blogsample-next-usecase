@@ -89,7 +89,7 @@ const IndexPricing: React.FC = () => {
               </ListItem>
             </List>
             <Box w="80%" pt={7}>
-              <Button w="full" colorScheme="red" variant="outline">
+              <Button w="full" colorScheme="brand" variant="outline">
                 {tp('startTrial')}
               </Button>
             </Box>
@@ -101,7 +101,7 @@ const IndexPricing: React.FC = () => {
             <Box position="absolute" top="-16px" left="50%" style={{ transform: 'translate(-50%)' }}>
               <Text
                 textTransform="uppercase"
-                bg={useColorModeValue('red.300', 'red.700')}
+                bg={useColorModeValue('brand.300', 'brand.700')}
                 px={3}
                 py={1}
                 color={useColorModeValue('gray.900', 'gray.300')}
@@ -142,7 +142,7 @@ const IndexPricing: React.FC = () => {
                 </ListItem>
               </List>
               <Box w="80%" pt={7}>
-                <Button w="full" colorScheme="red">
+                <Button w="full" colorScheme="brand">
                   {tp('startTrial')}
                 </Button>
               </Box>
@@ -172,7 +172,7 @@ const IndexPricing: React.FC = () => {
               </ListItem>
             </List>
             <Box w="80%" pt={7}>
-              <Button w="full" colorScheme="red" variant="outline">
+              <Button w="full" colorScheme="brand" variant="outline">
                 {tp('startTrial')}
               </Button>
             </Box>

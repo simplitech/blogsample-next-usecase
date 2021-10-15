@@ -16,7 +16,7 @@ const IndexHero: React.FC = () => {
         <Heading fontWeight={600} fontSize={{ base: '2xl', sm: '4xl', md: '6xl' }} lineHeight={'110%'}>
           <Trans i18nKey="comp.IndexHero.heading">
             default
-            <Text as={'span'} color={'green.400'} display={'block'}>
+            <Text as={'span'} color={'brand.400'} display={'block'}>
               special
             </Text>
           </Trans>
@@ -24,17 +24,17 @@ const IndexHero: React.FC = () => {
         <Text color={'gray.500'}>{tp('monetizeYourContent')}</Text>
         <Stack direction={'column'} spacing={3} align={'center'} alignSelf={'center'} position={'relative'}>
           <Button
-            colorScheme={'green'}
-            bg={'green.400'}
+            colorScheme={'brand'}
+            bg={'brand.400'}
             rounded={'full'}
             px={6}
             _hover={{
-              bg: 'green.500',
+              bg: 'brand.500',
             }}
           >
             {tp('getStarted')}
           </Button>
-          <Button variant={'link'} colorScheme={'blue'} size={'sm'}>
+          <Button variant={'link'} colorScheme={'brand'} size={'sm'}>
             {tp('learnMore')}
           </Button>
           <Box>
