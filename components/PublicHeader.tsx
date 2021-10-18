@@ -28,6 +28,7 @@ interface NavItem {
   subLabel?: string
   children?: Array<NavItem>
   href?: string
+  test?: string
 }
 
 const PublicHeader: React.FC = () => {
