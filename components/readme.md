@@ -2,9 +2,10 @@
 
 This folder contains React components that are used on other components or on [pages](../pages)
 
-Components that are used to create the main structure of the application are on [layout folder](../layouts) 
+Every relevant component must have a [Story](https://storybook.js.org/docs/react/get-started/whats-a-story) to facilitate
+tests and documentation, execute `yarn storybook` to visualize this documentation.
 
-Every component must have also a [Story](https://storybook.js.org/docs/react/get-started/whats-a-story) to facilitate tests and documentation.
+Components that are used to create the main structure of the application are on [layout folder](../layouts)
 
 Note:
 - Generic components should be on the root folders

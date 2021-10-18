@@ -18,38 +18,24 @@ JWT_SECRET="<any secret here>"
 STORYBOOK_ZEPLIN_TOKEN="<zeplin access token here, create one here: https://app.zeplin.io/profile/developer >"
 ```
 
-Create the database and seed with random data
+Run this command to setup Husky (pre-commit tasks) and the Database (with prisma)
 ```shell
 yarn setup
 ```
 
-## Run
-```shell
-yarn dev
-```
-
-## Prisma Studio
-To visualize and edit the database data
-```shell
-yarn studio
-```
-
-## Prisma Generate
-Execute this command everytime you change the schema.prisma file:
-```shell
-yarn prisma
-```
-
-## Storybook
-To visualize the Components and their different states and documentation
-```shell
-yarn storybook
-```
-
-## Recommended IntelliJ Plugins
+### IntelliJ Setup
+#### Plugins
 - JS GraphQL
 - Prisma Support
 - MDX
+#### Lint setup
+Open `File > Settings` and navigate on the menu `Languages and Frameworks > Javascript > Code Quality Tools > ESLint` and
+check the option **Run eslint --fix on save**.
+
+## Run the project locally
+```shell
+yarn dev
+```
 
 ## Code Guide Documentation
 The starting point of the application is on [pages](pages), follow this link to understand everything.
@@ -67,9 +53,3 @@ For the Front-end styling we are using [ChakraUI](https://chakra-ui.com/).
 
 ## Database Class Diagram
 ![](prisma/schema.png)
-
-## Lint
-We are using Eslint and Prettier to standardize the code style. Make sure to call `yarn lint` before commiting.
-
-If you are using IntelliJ, you can setup to automatically **Run eslint --fix on save**,
-just open `File > Settings` and setup it on the menu `Languages and Frameworks > Javascript > Code Quality Tools > ESLint`.
