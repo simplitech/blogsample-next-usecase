@@ -53,3 +53,10 @@ For the Front-end styling we are using [ChakraUI](https://chakra-ui.com/).
 
 ## Database Class Diagram
 ![](prisma/schema.png)
+
+
+## Problems to Commit?
+Maybe Eslint + Husky is blocking your crappy code 😅. Run this command to check where to fix:
+```shell
+yarn lint
+```
