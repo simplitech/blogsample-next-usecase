@@ -1,5 +1,5 @@
 import { useLocalStorage } from 'react-use-storage'
-import { User } from '../generated/graphql'
+import { User } from 'generated/graphql'
 import Cookies from 'js-cookie'
 import cookies from 'next-cookies'
 import { useEffect } from 'react'
@@ -25,7 +25,7 @@ export function useAuthState() {
       if (!user) {
         router.push('/')
       }
-    }, [router])
+    }, [user, router])
   }
 
   const pushAuthorizedUser = () => {
@@ -33,7 +33,7 @@ export function useAuthState() {
       if (user) {
         router.push('/admin/dashboard')
       }
-    }, [router])
+    }, [user, router])
   }
 
   return {

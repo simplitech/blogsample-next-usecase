@@ -1,6 +1,6 @@
 import { HStack, Image, Skeleton, SkeletonCircle, Text } from '@chakra-ui/react'
 import React from 'react'
-import { PartialPost } from '../../types/PartialPost'
+import { PartialPost } from 'types/PartialPost'
 
 const BlogAuthor = (props: { post?: PartialPost }) => {
   return (

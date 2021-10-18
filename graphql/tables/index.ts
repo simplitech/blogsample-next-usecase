@@ -1,4 +1,4 @@
-import { ModelsEnhanceMap } from '../../generated/type-graphql'
+import { ModelsEnhanceMap } from 'generated/type-graphql'
 
 import { postTableEnhance } from './PostTableEnhance'
 import { userTableEnhance } from './UserTableEnhance'

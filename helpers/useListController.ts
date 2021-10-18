@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { SortOrder } from '../generated/graphql'
+import { SortOrder } from 'generated/graphql'
 import { debounce } from 'lodash'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

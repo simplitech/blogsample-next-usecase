@@ -1,9 +1,9 @@
 import { Flex, Heading, Stack, Text, Link, useColorModeValue } from '@chakra-ui/react'
-import LoginCard from '../components/login/LoginCard'
+import LoginCard from 'components/login/LoginCard'
 import { Trans } from 'react-i18next'
 import React from 'react'
-import useTranslationWithPrefix from '../helpers/useTranslationWithPrefix'
-import { useAuthState } from '../state/AuthState'
+import useTranslationWithPrefix from 'helpers/useTranslationWithPrefix'
+import { useAuthState } from 'state/AuthState'
 
 const IndexPage: React.FC = () => {
   const { tp } = useTranslationWithPrefix('page.login')

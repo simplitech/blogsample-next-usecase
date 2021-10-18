@@ -1,5 +1,5 @@
 import { NonEmptyArray } from 'type-graphql'
-import { ResolversEnhanceMap } from '../../generated/type-graphql'
+import { ResolversEnhanceMap } from 'generated/type-graphql'
 import { CrudDefinition } from '../CrudDefinition'
 
 import postCrud from '../crud/PostCrud'

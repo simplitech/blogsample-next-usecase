@@ -1,9 +1,9 @@
-import EmailAndPasswordValidation from '../../validations/EmailAndPasswordValidation'
+import EmailAndPasswordValidation from 'validations/EmailAndPasswordValidation'
 import crypto from 'crypto'
 import { UserInputError } from 'apollo-server-micro'
 import i18next from 'i18next'
 import jwt from 'jsonwebtoken'
-import { User } from '../../generated/type-graphql'
+import { User } from 'generated/type-graphql'
 import { Context } from '../Context'
 
 export class UserProcess {

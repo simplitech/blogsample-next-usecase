@@ -1,7 +1,7 @@
-import { useAuthState } from '../../state/AuthState'
+import { useAuthState } from 'state/AuthState'
 import React from 'react'
-import AdminLayout from '../../layouts/AdminLayout'
-import useTranslationWithPrefix from '../../helpers/useTranslationWithPrefix'
+import AdminLayout from 'layouts/AdminLayout'
+import useTranslationWithPrefix from 'helpers/useTranslationWithPrefix'
 
 const Dashboard = () => {
   const authState = useAuthState()

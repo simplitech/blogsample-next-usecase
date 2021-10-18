@@ -13,7 +13,7 @@ import {
   Button,
 } from '@chakra-ui/react'
 import { FaCheckCircle } from 'react-icons/fa'
-import useTranslationWithPrefix from '../../helpers/useTranslationWithPrefix'
+import useTranslationWithPrefix from 'helpers/useTranslationWithPrefix'
 
 const PriceWrapper = ({ children }: { children: ReactNode }) => {
   return (

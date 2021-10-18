@@ -1,6 +1,6 @@
 import { Box, Flex, FlexProps, Heading, Image, Link, Text, useColorModeValue } from '@chakra-ui/react'
 import React from 'react'
-import { PartialPost } from '../../types/PartialPost'
+import { PartialPost } from 'types/PartialPost'
 import BlogAuthor from './BlogAuthor'
 
 const BlogPostSpotlightCard = (props: { post: PartialPost } & FlexProps) => {

@@ -14,7 +14,7 @@ import {
 import React, { ReactNode } from 'react'
 import { FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa'
 import { BiMailSend } from 'react-icons/bi'
-import useTranslationWithPrefix from '../helpers/useTranslationWithPrefix'
+import useTranslationWithPrefix from 'helpers/useTranslationWithPrefix'
 import Logo from './Logo'
 import NavLink from './NavLink'
 

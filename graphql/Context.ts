@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { IncomingMessage } from 'http'
-import { User } from '../generated/type-graphql'
+import { User } from 'generated/type-graphql'
 import { UserProcess } from './process/UserProcess'
 
 const prisma = new PrismaClient()

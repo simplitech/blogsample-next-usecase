@@ -1,7 +1,7 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
-import en from '../locale/en-US/lang.json'
+import en from 'locale/en-US/lang.json'
 
 export default function SetupI18next() {
   i18n

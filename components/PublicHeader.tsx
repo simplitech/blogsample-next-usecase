@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react'
 import { HamburgerIcon, CloseIcon, ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import React from 'react'
-import useTranslationWithPrefix from '../helpers/useTranslationWithPrefix'
+import useTranslationWithPrefix from 'helpers/useTranslationWithPrefix'
 import NavLink from './NavLink'
 import NavButton from './NavButton'
 import ColorModeToggleButton from './ColorModeToggleButton'

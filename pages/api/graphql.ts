@@ -2,9 +2,9 @@ import 'reflect-metadata'
 import { ApolloServer } from 'apollo-server-micro'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { buildSchema } from 'type-graphql'
-import { createContext } from '../../graphql/Context'
-import resolvers from '../../graphql/resolvers'
-import { appAuthChecker } from '../../graphql/AppAuthChecker'
+import { createContext } from 'graphql/Context'
+import resolvers from 'graphql/resolvers'
+import { appAuthChecker } from 'graphql/AppAuthChecker'
 
 export const config = {
   api: {

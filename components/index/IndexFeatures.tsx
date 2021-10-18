@@ -1,6 +1,6 @@
 import React from 'react'
 import { Stack, Container, Box, Flex, Text, Heading, SimpleGrid } from '@chakra-ui/react'
-import useTranslationWithPrefix from '../../helpers/useTranslationWithPrefix'
+import useTranslationWithPrefix from 'helpers/useTranslationWithPrefix'
 import { Trans } from 'react-i18next'
 
 const IndexFeatures: React.FC = () => {

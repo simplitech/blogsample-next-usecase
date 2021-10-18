@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 import { Box, Flex, Heading, Text, Stack, Container, Avatar, useColorModeValue } from '@chakra-ui/react'
-import useTranslationWithPrefix from '../../helpers/useTranslationWithPrefix'
+import useTranslationWithPrefix from 'helpers/useTranslationWithPrefix'
 
 const Testimonial = ({ children }: { children: ReactNode }) => {
   return <Box>{children}</Box>

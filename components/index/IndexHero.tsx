@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { Box, Heading, Text, Button, Stack, Icon, useColorModeValue, createIcon } from '@chakra-ui/react'
 import React from 'react'
 import { Trans } from 'react-i18next'
-import useTranslationWithPrefix from '../../helpers/useTranslationWithPrefix'
+import useTranslationWithPrefix from 'helpers/useTranslationWithPrefix'
 
 const IndexHero: React.FC = () => {
   const { tp } = useTranslationWithPrefix('comp.IndexHero')

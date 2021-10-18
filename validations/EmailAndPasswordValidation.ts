@@ -1,5 +1,5 @@
 import { string, object, SchemaOf } from 'yup'
-import EmailAndPassword from '../types/EmailAndPassword'
+import EmailAndPassword from 'types/EmailAndPassword'
 
 const EmailAndPasswordValidation: SchemaOf<EmailAndPassword> = object({
   email: string().defined().email(),

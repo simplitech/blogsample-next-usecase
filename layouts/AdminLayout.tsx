@@ -8,7 +8,6 @@ import {
   useColorModeValue,
   Drawer,
   DrawerContent,
-  Text,
   useDisclosure,
   BoxProps,
   FlexProps,
@@ -142,9 +141,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
     >
       <IconButton variant="outline" onClick={onOpen} aria-label="open menu" icon={<FiMenu />} />
 
-      <Text fontSize="2xl" ml="8" fontFamily="monospace" fontWeight="bold">
-        Logo
-      </Text>
+      <Logo color={useColorModeValue('gray.700', 'white')} height={32} />
     </Flex>
   )
 }

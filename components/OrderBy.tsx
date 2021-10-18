@@ -1,6 +1,6 @@
 import React from 'react'
 import { LinkProps, Link } from '@chakra-ui/react'
-import { SortOrder } from '../generated/graphql'
+import { SortOrder } from 'generated/graphql'
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons'
 
 export interface OrderController<T> {

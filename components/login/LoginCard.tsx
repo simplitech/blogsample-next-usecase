@@ -11,16 +11,16 @@ import {
   useToast,
   FormErrorMessage,
 } from '@chakra-ui/react'
-import { useSignInMutation } from '../../generated/graphql'
+import { useSignInMutation } from 'generated/graphql'
 import { useForm } from 'react-hook-form'
 import crypto from 'crypto'
-import { errorHandler } from '../../helpers/errorHandler'
-import { useAuthState } from '../../state/AuthState'
-import useTranslationWithPrefix from '../../helpers/useTranslationWithPrefix'
+import { errorHandler } from 'helpers/errorHandler'
+import { useAuthState } from 'state/AuthState'
+import useTranslationWithPrefix from 'helpers/useTranslationWithPrefix'
 import { useRouter } from 'next/router'
-import EmailAndPassword from '../../types/EmailAndPassword'
+import EmailAndPassword from 'types/EmailAndPassword'
 import { yupResolver } from '@hookform/resolvers/yup'
-import EmailAndPasswordValidation from '../../validations/EmailAndPasswordValidation'
+import EmailAndPasswordValidation from 'validations/EmailAndPasswordValidation'
 
 const LoginCard: React.FC = () => {
   const { tp } = useTranslationWithPrefix('comp.LoginCard')

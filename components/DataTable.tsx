@@ -1,12 +1,12 @@
 import React from 'react'
 import { Table, TableProps, Tbody, Td, Th, Thead, Tr, useColorModeValue } from '@chakra-ui/react'
 import OrderBy, { OrderController } from './OrderBy'
-import useTranslationWithPrefix from '../helpers/useTranslationWithPrefix'
+import useTranslationWithPrefix from 'helpers/useTranslationWithPrefix'
 
 type DataTableProps<T> = TableProps & {
   headersPrefix: string
   controller: OrderController<T> & { list: T[] }
-  fields?: RenderMap<T>
+  fields?: DataTableRenderMap<T>
 }
 
 export type CellRenderProps<T, k extends keyof T> = {
@@ -19,7 +19,7 @@ type FieldRenderMap<T> = {
   [k in keyof T]?: React.FC<CellRenderProps<T, k>>
 }
 
-export type RenderMap<T> = FieldRenderMap<T> & {
+export type DataTableRenderMap<T> = FieldRenderMap<T> & {
   [k: string]: React.FC<{ model?: T; fieldName?: any }>
 }
 

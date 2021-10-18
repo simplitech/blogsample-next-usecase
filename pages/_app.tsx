@@ -1,3 +1,3 @@
-import setup from '../setup'
+import setup from 'setup'
 
 export default setup()

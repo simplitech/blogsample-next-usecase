@@ -1,6 +1,6 @@
 import { AspectRatio, Box, Heading, Image, Link, Skeleton, SkeletonText, Text } from '@chakra-ui/react'
 import React from 'react'
-import { PartialPost } from '../../types/PartialPost'
+import { PartialPost } from 'types/PartialPost'
 import BlogAuthor from './BlogAuthor'
 
 const BlogPostCard = (props: { post?: PartialPost }) => {

@@ -1,4 +1,4 @@
-import * as generated from '../../generated/type-graphql'
+import * as generated from 'generated/type-graphql'
 import { CrudDefinition } from '../CrudDefinition'
 
 const postCrud: CrudDefinition = {
