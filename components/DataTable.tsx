@@ -12,7 +12,7 @@ type DataTableProps<T> = TableProps & {
 export type CellRenderProps<T, k extends keyof T> = {
   val: any
   model?: T
-  key?: k
+  fieldName?: k
 }
 
 type FieldRenderMap<T> = {
@@ -20,7 +20,7 @@ type FieldRenderMap<T> = {
 }
 
 export type RenderMap<T> = FieldRenderMap<T> & {
-  [k: string]: React.FC<{ model?: T; key?: any }>
+  [k: string]: React.FC<{ model?: T; fieldName?: any }>
 }
 
 export default function DataTable<T>({ headersPrefix, controller, fields, ...tableProps }: DataTableProps<T>) {
@@ -32,7 +32,7 @@ export default function DataTable<T>({ headersPrefix, controller, fields, ...tab
         <Tr>
           {Object.keys(fields).map((f) => (
             <Th key={`header.${f}`}>
-              <OrderBy controller={controller} fieldname={f as keyof T}>
+              <OrderBy controller={controller} fieldName={f as keyof T}>
                 {tp(f as string)}
               </OrderBy>
             </Th>
@@ -46,7 +46,7 @@ export default function DataTable<T>({ headersPrefix, controller, fields, ...tab
               const Comp: any = fields[f]
               return (
                 <Td key={`cell.${i}.${f}`}>
-                  <Comp val={p[f]} model={p} key={f} />
+                  <Comp val={p[f]} model={p} fieldName={f} />
                 </Td>
               )
             })}

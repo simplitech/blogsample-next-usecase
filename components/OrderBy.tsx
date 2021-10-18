@@ -10,15 +10,15 @@ export interface OrderController<T> {
 }
 
 type OrderByProps<T> = LinkProps & {
-  fieldname: keyof T
+  fieldName: keyof T
   controller: OrderController<T>
 }
 
-export default function OrderBy<T>({ controller, fieldname, children, ...igProps }: OrderByProps<T>) {
+export default function OrderBy<T>({ controller, fieldName, children, ...igProps }: OrderByProps<T>) {
   return (
-    <Link {...igProps} variant={'unstyled'} onClick={() => controller.setOrderBy(fieldname)}>
+    <Link {...igProps} variant={'unstyled'} onClick={() => controller.setOrderBy(fieldName)}>
       {children}
-      {controller.orderBy === fieldname &&
+      {controller.orderBy === fieldName &&
         (controller.sortOrder === SortOrder.Asc ? <TriangleUpIcon h={2.5} /> : <TriangleDownIcon h={2.5} />)}
     </Link>
   )

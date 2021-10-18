@@ -20,8 +20,12 @@ const Posts = () => {
   const { tp, t } = useTranslationWithPrefix('page.admin.list.posts')
   const toast = useToast()
 
-  const listController = useListController<PartialPost>()
-  const [{ data: countData }] = usePostsCountQuery()
+  const listController = useListController<PartialPost>({
+    fieldsToSearch: ['body', 'title'],
+  })
+  const [{ data: countData }] = usePostsCountQuery({
+    variables: { where: listController.query.where },
+  })
   const [{ data, error }] = usePostsAdminQuery({
     variables: listController.query,
   })

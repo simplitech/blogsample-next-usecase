@@ -1,10 +1,15 @@
 import { useTranslation } from 'react-i18next'
-import { Text } from '@chakra-ui/react'
+import { Text, TextProps } from '@chakra-ui/react'
 import React from 'react'
 import { CellRenderProps } from './DataTable'
 
-export default function RenderBoolean<T, k extends keyof T>({ val }: CellRenderProps<T, k>) {
+export default function RenderBoolean<T, k extends keyof T>({
+  val,
+  model,
+  fieldName,
+  ...textProps
+}: CellRenderProps<T, k> & TextProps) {
   const { t } = useTranslation()
 
-  return <Text>{t(`boolean.${val}`)}</Text>
+  return <Text {...textProps}>{t(`boolean.${val}`)}</Text>
 }

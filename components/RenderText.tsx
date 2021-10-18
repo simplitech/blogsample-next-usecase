@@ -5,7 +5,7 @@ import { CellRenderProps } from './DataTable'
 export default function RenderText<T, k extends keyof T>({
   val,
   model,
-  key,
+  fieldName,
   ...textProps
 }: CellRenderProps<T, k> & TextProps) {
   return <Text {...textProps}>{val}</Text>

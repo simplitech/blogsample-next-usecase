@@ -5,7 +5,7 @@ import { debounce } from 'lodash'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface Query<T> {
   // TODO: use T and remove the comment above
-  where?: unknown
+  where?: any
   orderBy?: unknown[] | null
   take?: number | null
   skip?: number | null
@@ -13,6 +13,7 @@ interface Query<T> {
 
 interface QBOptions<T> {
   search?: string
+  fieldsToSearch?: (keyof T)[]
   pageSize?: number
   pageIndex?: number
   orderBy?: keyof T
@@ -29,6 +30,13 @@ function staticQueryBuilder<T>(opts: QBOptions<T>): Query<T> {
     query.orderBy = [{ [opts.orderBy]: opts.sortOrder }]
   }
 
+  if (opts.fieldsToSearch?.length && opts.search?.length) {
+    query.where = { OR: [] }
+    opts.fieldsToSearch.forEach((field) => {
+      query.where.OR.push({ [field]: { contains: opts.search } })
+    })
+  }
+
   return query
 }
 
@@ -39,9 +47,11 @@ function staticQueryBuilder<T>(opts: QBOptions<T>): Query<T> {
 export default function useListController<T>(opts: QBOptions<T> = {}) {
   opts.pageSize = opts.pageSize ?? 20
   opts.pageIndex = opts.pageIndex ?? 0
+  opts.fieldsToSearch = opts.fieldsToSearch ?? []
 
   // input
   const [search, setSearch] = useState<string | undefined>(undefined)
+  const [fieldsToSearch, setFieldsToSearch] = useState<(keyof T)[]>(opts.fieldsToSearch)
   const [pageIndex, setPageIndex] = useState(opts.pageIndex)
   const [pageSize, setPageSize] = useState(opts.pageSize)
   const [orderBy, _setOrderBy] = useState<keyof T | undefined>(opts.orderBy)
@@ -61,12 +71,13 @@ export default function useListController<T>(opts: QBOptions<T> = {}) {
     setLoading(true)
     buildQuery({
       search,
+      fieldsToSearch,
       pageSize,
       pageIndex,
       orderBy,
       sortOrder,
     })
-  }, [search, pageIndex, pageSize, orderBy, sortOrder])
+  }, [search, fieldsToSearch, pageIndex, pageSize, orderBy, sortOrder])
 
   useEffect(() => {
     _setPageCount(Math.ceil(count / pageSize))
@@ -77,7 +88,6 @@ export default function useListController<T>(opts: QBOptions<T> = {}) {
   }, [list])
 
   const setOrderBy = (newOrderBy: keyof T, newSortOrder?: SortOrder) => {
-    setLoading(true)
     // if no sortOrder is provided it will use Asc unless the orderBy didn't change and sortOrder already is Asc
     _setSortOrder(
       newSortOrder ?? (orderBy !== newOrderBy || sortOrder !== SortOrder.Asc ? SortOrder.Asc : SortOrder.Desc),
@@ -122,6 +132,7 @@ export default function useListController<T>(opts: QBOptions<T> = {}) {
   return {
     search,
     setSearch,
+    setFieldsToSearch,
     pageIndex,
     setPageIndex,
     nextPage,
