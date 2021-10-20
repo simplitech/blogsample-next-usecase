@@ -13,6 +13,7 @@ import {
   Tooltip,
 } from '@chakra-ui/react'
 import { ArrowLeftIcon, ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
+import { Trans, useTranslation } from 'react-i18next'
 
 type PaginationProps = FlexProps & {
   controller: {
@@ -29,10 +30,11 @@ type PaginationProps = FlexProps & {
 }
 
 const Pagination: React.FC<PaginationProps> = ({ controller, ...flexProps }) => {
+  const { t } = useTranslation()
   return (
     <Flex justifyContent="space-between" alignItems="center" {...flexProps}>
       <Flex>
-        <Tooltip label="First Page">
+        <Tooltip label={t('list.firstPage')}>
           <IconButton
             onClick={() => controller.goToPage(0)}
             isDisabled={!controller.hasPrev()}
@@ -41,7 +43,7 @@ const Pagination: React.FC<PaginationProps> = ({ controller, ...flexProps }) => 
             aria-label={''}
           />
         </Tooltip>
-        <Tooltip label="Previous Page">
+        <Tooltip label={t('list.prevPage')}>
           <IconButton
             onClick={() => controller.prevPage()}
             isDisabled={!controller.hasPrev()}
@@ -53,16 +55,13 @@ const Pagination: React.FC<PaginationProps> = ({ controller, ...flexProps }) => 
 
       <Flex alignItems="center">
         <Text flexShrink={0} mr={8}>
-          Page{' '}
-          <Text fontWeight="bold" as="span">
-            {controller.pageIndex + 1}
-          </Text>{' '}
-          of{' '}
-          <Text fontWeight="bold" as="span">
-            {controller.pageCount}
-          </Text>
+          <Trans
+            i18nKey={'list.pageIndexOfCount'}
+            values={{ index: controller.pageIndex + 1, count: controller.pageCount }}
+            components={{ bold: <Text fontWeight="bold" as="span" /> }}
+          />
         </Text>
-        <Text flexShrink={0}>Go to page:</Text>{' '}
+        <Text flexShrink={0}>{t('list.goToPage')}</Text>
         <NumberInput
           ml={2}
           mr={8}
@@ -89,14 +88,14 @@ const Pagination: React.FC<PaginationProps> = ({ controller, ...flexProps }) => 
         >
           {[10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
-              Show {pageSize}
+              {t('list.showNumber', { number: pageSize })}
             </option>
           ))}
         </Select>
       </Flex>
 
       <Flex>
-        <Tooltip label="Next Page">
+        <Tooltip label={t('list.nextPage')}>
           <IconButton
             onClick={controller.nextPage}
             isDisabled={!controller.hasNext()}
@@ -104,7 +103,7 @@ const Pagination: React.FC<PaginationProps> = ({ controller, ...flexProps }) => 
             aria-label={''}
           />
         </Tooltip>
-        <Tooltip label="Last Page">
+        <Tooltip label={t('list.lastPage')}>
           <IconButton
             onClick={() => controller.goToPage(controller.pageCount - 1)}
             isDisabled={!controller.hasNext()}

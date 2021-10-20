@@ -38,7 +38,14 @@
     "noDataToShow": "No data to show",
     "noResultFound": "No result found",
     "emptyList": "List is empty",
-    "totalLines": "{{total}} total lines"
+    "totalLines": "{{total}} total lines",
+    "firstPage": "First Page",
+    "prevPage": "Previous Page",
+    "nextPage": "Next Page",
+    "lastPage": "Last Page",
+    "goToPage": "Go to page:",
+    "pageIndexOfCount": "Page <bold>{{index}}</bold> of <bold>{{count}}</bold>",
+    "showNumber": "Show {{number}}"
   },
   "dialog": {
     "remove": {

@@ -14,11 +14,11 @@ import {
 } from '@chakra-ui/react'
 import { FiGrid, FiList, FiMenu, FiLogOut } from 'react-icons/fi'
 import { IconType } from 'react-icons'
-import { useAuthState } from '../state/AuthState'
-import useTranslationWithPrefix from '../helpers/useTranslationWithPrefix'
+import { useAuthState } from 'state/AuthState'
+import useTranslationWithPrefix from 'helpers/useTranslationWithPrefix'
 import Head from 'next/head'
-import NavLink from '../components/NavLink'
-import Logo from '../components/Logo'
+import NavLink from 'components/NavLink'
+import Logo from 'components/Logo'
 
 interface LinkItemProps {
   name: string
