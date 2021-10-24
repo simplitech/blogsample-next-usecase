@@ -2,9 +2,10 @@ import { NonEmptyArray } from 'type-graphql'
 import { ResolversEnhanceMap } from 'generated/type-graphql'
 import { CrudDefinition } from '../CrudDefinition'
 
-import postCrud from '../crud/PostCrud'
+import postCrud from './PostCrud'
+import userCrud from './UserCrud'
 
-const cruds: CrudDefinition[] = [postCrud]
+const cruds: CrudDefinition[] = [postCrud, userCrud]
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const crudResolvers = cruds.reduce<Function[]>((all, curr) => {

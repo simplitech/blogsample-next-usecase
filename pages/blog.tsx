@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { SortOrder, usePostsCountQuery, usePostsQuery } from 'generated/graphql'
 import useTranslationWithPrefix from 'helpers/useTranslationWithPrefix'
 import Head from 'next/head'
-import { Button, Flex, Grid, Text, useToast } from '@chakra-ui/react'
+import { Button, Flex, SimpleGrid, Text, useToast } from '@chakra-ui/react'
 import PublicHeader from 'components/PublicHeader'
 import PublicFooter from 'components/PublicFooter'
 import BlogPostCard from 'components/blog/BlogPostCard'
@@ -50,7 +50,7 @@ const Posts = () => {
             {tp('title')}
           </Text>
           {firstPost && <BlogPostSpotlightCard post={firstPost} mb={16} />}
-          <Grid templateColumns={['repeat(1, 1fr)', 'repeat(2, 1fr)', 'repeat(3, 1fr)']} gap={8} mb={16}>
+          <SimpleGrid columns={[1, 2, 3]} gap={8} mb={16}>
             {otherPosts.map((p) => (
               <BlogPostCard post={p} key={p.id} />
             ))}
@@ -63,7 +63,7 @@ const Posts = () => {
                 {tp('loadMore')}
               </Button>
             )}
-          </Grid>
+          </SimpleGrid>
         </Flex>
         <PublicFooter />
       </Flex>

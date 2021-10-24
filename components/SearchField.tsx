@@ -19,7 +19,7 @@ const SearchField: React.FC<SearchFieldProps> = ({ controller, placeholder = i18
       </InputLeftElement>
       <Input
         type="search"
-        value={controller.search}
+        value={controller.search ?? ''}
         onChange={(e) => controller.setSearch(e.target.value)}
         placeholder={placeholder}
         borderRadius={999}

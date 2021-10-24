@@ -6,14 +6,17 @@ import useTranslationWithPrefix from 'helpers/useTranslationWithPrefix'
 import useListController from 'helpers/useListController'
 import { PartialPost } from 'types/PartialPost'
 import { errorHandler } from 'helpers/errorHandler'
-import { Text, useToast, Flex, Spacer, Box, IconButton, useColorModeValue, Button } from '@chakra-ui/react'
+import { Text, useToast, Flex, Spacer, Box, IconButton, useColorModeValue, Button, Collapse } from '@chakra-ui/react'
 import SearchField from 'components/SearchField'
 import Pagination from 'components/Pagination'
 import DataTable from 'components/DataTable'
-import PostTableRenderer from 'renderers/PostTableRenderer'
+import usePostTable from 'renderers/usePostTable'
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons'
 import { XlsxHelper } from 'helpers/XlsxHelper'
-import PostXlsxRenderer from 'renderers/PostXlsxRenderer'
+import usePostXlsx from 'renderers/usePostXlsx'
+import usePostFilter from 'renderers/usePostFilter'
+import FilterForm from 'components/FilterForm'
+import { BiFilter } from 'react-icons/bi'
 
 const Posts = () => {
   const authState = useAuthState()
@@ -25,7 +28,7 @@ const Posts = () => {
   const [xlsxRequested, setXlsxRequested] = useState(false)
 
   const listController = useListController<PartialPost>({
-    fieldsToSearch: ['body', 'title'],
+    fieldsToSearch: ['body', 'title', 'author.name'],
   })
   const [countResult] = usePostsCountQuery({
     variables: { where: listController.query.where },
@@ -37,6 +40,10 @@ const Posts = () => {
     variables: { where: listController.query.where },
     pause: !xlsxRequested,
   })
+  const tableRenderer = usePostTable()
+  const xlsxRenderer = usePostXlsx()
+  const filterRenderer = usePostFilter()
+  const [filterOpen, setFilterOpen] = useState(false)
 
   useEffect(() => {
     listController.setList(listResult.data?.posts ?? [])
@@ -52,7 +59,7 @@ const Posts = () => {
         xlsxResult.data?.posts,
         tp('title'),
         'page.admin.list.posts.PostFields',
-        PostXlsxRenderer,
+        xlsxRenderer,
       )
       setXlsxRequested(false)
     }
@@ -71,12 +78,29 @@ const Posts = () => {
           </Text>
           <Flex p={2} alignItems={'center'}>
             <SearchField controller={listController} w={'auto'} />
+            <Button
+              onClick={() => setFilterOpen(!filterOpen)}
+              variant={filterOpen ? 'solid' : 'ghost'}
+              leftIcon={<BiFilter />}
+              fontSize={14}
+              iconSpacing={1}
+              ml={2}
+            >
+              {t('list.filter')}
+            </Button>
             <Spacer flex={1} />
             {t('list.totalLines', { total: listController.count })}
             <Button onClick={() => setXlsxRequested(true)} ml={4}>
               {t('action.downloadXlsx')}
             </Button>
           </Flex>
+          <Collapse in={filterOpen} animateOpacity>
+            <FilterForm
+              labelPrefix={'page.admin.list.posts.PostFilter'}
+              controller={listController}
+              fields={filterRenderer}
+            />
+          </Collapse>
         </Flex>
         <Box flex={1} overflow={'auto'}>
           <DataTable
@@ -100,7 +124,7 @@ const Posts = () => {
                   />
                 </Flex>
               ),
-              ...PostTableRenderer,
+              ...tableRenderer,
             }}
           />
         </Box>

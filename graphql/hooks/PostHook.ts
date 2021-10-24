@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 
-export const postsAdminQuery = gql`
+export const queries = gql`
   query postsCount(
     $where: PostWhereInput
     $orderBy: [PostOrderByWithRelationInput!]
@@ -39,9 +39,7 @@ export const postsAdminQuery = gql`
       }
     }
   }
-`
 
-export const postsQuery = gql`
   query posts(
     $where: PostWhereInput
     $orderBy: [PostOrderByWithRelationInput!]

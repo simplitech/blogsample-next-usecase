@@ -25,13 +25,18 @@ async function main() {
         posts: {
           create: Array(faker.datatype.number({ min: 0, max: 40 }))
             .fill(0)
-            .map(() => ({
-              title: faker.company.bs(),
-              bannerUrl: `https://picsum.photos/seed/${faker.random.alphaNumeric()}/600/400`,
-              body: faker.lorem.paragraphs(5),
-              published: true,
-              createdAt: faker.date.past(),
-            })),
+            .map(() => {
+              const createdAt = faker.date.past()
+              const updatedAt = faker.date.between(createdAt, new Date())
+              return {
+                title: faker.company.bs(),
+                bannerUrl: `https://picsum.photos/seed/${faker.random.alphaNumeric()}/600/400`,
+                body: faker.lorem.paragraphs(5),
+                published: faker.datatype.boolean(),
+                createdAt,
+                updatedAt,
+              }
+            }),
         },
       },
     })

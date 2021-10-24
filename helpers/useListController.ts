@@ -1,66 +1,27 @@
 import { useCallback, useEffect, useState } from 'react'
 import { SortOrder } from 'generated/graphql'
 import { debounce } from 'lodash'
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-interface Query<T> {
-  // TODO: use T and remove the comment above
-  where?: any
-  orderBy?: unknown[] | null
-  take?: number | null
-  skip?: number | null
-}
-
-interface QBOptions<T> {
-  search?: string
-  fieldsToSearch?: (keyof T)[]
-  pageSize?: number
-  pageIndex?: number
-  orderBy?: keyof T
-  sortOrder?: SortOrder
-}
-
-function staticQueryBuilder<T>(opts: QBOptions<T>): Query<T> {
-  const query: Query<T> = {
-    take: opts.pageSize,
-    skip: opts.pageIndex * opts.pageSize,
-  }
-
-  if (opts.orderBy && opts.sortOrder) {
-    query.orderBy = [{ [opts.orderBy]: opts.sortOrder }]
-  }
-
-  if (opts.fieldsToSearch?.length && opts.search?.length) {
-    query.where = { OR: [] }
-    opts.fieldsToSearch.forEach((field) => {
-      query.where.OR.push({ [field]: { contains: opts.search } })
-    })
-  }
-
-  return query
-}
+import { QueryBuilder, QBOptions, Query, Where, WhereField } from './QueryBuilder'
 
 /**
  * creates an object that is responsible to control lists queries on GraphQL, with order, filter and paging capabilities
  * @param opts
  */
 export default function useListController<T>(opts: QBOptions<T> = {}) {
-  opts.pageSize = opts.pageSize ?? 20
-  opts.pageIndex = opts.pageIndex ?? 0
-  opts.fieldsToSearch = opts.fieldsToSearch ?? []
+  QueryBuilder.fillDefaultOptions(opts)
 
   // input
   const [search, setSearch] = useState<string | undefined>(undefined)
-  const [fieldsToSearch, setFieldsToSearch] = useState<(keyof T)[]>(opts.fieldsToSearch)
+  const [fieldsToSearch, setFieldsToSearch] = useState<(keyof T | string)[]>(opts.fieldsToSearch)
   const [pageIndex, setPageIndex] = useState(opts.pageIndex)
   const [pageSize, setPageSize] = useState(opts.pageSize)
   const [orderBy, _setOrderBy] = useState<keyof T | undefined>(opts.orderBy)
   const [sortOrder, _setSortOrder] = useState<SortOrder | undefined>(opts.sortOrder)
-  // TODO: filter
+  const [filters, setFilters] = useState<Where<T>>(opts.filters)
 
   // processed
   const [loading, setLoading] = useState(false)
-  const [query, _setQuery] = useState<Query<T>>(opts ? staticQueryBuilder(opts) : {})
+  const [query, _setQuery] = useState<Query<T>>(opts ? QueryBuilder.build(opts) : {})
   const [pageCount, _setPageCount] = useState(0)
 
   // content
@@ -76,8 +37,26 @@ export default function useListController<T>(opts: QBOptions<T> = {}) {
       pageIndex,
       orderBy,
       sortOrder,
+      filters,
     })
-  }, [search, fieldsToSearch, pageIndex, pageSize, orderBy, sortOrder])
+  }, [pageIndex])
+
+  useEffect(() => {
+    setLoading(true)
+    if (pageIndex !== 0) {
+      setPageIndex(0)
+    } else {
+      buildQuery({
+        search,
+        fieldsToSearch,
+        pageSize,
+        pageIndex,
+        orderBy,
+        sortOrder,
+        filters,
+      })
+    }
+  }, [search, fieldsToSearch, pageSize, orderBy, sortOrder, filters])
 
   useEffect(() => {
     _setPageCount(Math.ceil(count / pageSize))
@@ -93,6 +72,12 @@ export default function useListController<T>(opts: QBOptions<T> = {}) {
       newSortOrder ?? (orderBy !== newOrderBy || sortOrder !== SortOrder.Asc ? SortOrder.Asc : SortOrder.Desc),
     )
     _setOrderBy(newOrderBy)
+  }
+
+  const addFilter = (field: keyof T | string, val: WhereField<any>) => {
+    setFilters((curFilters) =>
+      QueryBuilder.cleanUpFilters({ ...curFilters, [field]: { ...curFilters[field], ...val } }),
+    )
   }
 
   const nextPage = () => {
@@ -124,7 +109,7 @@ export default function useListController<T>(opts: QBOptions<T> = {}) {
   }
 
   const _buildQueryNow = (qbOptions: QBOptions<T>) => {
-    _setQuery(staticQueryBuilder<T>(qbOptions))
+    _setQuery(QueryBuilder.build<T>(qbOptions))
   }
 
   const buildQuery = useCallback(debounce(_buildQueryNow, 200), [])
@@ -155,5 +140,8 @@ export default function useListController<T>(opts: QBOptions<T> = {}) {
     appendList,
     count,
     setCount,
+    filters,
+    setFilters,
+    addFilter,
   }
 }

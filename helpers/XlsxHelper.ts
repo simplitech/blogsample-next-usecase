@@ -1,19 +1,16 @@
 import XLSX from 'xlsx'
 import { snakeCase } from 'lodash'
 import i18next from 'i18next'
+import Dictionary from 'types/Dictionary'
 
-interface Dictionary<T> {
-  [k: string]: T
-}
-
-export type CellRenderProps<T, k extends keyof T> = {
+export type XlsxCellRenderProps<T, k extends keyof T> = {
   val: any
   model?: T
   fieldName?: k
 }
 
 type FieldRenderMap<T> = {
-  [k in keyof T]?: (props: CellRenderProps<T, k>) => string
+  [k in keyof T]?: (props: XlsxCellRenderProps<T, k>) => string
 }
 
 export type XlsxRenderMap<T> = FieldRenderMap<T> & {

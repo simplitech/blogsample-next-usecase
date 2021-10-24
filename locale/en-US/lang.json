@@ -13,6 +13,7 @@
     "time": "HH:mm"
   },
   "boolean": {
+    "null": "--",
     "true": "Yes",
     "false": "No"
   },
@@ -36,9 +37,8 @@
   },
   "list": {
     "noDataToShow": "No data to show",
-    "noResultFound": "No result found",
-    "emptyList": "List is empty",
     "totalLines": "{{total}} total lines",
+    "filter": "Filter",
     "firstPage": "First Page",
     "prevPage": "Previous Page",
     "nextPage": "Next Page",
@@ -220,6 +220,14 @@
             "bannerUrl":  "Banner URL",
             "author": "Author",
             "authorId":  "Author ID"
+          },
+          "PostFilter": {
+            "createdAtGte": "Created At Least",
+            "createdAtLte": "Created At Most",
+            "updatedAtGte":  "Updated At Least",
+            "updatedAtLte":  "Updated At Most",
+            "publishedEquals": "Published",
+            "authorIdIn":  "Authors"
           }
         }
       },
