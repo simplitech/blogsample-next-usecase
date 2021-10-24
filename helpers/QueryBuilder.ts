@@ -10,15 +10,13 @@ export abstract class QueryBuilder {
     }
 
     if (opts.orderBy && opts.sortOrder) {
-      const qo: QueryOrderBy<T> = {}
-      qo[opts.orderBy] = opts.sortOrder
-      query.orderBy = [qo]
+      query.orderBy = [this.buildNestedOrderBy(opts.orderBy, opts.sortOrder)]
     }
 
     if (opts.fieldsToSearch?.length && opts.search?.length) {
       const or: Where<T>[] = []
-      opts.fieldsToSearch.forEach((field: string) => {
-        or.push(this.buildNestedFields(field, { contains: opts.search }))
+      opts.fieldsToSearch.forEach((field) => {
+        or.push(this.buildNestedFilter(field, { contains: opts.search }))
       })
       // @ts-ignore
       query.where = { OR: or } // WHERE has this special field called 'OR' but we can't put it on the type
@@ -36,16 +34,31 @@ export abstract class QueryBuilder {
     opts.filters = opts.filters ?? {}
   }
 
-  static buildNestedFields<T>(field: string, value: WhereField<keyof T>) {
+  static buildNestedFilter<T>(field: keyof T | string, value: WhereField<keyof T>) {
     const result: Where<T> = {}
     let cursor = result
-    const subfields = field.split('.') as (keyof T)[]
+    const subfields = (field as string).split('.') as (keyof T)[]
     subfields.forEach((sub, index) => {
       if (index < subfields.length - 1) {
         cursor[sub] = { is: {} }
         cursor = cursor[sub].is
       } else {
         cursor[sub] = value
+      }
+    })
+    return result
+  }
+
+  static buildNestedOrderBy<T>(field: keyof T | string, sortOrder: SortOrder) {
+    const result: any = {}
+    let cursor = result
+    const subfields = (field as string).split('.') as (keyof T)[]
+    subfields.forEach((sub, index) => {
+      if (index < subfields.length - 1) {
+        cursor[sub] = {}
+        cursor = cursor[sub]
+      } else {
+        cursor[sub] = sortOrder
       }
     })
     return result
@@ -88,7 +101,7 @@ export interface QBOptions<T> {
   fieldsToSearch?: (keyof T | string)[]
   pageSize?: number
   pageIndex?: number
-  orderBy?: keyof T
+  orderBy?: keyof T | string
   sortOrder?: SortOrder
   filters?: Where<T>
 }

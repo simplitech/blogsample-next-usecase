@@ -11,5 +11,5 @@ export type DataTableFieldRenderMap<T> = {
 }
 
 export type DataTableRenderMap<T> = DataTableFieldRenderMap<T> & {
-  [k: string]: React.FC<{ model?: T; fieldName?: string }>
+  [k: string]: React.FC<{ model?: T; fieldName?: any }>
 }

@@ -15,7 +15,7 @@ export default function useListController<T>(opts: QBOptions<T> = {}) {
   const [fieldsToSearch, setFieldsToSearch] = useState<(keyof T | string)[]>(opts.fieldsToSearch)
   const [pageIndex, setPageIndex] = useState(opts.pageIndex)
   const [pageSize, setPageSize] = useState(opts.pageSize)
-  const [orderBy, _setOrderBy] = useState<keyof T | undefined>(opts.orderBy)
+  const [orderBy, _setOrderBy] = useState<keyof T | string | undefined>(opts.orderBy)
   const [sortOrder, _setSortOrder] = useState<SortOrder | undefined>(opts.sortOrder)
   const [filters, setFilters] = useState<Where<T>>(opts.filters)
 

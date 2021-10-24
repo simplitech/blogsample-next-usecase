@@ -218,7 +218,7 @@
             "title":  "Title",
             "body": "Body",
             "bannerUrl":  "Banner URL",
-            "author": "Author",
+            "author": { "name": "Author" },
             "authorId":  "Author ID"
           },
           "PostFilter": {
