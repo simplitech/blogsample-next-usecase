@@ -4,6 +4,7 @@ import OrderBy from './OrderBy'
 import useTranslationWithPrefix from 'helpers/useTranslationWithPrefix'
 import { DataTableRenderMap } from 'types/DataTableTypes'
 import { OrderController } from 'types/OrderByTypes'
+import _ from 'lodash'
 
 type DataTableProps<T> = TableProps & {
   headersPrefix: string
@@ -34,7 +35,7 @@ export default function DataTable<T>({ headersPrefix, controller, fields, ...tab
               const Comp: any = fields[f]
               return (
                 <Td key={`cell.${i}.${f}`}>
-                  <Comp val={p[f]} model={p} fieldName={f} />
+                  <Comp val={_.get(p, f)} model={p} fieldName={f} />
                 </Td>
               )
             })}

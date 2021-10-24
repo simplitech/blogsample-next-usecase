@@ -15,6 +15,6 @@ export default function usePostTable(): DataTableRenderMap<Post> {
     title: RenderText,
     body: (args) => <RenderText {...args} noOfLines={3} />,
     bannerUrl: RenderImage,
-    'author.name': (args) => <RenderText {...args} val={args.model.author.name} />,
+    'author.name': RenderText,
   }
 }

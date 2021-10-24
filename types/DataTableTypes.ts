@@ -1,15 +1,11 @@
 import React from 'react'
 
-export type DataTableCellRenderProps<T, k extends keyof T> = {
-  val: any
+export type DataTableCellRenderProps<T> = {
+  val?: any
   model?: T
-  fieldName?: k
+  fieldName?: any
 }
 
-export type DataTableFieldRenderMap<T> = {
-  [k in keyof T]?: React.FC<DataTableCellRenderProps<T, k>>
-}
-
-export type DataTableRenderMap<T> = DataTableFieldRenderMap<T> & {
-  [k: string]: React.FC<{ model?: T; fieldName?: any }>
+export type DataTableRenderMap<T> = {
+  [k in keyof T | string]?: React.FC<DataTableCellRenderProps<T>>
 }
