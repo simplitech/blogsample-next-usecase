@@ -197,6 +197,10 @@
       "dashboard":  "Dashboard",
       "posts": "Posts",
       "logout": "Logout"
+    },
+    "RemoveDialog": {
+      "title": "Delete {{type}}: {{name}}",
+      "body": "Are you sure? You can't undo this action afterwards."
     }
   },
   "page": {
@@ -209,6 +213,7 @@
       "list": {
         "posts": {
           "title": "Posts",
+          "type": "Post",
           "PostFields": {
             "actions": "",
             "id": "ID",

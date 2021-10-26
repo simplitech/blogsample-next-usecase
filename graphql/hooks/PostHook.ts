@@ -62,4 +62,10 @@ export const queries = gql`
       }
     }
   }
+
+  mutation deletePost($where: PostWhereUniqueInput!) {
+    deletePost(where: $where) {
+      id
+    }
+  }
 `

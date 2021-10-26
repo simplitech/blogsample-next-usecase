@@ -1304,6 +1304,13 @@ export type PostsQueryVariables = Exact<{
 
 export type PostsQuery = { __typename?: 'Query', posts: Array<{ __typename?: 'Post', id: number, createdAt: any, updatedAt: any, title: string, body?: Maybe<string>, bannerUrl?: Maybe<string>, author?: Maybe<{ __typename?: 'User', id: number, name?: Maybe<string>, avatarUrl?: Maybe<string> }> }> };
 
+export type DeletePostMutationVariables = Exact<{
+  where: PostWhereUniqueInput;
+}>;
+
+
+export type DeletePostMutation = { __typename?: 'Mutation', deletePost?: Maybe<{ __typename?: 'Post', id: number }> };
+
 export type UsersCountQueryVariables = Exact<{
   where?: Maybe<UserWhereInput>;
   orderBy?: Maybe<Array<UserOrderByWithRelationInput> | UserOrderByWithRelationInput>;
@@ -1422,6 +1429,17 @@ export const PostsDocument = gql`
 
 export function usePostsQuery(options: Omit<Urql.UseQueryArgs<PostsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<PostsQuery>({ query: PostsDocument, ...options });
+};
+export const DeletePostDocument = gql`
+    mutation deletePost($where: PostWhereUniqueInput!) {
+  deletePost(where: $where) {
+    id
+  }
+}
+    `;
+
+export function useDeletePostMutation() {
+  return Urql.useMutation<DeletePostMutation, DeletePostMutationVariables>(DeletePostDocument);
 };
 export const UsersCountDocument = gql`
     query usersCount($where: UserWhereInput, $orderBy: [UserOrderByWithRelationInput!], $cursor: UserWhereUniqueInput, $take: Int, $skip: Int) {

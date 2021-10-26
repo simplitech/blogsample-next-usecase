@@ -1,7 +1,7 @@
 import { useAuthState } from 'state/AuthState'
 import React, { useEffect, useState } from 'react'
 import AdminLayout from 'layouts/AdminLayout'
-import { usePostsAdminQuery, usePostsCountQuery } from 'generated/graphql'
+import { usePostsAdminQuery, usePostsCountQuery, useDeletePostMutation } from 'generated/graphql'
 import useTranslationWithPrefix from 'helpers/useTranslationWithPrefix'
 import useListController from 'helpers/useListController'
 import { PartialPost } from 'types/PartialPost'
@@ -17,6 +17,7 @@ import usePostXlsx from 'renderers/usePostXlsx'
 import usePostFilter from 'renderers/usePostFilter'
 import FilterForm from 'components/FilterForm'
 import { BiFilter } from 'react-icons/bi'
+import RemoveDialog from 'components/RemoveDialog'
 
 const Posts = () => {
   const authState = useAuthState()
@@ -30,7 +31,7 @@ const Posts = () => {
   const listController = useListController<PartialPost>({
     fieldsToSearch: ['body', 'title', 'author.name'],
   })
-  const [countResult] = usePostsCountQuery({
+  const [countResult, refreshCount] = usePostsCountQuery({
     variables: { where: listController.query.where },
   })
   const [listResult] = usePostsAdminQuery({
@@ -40,10 +41,13 @@ const Posts = () => {
     variables: { where: listController.query.where },
     pause: !xlsxRequested,
   })
+  const [{ fetching: deleting }, deleteItem] = useDeletePostMutation()
   const tableRenderer = usePostTable()
   const xlsxRenderer = usePostXlsx()
   const filterRenderer = usePostFilter()
+
   const [filterOpen, setFilterOpen] = useState(false)
+  const [itemToRemove, setItemToRemove] = useState<PartialPost | null>(null)
 
   useEffect(() => {
     listController.setList(listResult.data?.posts ?? [])
@@ -67,6 +71,13 @@ const Posts = () => {
 
   if (listResult.error) {
     errorHandler(listResult.error, { toast })
+  }
+
+  const removeItem = async () => {
+    await deleteItem({ where: { id: itemToRemove.id } })
+    setItemToRemove(null)
+    // urql updates the list automatically, but we need to update the count manually
+    refreshCount({ requestPolicy: 'network-only' })
   }
 
   return (
@@ -107,7 +118,7 @@ const Posts = () => {
             headersPrefix={'page.admin.list.posts.PostFields'}
             controller={listController}
             fields={{
-              actions: () => (
+              actions: ({ model }) => (
                 <Flex>
                   <IconButton
                     aria-label={'Edit'}
@@ -117,6 +128,7 @@ const Posts = () => {
                   />
                   <Spacer w={2} />
                   <IconButton
+                    onClick={() => setItemToRemove(model)}
                     aria-label={'Delete'}
                     bg={useColorModeValue('white', 'gray.800')}
                     variant={'outline'}
@@ -130,6 +142,14 @@ const Posts = () => {
         </Box>
         <Pagination controller={listController} p={2} />
       </Flex>
+      <RemoveDialog
+        isOpen={!!itemToRemove}
+        isLoading={deleting}
+        type={tp('type')}
+        name={itemToRemove?.title}
+        onCancel={() => setItemToRemove(null)}
+        onConfirm={removeItem}
+      />
     </AdminLayout>
   )
 }
