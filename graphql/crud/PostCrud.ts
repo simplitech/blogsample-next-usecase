@@ -1,12 +1,28 @@
 import * as generated from 'generated/type-graphql'
 import { CrudDefinition } from '../CrudDefinition'
+import { Authorized, UseMiddleware } from 'type-graphql'
+import { appAuthChecker } from '../AppAuthChecker'
 
 const postCrud: CrudDefinition = {
   resolvers: [generated.PostRelationsResolver, generated.PostCrudResolver],
   enhanceMap: {
     Post: {
-      // TODO: disallow post insert, edit or delete to non authorized users | import {Authorized} from 'type-graphql'
-      // TODO: middleware to hide unpublished posts for unauthorized users
+      createPost: [Authorized()],
+      createManyPost: [Authorized()],
+      deletePost: [Authorized()],
+      updatePost: [Authorized()],
+      deleteManyPost: [Authorized()],
+      updateManyPost: [Authorized()],
+      upsertPost: [Authorized()],
+      posts: [
+        UseMiddleware(({ context, args }, next) => {
+          if (!appAuthChecker(context, [])) {
+            args.where = { ...args.where, published: { equals: true } }
+          }
+
+          return next()
+        }),
+      ],
     },
   },
 }
