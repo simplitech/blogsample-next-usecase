@@ -17,7 +17,7 @@ async function main() {
   for (let i = 0; i < 5; i++) {
     await prisma.user.create({
       data: {
-        email: faker.internet.email(),
+        email: i === 0 ? 'test@test.com' : faker.internet.email(),
         password: passwordSha256x2,
         name: faker.name.findName(),
         avatarUrl: `https://i.pravatar.cc/150?u=${faker.random.alphaNumeric()}`,

@@ -63,6 +63,34 @@ export const queries = gql`
     }
   }
 
+  query post($where: PostWhereUniqueInput!) {
+    post(where: $where) {
+      id
+      createdAt
+      updatedAt
+      title
+      body
+      bannerUrl
+      author {
+        id
+        name
+        avatarUrl
+      }
+    }
+  }
+
+  mutation createPost($data: PostCreateInput!) {
+    createPost(data: $data) {
+      id
+    }
+  }
+
+  mutation updatePost($data: PostUpdateInput!, $where: PostWhereUniqueInput!) {
+    updatePost(data: $data, where: $where) {
+      id
+    }
+  }
+
   mutation deletePost($where: PostWhereUniqueInput!) {
     deletePost(where: $where) {
       id

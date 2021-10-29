@@ -18,6 +18,9 @@ import usePostFilter from 'renderers/usePostFilter'
 import FilterForm from 'components/FilterForm'
 import { BiFilter } from 'react-icons/bi'
 import RemoveDialog from 'components/RemoveDialog'
+import NextLink from 'next/link'
+import EditPostForm from 'components/admin/edit/post/EditPostForm'
+import ModalToEdit from 'components/ModalToEdit'
 
 const Posts = () => {
   const authState = useAuthState()
@@ -104,6 +107,11 @@ const Posts = () => {
             <Button onClick={() => setXlsxRequested(true)} ml={4}>
               {t('action.downloadXlsx')}
             </Button>
+            <NextLink href={'?edit=new'} as={'/admin/edit/post/new'}>
+              <Button colorScheme={'brand'} ml={4}>
+                {t('action.add')}
+              </Button>
+            </NextLink>
           </Flex>
           <Collapse in={filterOpen} animateOpacity>
             <FilterForm
@@ -120,12 +128,14 @@ const Posts = () => {
             fields={{
               actions: ({ model }) => (
                 <Flex>
-                  <IconButton
-                    aria-label={'Edit'}
-                    bg={useColorModeValue('white', 'gray.800')}
-                    variant={'outline'}
-                    icon={<EditIcon />}
-                  />
+                  <NextLink href={`?edit=${model.id}`} as={`/admin/edit/post/${model.id}`}>
+                    <IconButton
+                      aria-label={'Edit'}
+                      bg={useColorModeValue('white', 'gray.800')}
+                      variant={'outline'}
+                      icon={<EditIcon />}
+                    />
+                  </NextLink>
                   <Spacer w={2} />
                   <IconButton
                     onClick={() => setItemToRemove(model)}
@@ -150,6 +160,8 @@ const Posts = () => {
         onCancel={() => setItemToRemove(null)}
         onConfirm={removeItem}
       />
+
+      <ModalToEdit>{(id) => <EditPostForm id={id} />}</ModalToEdit>
     </AdminLayout>
   )
 }

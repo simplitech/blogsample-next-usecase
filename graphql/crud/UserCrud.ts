@@ -3,7 +3,15 @@ import { CrudDefinition } from '../CrudDefinition'
 import { Authorized } from 'type-graphql'
 
 const userCrud: CrudDefinition = {
-  resolvers: [generated.UserRelationsResolver, generated.UserCrudResolver],
+  resolvers: [
+    generated.AggregateUserResolver,
+    generated.CreateUserResolver,
+    generated.DeleteUserResolver,
+    generated.FindManyUserResolver,
+    generated.FindUniqueUserResolver,
+    generated.UpdateUserResolver,
+    generated.UserRelationsResolver,
+  ],
   enhanceMap: {
     User: {
       _all: [Authorized()],

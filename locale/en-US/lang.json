@@ -201,6 +201,14 @@
     "RemoveDialog": {
       "title": "Delete {{type}}: {{name}}",
       "body": "Are you sure? You can't undo this action afterwards."
+    },
+    "EditPostForm": {
+      "success": "Post Saved!",
+      "PostFields": {
+        "title": "Title",
+        "body": "Body",
+        "bannerUrl": "Banner"
+      }
     }
   },
   "page": {
@@ -235,6 +243,9 @@
             "authorIdIn":  "Authors"
           }
         }
+      },
+      "edit": {
+        "post": { "title": "Edit Post" }
       },
       "dashboard": {
         "title": "Dashboard"
