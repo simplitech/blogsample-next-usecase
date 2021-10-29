@@ -3,6 +3,8 @@ import { CrudDefinition } from '../CrudDefinition'
 import { Authorized, UseMiddleware } from 'type-graphql'
 import { appAuthChecker } from '../AppAuthChecker'
 import { PostProcess } from '../process/PostProcess'
+import PostValidation from 'validations/PostValidation'
+import { formatFromUpdate } from 'helpers/prismaUpdateFormatter'
 
 const postCrud: CrudDefinition = {
   resolvers: [
@@ -36,7 +38,9 @@ const postCrud: CrudDefinition = {
       ],
       createPost: [
         Authorized(),
-        UseMiddleware((resolverData, next) => {
+        UseMiddleware(async (resolverData, next) => {
+          // validate the input
+          await PostValidation.validate(resolverData.args.data)
           // force the authorized user to be the author of the post
           resolverData.args.data.author = resolverData.context.user
           // force db default value
@@ -51,6 +55,8 @@ const postCrud: CrudDefinition = {
         UseMiddleware(async (resolverData, next) => {
           // the authorized user must be the author of the post to continue
           await new PostProcess(resolverData.context).validateAuthorship(resolverData.args.where.id)
+          // validate the input
+          await PostValidation.validate(formatFromUpdate(resolverData.args.data))
           // don't change
           resolverData.args.data.author = undefined
           // don't change

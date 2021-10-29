@@ -1,9 +1,9 @@
 import { string, object } from 'yup'
 
 const PostValidation = object({
-  title: string().defined(),
-  body: string().defined(),
-  bannerUrl: string().defined(),
+  title: string().required(),
+  body: string().required(),
+  bannerUrl: string().required(),
 })
 
 export default PostValidation

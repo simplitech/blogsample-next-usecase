@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import { FormGridColspanMap, FormGridRenderMap } from 'types/FormGridTypes'
 import { UseFormSetError } from 'react-hook-form/dist/types/form'
-import _ from 'lodash'
+import { formatToUpdate } from '../helpers/prismaUpdateFormatter'
 
 type FormGridProps<T> = {
   defaultValues?: any
@@ -40,15 +40,7 @@ export default function FormGrid<T>({
   })
 
   const submit = async (data) => {
-    onSubmit(defaultValues ? transformData(data) : data, setError)
-  }
-
-  const transformData = (data) => {
-    const result = {}
-    Object.keys(fields).forEach((key) => {
-      _.set(result, key, { set: _.get(data, key) })
-    })
-    return result
+    onSubmit(defaultValues ? formatToUpdate(data, Object.keys(fields)) : data, setError)
   }
 
   return (
