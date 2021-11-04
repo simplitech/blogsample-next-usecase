@@ -9,7 +9,7 @@ const BlogPostSpotlightCard = (props: { post: PartialPost } & FlexProps) => {
       <Box display="flex" flex="1" marginRight="3" position="relative" alignItems="center">
         <Box width={{ base: '100%', sm: '85%' }} zIndex="2" marginLeft={{ base: '0', sm: '5%' }} marginTop="5%">
           <Link textDecoration="none" _hover={{ textDecoration: 'none' }}>
-            <Image borderRadius="lg" src={props.post.bannerUrl} objectFit="contain" />
+            <Image borderRadius="lg" src={props.post.bannerUrl ?? undefined} objectFit="contain" />
           </Link>
         </Box>
         <Box zIndex="1" width="100%" position="absolute" height="100%">

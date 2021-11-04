@@ -57,7 +57,7 @@ const Posts = () => {
   }, [listResult.data])
 
   useEffect(() => {
-    listController.setCount(countResult.data?.aggregatePost._count.id ?? 0)
+    listController.setCount(countResult.data?.aggregatePost._count?.id ?? 0)
   }, [countResult.data])
 
   useEffect(() => {
@@ -77,6 +77,7 @@ const Posts = () => {
   }
 
   const removeItem = async () => {
+    if (!itemToRemove) return
     await deleteItem({ where: { id: itemToRemove.id } })
     setItemToRemove(null)
     // urql updates the list automatically, but we need to update the count manually
@@ -126,7 +127,7 @@ const Posts = () => {
             headersPrefix={'page.admin.list.posts.PostFields'}
             controller={listController}
             fields={{
-              actions: ({ model }) => (
+              actions: ({ model }: { model: PartialPost }) => (
                 <Flex>
                   <NextLink href={`?edit=${model.id}`} as={`/admin/edit/post/${model.id}`}>
                     <IconButton
@@ -156,7 +157,7 @@ const Posts = () => {
         isOpen={!!itemToRemove}
         isLoading={deleting}
         type={tp('type')}
-        name={itemToRemove?.title}
+        name={itemToRemove?.title ?? ''}
         onCancel={() => setItemToRemove(null)}
         onConfirm={removeItem}
       />

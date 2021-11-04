@@ -45,8 +45,10 @@ const LoginCard: React.FC = () => {
       return
     }
 
-    authState.setSigninInfo(resp.data?.signin.token, resp.data?.signin.user)
-    await router.push('/admin/dashboard')
+    if (resp.data?.signin.token) {
+      authState.setSigninInfo(resp.data?.signin.token, resp.data?.signin.user)
+      await router.push('/admin/dashboard')
+    }
   }
 
   return (

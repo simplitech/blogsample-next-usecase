@@ -1,4 +1,4 @@
-import { HStack, Image, Skeleton, SkeletonCircle, Text } from '@chakra-ui/react'
+import { Avatar, HStack, Skeleton, SkeletonCircle, Text } from '@chakra-ui/react'
 import React from 'react'
 import { PartialPost } from 'types/PartialPost'
 
@@ -7,8 +7,12 @@ const BlogAuthor = (props: { post?: PartialPost }) => {
     <HStack marginTop="2" spacing="2" display="flex" alignItems="center">
       {props.post ? (
         <>
-          <Image borderRadius="full" boxSize="40px" src={props.post.author.avatarUrl} />
-          <Text fontWeight="medium">{props.post.author.name}</Text>
+          <Avatar
+            name={props.post.author?.name ?? undefined}
+            src={props.post.author?.avatarUrl ?? undefined}
+            boxSize="40px"
+          />
+          <Text fontWeight="medium">{props.post.author?.name}</Text>
           <Text>—</Text>
           <Text>{new Date(props.post.createdAt).toLocaleDateString()}</Text>
         </>

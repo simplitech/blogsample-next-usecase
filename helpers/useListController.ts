@@ -12,12 +12,12 @@ export default function useListController<T>(opts: QBOptions<T> = {}) {
 
   // input
   const [search, setSearch] = useState<string | undefined>(undefined)
-  const [fieldsToSearch, setFieldsToSearch] = useState<(keyof T | string)[]>(opts.fieldsToSearch)
-  const [pageIndex, setPageIndex] = useState(opts.pageIndex)
-  const [pageSize, setPageSize] = useState(opts.pageSize)
+  const [fieldsToSearch, setFieldsToSearch] = useState<(keyof T | string)[]>(opts.fieldsToSearch ?? [])
+  const [pageIndex, setPageIndex] = useState(opts.pageIndex ?? 0)
+  const [pageSize, setPageSize] = useState(opts.pageSize ?? 0)
   const [orderBy, _setOrderBy] = useState<keyof T | string | undefined>(opts.orderBy)
   const [sortOrder, _setSortOrder] = useState<SortOrder | undefined>(opts.sortOrder)
-  const [filters, setFilters] = useState<Where<T>>(opts.filters)
+  const [filters, setFilters] = useState<Where<T>>(opts.filters || {})
 
   // processed
   const [loading, setLoading] = useState(false)

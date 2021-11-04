@@ -11,7 +11,7 @@ export default function ModalToEdit({ children }: ModalToEditProps) {
   const { edit } = router.query
 
   const getId = () => {
-    return edit === 'new' ? undefined : parseInt(edit as string)
+    return edit === 'new' ? 0 : parseInt(edit as string)
   }
 
   return (

@@ -28,7 +28,7 @@ export default function RemoveDialog({
   onConfirm,
 }: RemoveDialogProps) {
   const { tp, t } = useTranslationWithPrefix('comp.RemoveDialog')
-  const cancelRef = useRef()
+  const cancelRef = useRef<HTMLButtonElement>(null)
 
   return (
     <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onCancel}>

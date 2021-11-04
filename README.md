@@ -58,9 +58,5 @@ For the Front-end styling we are using [ChakraUI](https://chakra-ui.com/).
 ## Problems to Commit?
 Maybe TS + Eslint + Husky is blocking your crappy code 😅. Run these commands to check where to fix:
 ```shell
-yarn lint
-```
-and
-```shell
-yarn type-check
+yarn ggez
 ```

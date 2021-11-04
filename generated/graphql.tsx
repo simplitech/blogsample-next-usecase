@@ -829,7 +829,7 @@ export type UserAdminQueryVariables = Exact<{
 }>;
 
 
-export type UserAdminQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: number, createdAt: any, email: string, name?: Maybe<string>, avatarUrl?: Maybe<string>, role: Role }> };
+export type UserAdminQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: number, createdAt: any, email: string, name?: Maybe<string>, avatarUrl?: Maybe<string>, role: Role, _count?: Maybe<{ __typename?: 'UserCount', posts: number }> }> };
 
 
 export const SignInDocument = gql`
@@ -1016,6 +1016,9 @@ export const UserAdminDocument = gql`
     name
     avatarUrl
     role
+    _count {
+      posts
+    }
   }
 }
     `;

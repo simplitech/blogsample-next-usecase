@@ -10,7 +10,7 @@ export default function EditPost() {
   const { editPostId } = router.query
 
   const getId = () => {
-    return editPostId === 'new' ? undefined : parseInt(editPostId as string)
+    return editPostId === 'new' ? 0 : parseInt(editPostId as string)
   }
 
   return (

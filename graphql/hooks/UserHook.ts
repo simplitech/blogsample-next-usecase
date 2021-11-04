@@ -30,6 +30,9 @@ export const queries = gql`
       name
       avatarUrl
       role
+      _count {
+        posts
+      }
     }
   }
 `

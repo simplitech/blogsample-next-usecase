@@ -12,7 +12,7 @@ const BlogPostCard = (props: { post?: PartialPost }) => {
             {props.post ? (
               <Image
                 transform="scale(1.0)"
-                src={props.post.bannerUrl}
+                src={props.post.bannerUrl ?? undefined}
                 alt="Banner image"
                 objectFit="cover"
                 width="100%"

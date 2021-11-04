@@ -27,7 +27,7 @@ const Posts = () => {
   }, [data])
 
   useEffect(() => {
-    listController.setCount(countData?.aggregatePost._count.id ?? 0)
+    listController.setCount(countData?.aggregatePost._count?.id ?? 0)
   }, [countData])
 
   if (error) {

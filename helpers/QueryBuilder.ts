@@ -6,7 +6,7 @@ export abstract class QueryBuilder {
 
     const query: Query<T> = {
       take: opts.pageSize,
-      skip: opts.pageIndex * opts.pageSize,
+      skip: (opts.pageIndex ?? 0) * (opts.pageSize ?? 0),
     }
 
     if (opts.orderBy && opts.sortOrder) {
@@ -22,7 +22,7 @@ export abstract class QueryBuilder {
       query.where = { OR: or } // WHERE has this special field called 'OR' but we can't put it on the type
     }
 
-    query.where = { ...query.where, ...this.convertFilters(opts.filters) }
+    query.where = { ...query.where, ...this.convertFilters(opts.filters ?? {}) }
 
     return query
   }
@@ -41,7 +41,7 @@ export abstract class QueryBuilder {
     subfields.forEach((sub, index) => {
       if (index < subfields.length - 1) {
         cursor[sub] = { is: {} }
-        cursor = cursor[sub].is
+        cursor = cursor[sub]?.is ?? {}
       } else {
         cursor[sub] = value
       }
@@ -67,14 +67,16 @@ export abstract class QueryBuilder {
   static cleanUpFilters<T>(filters: Where<T>) {
     Object.keys(filters).forEach((fkey) => {
       const f = filters[fkey]
-      if (f.equals === null || f.equals === '') f.equals = undefined
-      if (f.in === null || !f.in?.length) f.in = undefined
-      if (f.notIn === null || !f.notIn?.length) f.notIn = undefined
-      if (f.lt === null || f.lt === '') f.lt = undefined
-      if (f.lte === null || f.lte === '') f.lte = undefined
-      if (f.gt === null || f.gt === '') f.gt = undefined
-      if (f.gte === null || f.gte === '') f.gte = undefined
-      if (f.not === null || f.not === '') f.not = undefined
+      if (f) {
+        if (f.equals === null || f.equals === '') f.equals = undefined
+        if (f.in === null || !f.in?.length) f.in = undefined
+        if (f.notIn === null || !f.notIn?.length) f.notIn = undefined
+        if (f.lt === null || f.lt === '') f.lt = undefined
+        if (f.lte === null || f.lte === '') f.lte = undefined
+        if (f.gt === null || f.gt === '') f.gt = undefined
+        if (f.gte === null || f.gte === '') f.gte = undefined
+        if (f.not === null || f.not === '') f.not = undefined
+      }
     })
 
     return filters
@@ -84,11 +86,13 @@ export abstract class QueryBuilder {
     const newFilter: Where<T> = {}
     ;(Object.keys(filters) as (keyof T)[]).forEach((fkey) => {
       const f = { ...filters[fkey] }
-      if (f.in) {
-        f.in = f.in.map((i) => (typeof i === 'object' ? i.value : i))
-      }
-      if (f.notIn) {
-        f.notIn = f.notIn.map((i) => (typeof i === 'object' ? i.value : i))
+      if (f) {
+        if (f.in) {
+          f.in = f.in.map((i) => (typeof i === 'object' ? i.value : i))
+        }
+        if (f.notIn) {
+          f.notIn = f.notIn.map((i) => (typeof i === 'object' ? i.value : i))
+        }
       }
       newFilter[fkey] = f
     })

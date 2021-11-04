@@ -40,16 +40,16 @@ export default function FormGrid<T>({
   })
 
   const submit = async (data) => {
-    onSubmit(defaultValues ? formatToUpdate(data, Object.keys(fields)) : data, setError)
+    onSubmit(defaultValues ? formatToUpdate(data, Object.keys(fields ?? {})) : data, setError)
   }
 
   return (
     <Flex direction={'column'} as={'form'} onSubmit={handleSubmit(submit)} p={3}>
       <SimpleGrid gap={2} columns={[1, 2]} mb={4}>
-        {Object.keys(fields).map((f) => {
-          const Comp: any = fields[f]
+        {Object.keys(fields ?? {}).map((f) => {
+          const Comp: any = (fields ?? {})[f]
           return (
-            <GridItem key={`field.${f}`} colSpan={colSpans[f]}>
+            <GridItem key={`field.${f}`} colSpan={colSpans?.[f]}>
               <FormControl isInvalid={!!errors[f]}>
                 <FormLabel>{tp(f)}</FormLabel>
                 <Comp register={register} name={f} />

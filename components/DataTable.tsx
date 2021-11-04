@@ -15,11 +15,13 @@ type DataTableProps<T> = TableProps & {
 export default function DataTable<T>({ headersPrefix, controller, fields, ...tableProps }: DataTableProps<T>) {
   const { tp } = useTranslationWithPrefix(headersPrefix)
 
+  const fieldOrFallback = () => fields ?? {}
+
   return (
     <Table variant={'striped'} bg={useColorModeValue('white', 'gray.800')} {...tableProps}>
       <Thead>
         <Tr>
-          {Object.keys(fields).map((f) => (
+          {Object.keys(fieldOrFallback()).map((f) => (
             <Th key={`header.${f}`}>
               <OrderBy controller={controller} fieldName={f as keyof T}>
                 {tp(f as string)}
@@ -31,8 +33,8 @@ export default function DataTable<T>({ headersPrefix, controller, fields, ...tab
       <Tbody>
         {controller.list.map((p, i) => (
           <Tr key={`row.${i}`}>
-            {Object.keys(fields).map((f) => {
-              const Comp: any = fields[f]
+            {Object.keys(fieldOrFallback()).map((f) => {
+              const Comp: any = fieldOrFallback()[f]
               return (
                 <Td key={`cell.${i}.${f}`}>
                   <Comp val={_.get(p, f)} model={p} fieldName={f} />
