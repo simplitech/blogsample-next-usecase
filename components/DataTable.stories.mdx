@@ -2,6 +2,7 @@ import { Meta, Story } from '@storybook/addon-docs';
 import {Box, Text} from "@chakra-ui/react";
 import DataTable from "./DataTable";
 import RenderText from "./RenderText"; import {SortOrder} from "../generated/graphql";
+import { action } from '@storybook/addon-actions'
 
 export const StoryComponent = ({ parentWidth, ...args }) => (<Box w={parentWidth}><DataTable {...args} /></Box>);
 
@@ -35,7 +36,7 @@ An example without orderBy
            }],
            orderBy: undefined,
            sortOrder: undefined,
-           setOrderBy: (column) => {alert(column)}
+           setOrderBy: (column) => action('setOrderBy')(column)
          },
          parentWidth: 'lg'
        }}>
@@ -66,7 +67,7 @@ The component is not responsible for the real sorting, that is why it has the se
            }],
            orderBy: "id",
            sortOrder: SortOrder.Asc,
-           setOrderBy: (column) => {alert(column)}
+           setOrderBy: (column) => action('setOrderBy')(column)
          },
          parentWidth: 'lg'
        }}>

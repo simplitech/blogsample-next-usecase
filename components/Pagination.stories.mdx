@@ -1,6 +1,7 @@
 import { Meta, Story } from '@storybook/addon-docs';
 import {Box} from "@chakra-ui/react";
 import Pagination from "./Pagination";
+import { action } from '@storybook/addon-actions'
 
 export const StoryComponent = ({ parentWidth, ...args }) => (<Box w={parentWidth}><Pagination {...args} /></Box>);
 
@@ -19,10 +20,10 @@ The pagination component shows the visual controls of pagination, it's not respo
            pageCount: 3,
            hasNext: () => true,
            hasPrev: () => false,
-           nextPage: () => alert("Next"),
-           prevPage: () => alert("Prev"),
-           goToPage: (val) => alert(`goto ${val}`),
-           setPageSize: (val) => alert(`size ${val}`),
+           nextPage: () => action('nextPage')(),
+           prevPage: () => action('prevPage')(),
+           goToPage: (val) => action('goToPage')(val),
+           setPageSize: (val) => action('setPageSize')(val),
          },
          parentWidth: '2xl'
        }}>
@@ -40,10 +41,10 @@ The pagination component shows the visual controls of pagination, it's not respo
            pageCount: 3,
            hasNext: () => true,
            hasPrev: () => true,
-           nextPage: () => alert("Next"),
-           prevPage: () => alert("Prev"),
-           goToPage: (val) => alert(`goto ${val}`),
-           setPageSize: (val) => alert(`size ${val}`),
+           nextPage: () => action('nextPage')(),
+           prevPage: () => action('prevPage')(),
+           goToPage: (val) => action('goToPage')(val),
+           setPageSize: (val) => action('setPageSize')(val),
          },
          parentWidth: '2xl'
        }}>
@@ -61,10 +62,10 @@ The pagination component shows the visual controls of pagination, it's not respo
            pageCount: 3,
            hasNext: () => false,
            hasPrev: () => true,
-           nextPage: () => alert("Next"),
-           prevPage: () => alert("Prev"),
-           goToPage: (val) => alert(`goto ${val}`),
-           setPageSize: (val) => alert(`size ${val}`),
+           nextPage: () => action('nextPage')(),
+           prevPage: () => action('prevPage')(),
+           goToPage: (val) => action('goToPage')(val),
+           setPageSize: (val) => action('setPageSize')(val),
          },
          parentWidth: '2xl'
        }}>

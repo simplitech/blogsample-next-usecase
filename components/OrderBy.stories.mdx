@@ -1,6 +1,7 @@
 import { Meta, Story } from '@storybook/addon-docs';
 import {Box, Text} from "@chakra-ui/react";
 import OrderBy from "./OrderBy"; import {SortOrder} from "../generated/graphql";
+import { action } from '@storybook/addon-actions'
 
 export const StoryComponent = ({ parentWidth, ...args }) => (<Box w={parentWidth}><OrderBy {...args} /></Box>);
 
@@ -13,12 +14,12 @@ OrderBys are components that shows the sorting controller and has callbacks to a
 
 <Story name="Primary"
        args={{
-         fieldname: "id",
+         fieldName: "id",
          children: "ID",
          controller: {
            orderBy: undefined,
            sortOrder: undefined,
-           setOrderBy: (column) => {alert(column)}
+           setOrderBy: (column) => action('setOrderBy')(column)
          },
          parentWidth: 'lg'
        }}>
@@ -30,12 +31,12 @@ The component is not responsible for the real sorting, that is why it has the se
 
 <Story name="Order by ID ASC"
        args={{
-         fieldname: "id",
+         fieldName: "id",
          children: "ID",
          controller: {
            orderBy: "id",
            sortOrder: SortOrder.Asc,
-           setOrderBy: (column) => {alert(column)}
+           setOrderBy: (column) => action('setOrderBy')(column)
          },
          parentWidth: 'lg'
        }}>

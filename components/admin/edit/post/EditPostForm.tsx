@@ -13,6 +13,10 @@ type EditPostFormProps = {
   id: number
 }
 
+/**
+ * @param id the ID of the content to edit. But this component also works to create new content,
+ simply pass null or zero on this ID param.
+ */
 export default function EditPostForm({ id }: EditPostFormProps) {
   const authState = useAuthState()
   authState.pushUnauthorizedUser()

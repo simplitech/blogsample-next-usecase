@@ -1,0 +1,32 @@
+import { Meta, Story } from '@storybook/addon-docs';
+import {Box} from "@chakra-ui/react";
+import EditPostForm from "./EditPostForm";
+
+export const StoryComponent = ({ parentWidth, ...args }) => (<Box w={parentWidth}><EditPostForm {...args} /></Box>);
+
+<Meta title="admin/edit/post/EditPostForm" />
+
+# EditPostForm
+It has the responsibility of the whole Edit page, it is made as a component to be reused on the Edit page
+and on the list page as a Modal.
+
+## Create
+Creating the content, without passing an ID
+
+<Story name="Create"
+       args={{
+         parentWidth: 'lg'
+       }}>
+  {StoryComponent.bind({})}
+</Story>
+
+## Edit
+Editing a content, passing an ID
+
+<Story name="Edit"
+       args={{
+         parentWidth: 'lg',
+         id: 1
+       }}>
+  {StoryComponent.bind({})}
+</Story>
