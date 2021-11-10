@@ -1,4 +1,4 @@
-# Pages API
+# API Pages
 
 This folder contains the [graphql.ts](graphql.ts) file. It initializes the [Apollo Server](https://www.apollographql.com/)
 to work with the [GraphQL Resolvers](../../graphql/resolvers) and also creates the [Context](graphql/Context.ts)

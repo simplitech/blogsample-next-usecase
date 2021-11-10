@@ -12,7 +12,7 @@ export interface Context {
 }
 
 /**
- * created the context object to be used on every endpoint
+ * create the context object to be used on every endpoint
  * @param req HttpRequest info
  */
 export async function createContext({ req }: { req: IncomingMessage }) {

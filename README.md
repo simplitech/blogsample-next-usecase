@@ -15,7 +15,7 @@ DB_PASS="root"
 DATABASE_URL="mysql://${DB_USER}:${DB_PASS}@${DB_HOST}:3306/${DB_NAME}?useSSL=false"
 
 JWT_SECRET="<any secret here>"
-STORYBOOK_ZEPLIN_TOKEN="<zeplin access token here, create one here: https://app.zeplin.io/profile/developer >"
+STORYBOOK_ZEPLIN_TOKEN="<optional zeplin access token, create one here: https://app.zeplin.io/profile/developer >"
 ```
 
 Run this command to setup Husky (pre-commit tasks) and the Database (with prisma)
@@ -38,7 +38,7 @@ yarn dev
 ```
 
 ## Code Guide Documentation
-The starting point of the application is on [pages](pages), follow this link to understand everything.
+The starting point of the application is on [pages](pages), **follow this link to understand the application strucuture**.
 
 ## Technologies
 This is a [Next](https://nextjs.org/) Application, which is a [React](https://reactjs.org/) web application with
@@ -56,7 +56,7 @@ For the Front-end styling we are using [ChakraUI](https://chakra-ui.com/).
 
 
 ## Problems to Commit?
-Maybe TS + Eslint + Husky is blocking your crappy code 😅. Run these commands to check where to fix:
+Maybe TS + Eslint + Husky is blocking your crappy code 😅. Run this commands to check where to fix:
 ```shell
 yarn ggez
 ```
