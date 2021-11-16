@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { SortOrder, usePostsCountQuery, usePostsQuery } from 'generated/graphql'
+import React from 'react'
+import { SortOrder, usePostsQuery } from 'generated/graphql'
 import useTranslationWithPrefix from 'helpers/useTranslationWithPrefix'
 import Head from 'next/head'
 import { Button, Flex, SimpleGrid, Text, useToast } from '@chakra-ui/react'
@@ -10,8 +10,9 @@ import BlogPostSpotlightCard from 'components/blog/BlogPostSpotlightCard'
 import useListController from 'helpers/useListController'
 import { PartialPost } from 'types/PartialPost'
 import { errorHandler } from 'helpers/errorHandler'
+import initThenEffect from 'helpers/initThenEffect'
 
-const Posts = () => {
+const Blog = () => {
   const { tp } = useTranslationWithPrefix('page.blog')
   const toast = useToast()
 
@@ -19,16 +20,12 @@ const Posts = () => {
     orderBy: 'createdAt',
     sortOrder: SortOrder.Desc,
   })
-  const [{ data: countData }] = usePostsCountQuery()
   const [{ data, error }] = usePostsQuery({ variables: listController.query })
 
-  useEffect(() => {
-    listController.appendList(data?.posts ?? [])
+  initThenEffect(() => {
+    listController.appendList(data?.list ?? [])
+    listController.setCount(data?.aggregate._count?.id ?? 0)
   }, [data])
-
-  useEffect(() => {
-    listController.setCount(countData?.aggregatePost._count?.id ?? 0)
-  }, [countData])
 
   if (error) {
     errorHandler(error, { toast })
@@ -71,4 +68,4 @@ const Posts = () => {
   )
 }
 
-export default Posts
+export default Blog

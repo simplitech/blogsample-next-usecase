@@ -1,20 +1,6 @@
 import gql from 'graphql-tag'
 
 export const queries = gql`
-  query postsCount(
-    $where: PostWhereInput
-    $orderBy: [PostOrderByWithRelationInput!]
-    $cursor: PostWhereUniqueInput
-    $take: Int
-    $skip: Int
-  ) {
-    aggregatePost(where: $where, orderBy: $orderBy, cursor: $cursor, take: $take, skip: $skip) {
-      _count {
-        id
-      }
-    }
-  }
-
   query postsAdmin(
     $where: PostWhereInput
     $orderBy: [PostOrderByWithRelationInput!]
@@ -23,7 +9,7 @@ export const queries = gql`
     $skip: Int
     $distinct: [PostScalarFieldEnum!]
   ) {
-    posts(where: $where, orderBy: $orderBy, cursor: $cursor, take: $take, skip: $skip, distinct: $distinct) {
+    list: posts(where: $where, orderBy: $orderBy, cursor: $cursor, take: $take, skip: $skip, distinct: $distinct) {
       id
       createdAt
       updatedAt
@@ -38,6 +24,11 @@ export const queries = gql`
         avatarUrl
       }
     }
+    aggregate: aggregatePost(where: $where, orderBy: $orderBy, cursor: $cursor) {
+      _count {
+        id
+      }
+    }
   }
 
   query posts(
@@ -48,7 +39,7 @@ export const queries = gql`
     $skip: Int
     $distinct: [PostScalarFieldEnum!]
   ) {
-    posts(where: $where, orderBy: $orderBy, cursor: $cursor, take: $take, skip: $skip, distinct: $distinct) {
+    list: posts(where: $where, orderBy: $orderBy, cursor: $cursor, take: $take, skip: $skip, distinct: $distinct) {
       id
       createdAt
       updatedAt
@@ -59,6 +50,11 @@ export const queries = gql`
         id
         name
         avatarUrl
+      }
+    }
+    aggregate: aggregatePost(where: $where, orderBy: $orderBy, cursor: $cursor) {
+      _count {
+        id
       }
     }
   }

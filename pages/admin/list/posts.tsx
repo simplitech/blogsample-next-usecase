@@ -1,7 +1,7 @@
 import { useAuthState } from 'state/AuthState'
 import React, { useEffect, useState } from 'react'
 import AdminLayout from 'layouts/AdminLayout'
-import { usePostsAdminQuery, usePostsCountQuery, useDeletePostMutation } from 'generated/graphql'
+import { usePostsAdminQuery, useDeletePostMutation } from 'generated/graphql'
 import useTranslationWithPrefix from 'helpers/useTranslationWithPrefix'
 import useListController from 'helpers/useListController'
 import { PartialPost } from 'types/PartialPost'
@@ -21,6 +21,7 @@ import RemoveDialog from 'components/RemoveDialog'
 import NextLink from 'next/link'
 import EditPostForm from 'components/admin/edit/post/EditPostForm'
 import ModalToEdit from 'components/ModalToEdit'
+import initThenEffect from 'helpers/initThenEffect'
 
 const Posts = () => {
   const authState = useAuthState()
@@ -33,9 +34,6 @@ const Posts = () => {
 
   const listController = useListController<PartialPost>({
     fieldsToSearch: ['body', 'title', 'author.name'],
-  })
-  const [countResult, refreshCount] = usePostsCountQuery({
-    variables: { where: listController.query.where },
   })
   const [listResult] = usePostsAdminQuery({
     variables: listController.query,
@@ -52,18 +50,15 @@ const Posts = () => {
   const [filterOpen, setFilterOpen] = useState(false)
   const [itemToRemove, setItemToRemove] = useState<PartialPost | null>(null)
 
-  useEffect(() => {
-    listController.setList(listResult.data?.posts ?? [])
+  initThenEffect(() => {
+    listController.setList(listResult.data?.list ?? [])
+    listController.setCount(listResult.data?.aggregate._count?.id ?? 0)
   }, [listResult.data])
 
   useEffect(() => {
-    listController.setCount(countResult.data?.aggregatePost._count?.id ?? 0)
-  }, [countResult.data])
-
-  useEffect(() => {
-    if (xlsxResult.data?.posts && xlsxRequested) {
+    if (xlsxResult.data?.list && xlsxRequested) {
       XlsxHelper.downloadFromSchema(
-        xlsxResult.data?.posts,
+        xlsxResult.data?.list,
         tp('title'),
         'page.admin.list.posts.PostFields',
         xlsxRenderer,
@@ -80,8 +75,6 @@ const Posts = () => {
     if (!itemToRemove) return
     await deleteItem({ where: { id: itemToRemove.id } })
     setItemToRemove(null)
-    // urql updates the list automatically, but we need to update the count manually
-    refreshCount({ requestPolicy: 'network-only' })
   }
 
   return (

@@ -744,17 +744,6 @@ export type SignInMutationVariables = Exact<{
 
 export type SignInMutation = { __typename?: 'Mutation', signin: { __typename?: 'SigninInfo', token: string, user: { __typename?: 'User', id: number, createdAt: any, email: string, name?: Maybe<string>, role: Role } } };
 
-export type PostsCountQueryVariables = Exact<{
-  where?: Maybe<PostWhereInput>;
-  orderBy?: Maybe<Array<PostOrderByWithRelationInput> | PostOrderByWithRelationInput>;
-  cursor?: Maybe<PostWhereUniqueInput>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-}>;
-
-
-export type PostsCountQuery = { __typename?: 'Query', aggregatePost: { __typename?: 'AggregatePost', _count?: Maybe<{ __typename?: 'PostCountAggregate', id: number }> } };
-
 export type PostsAdminQueryVariables = Exact<{
   where?: Maybe<PostWhereInput>;
   orderBy?: Maybe<Array<PostOrderByWithRelationInput> | PostOrderByWithRelationInput>;
@@ -765,7 +754,7 @@ export type PostsAdminQueryVariables = Exact<{
 }>;
 
 
-export type PostsAdminQuery = { __typename?: 'Query', posts: Array<{ __typename?: 'Post', id: number, createdAt: any, updatedAt: any, published: boolean, title: string, body?: Maybe<string>, bannerUrl?: Maybe<string>, author?: Maybe<{ __typename?: 'User', id: number, name?: Maybe<string>, email: string, avatarUrl?: Maybe<string> }> }> };
+export type PostsAdminQuery = { __typename?: 'Query', list: Array<{ __typename?: 'Post', id: number, createdAt: any, updatedAt: any, published: boolean, title: string, body?: Maybe<string>, bannerUrl?: Maybe<string>, author?: Maybe<{ __typename?: 'User', id: number, name?: Maybe<string>, email: string, avatarUrl?: Maybe<string> }> }>, aggregate: { __typename?: 'AggregatePost', _count?: Maybe<{ __typename?: 'PostCountAggregate', id: number }> } };
 
 export type PostsQueryVariables = Exact<{
   where?: Maybe<PostWhereInput>;
@@ -777,7 +766,7 @@ export type PostsQueryVariables = Exact<{
 }>;
 
 
-export type PostsQuery = { __typename?: 'Query', posts: Array<{ __typename?: 'Post', id: number, createdAt: any, updatedAt: any, title: string, body?: Maybe<string>, bannerUrl?: Maybe<string>, author?: Maybe<{ __typename?: 'User', id: number, name?: Maybe<string>, avatarUrl?: Maybe<string> }> }> };
+export type PostsQuery = { __typename?: 'Query', list: Array<{ __typename?: 'Post', id: number, createdAt: any, updatedAt: any, title: string, body?: Maybe<string>, bannerUrl?: Maybe<string>, author?: Maybe<{ __typename?: 'User', id: number, name?: Maybe<string>, avatarUrl?: Maybe<string> }> }>, aggregate: { __typename?: 'AggregatePost', _count?: Maybe<{ __typename?: 'PostCountAggregate', id: number }> } };
 
 export type PostQueryVariables = Exact<{
   where: PostWhereUniqueInput;
@@ -850,28 +839,9 @@ export const SignInDocument = gql`
 export function useSignInMutation() {
   return Urql.useMutation<SignInMutation, SignInMutationVariables>(SignInDocument);
 };
-export const PostsCountDocument = gql`
-    query postsCount($where: PostWhereInput, $orderBy: [PostOrderByWithRelationInput!], $cursor: PostWhereUniqueInput, $take: Int, $skip: Int) {
-  aggregatePost(
-    where: $where
-    orderBy: $orderBy
-    cursor: $cursor
-    take: $take
-    skip: $skip
-  ) {
-    _count {
-      id
-    }
-  }
-}
-    `;
-
-export function usePostsCountQuery(options: Omit<Urql.UseQueryArgs<PostsCountQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<PostsCountQuery>({ query: PostsCountDocument, ...options });
-};
 export const PostsAdminDocument = gql`
     query postsAdmin($where: PostWhereInput, $orderBy: [PostOrderByWithRelationInput!], $cursor: PostWhereUniqueInput, $take: Int = 20, $skip: Int, $distinct: [PostScalarFieldEnum!]) {
-  posts(
+  list: posts(
     where: $where
     orderBy: $orderBy
     cursor: $cursor
@@ -893,6 +863,11 @@ export const PostsAdminDocument = gql`
       avatarUrl
     }
   }
+  aggregate: aggregatePost(where: $where, orderBy: $orderBy, cursor: $cursor) {
+    _count {
+      id
+    }
+  }
 }
     `;
 
@@ -901,7 +876,7 @@ export function usePostsAdminQuery(options: Omit<Urql.UseQueryArgs<PostsAdminQue
 };
 export const PostsDocument = gql`
     query posts($where: PostWhereInput, $orderBy: [PostOrderByWithRelationInput!], $cursor: PostWhereUniqueInput, $take: Int = 20, $skip: Int, $distinct: [PostScalarFieldEnum!]) {
-  posts(
+  list: posts(
     where: $where
     orderBy: $orderBy
     cursor: $cursor
@@ -919,6 +894,11 @@ export const PostsDocument = gql`
       id
       name
       avatarUrl
+    }
+  }
+  aggregate: aggregatePost(where: $where, orderBy: $orderBy, cursor: $cursor) {
+    _count {
+      id
     }
   }
 }
