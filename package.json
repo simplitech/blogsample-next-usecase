@@ -6,7 +6,7 @@
     "migrate": "npx prisma migrate dev",
     "setup": "npx prisma db push && npx prisma db seed && husky install",
     "studio": "npx prisma studio",
-    "build": "next build",
+    "build": "npx prisma generate && next build",
     "lint": "eslint --fix .",
     "type-check": "tsc",
     "ggez": "eslint --fix . && tsc",
