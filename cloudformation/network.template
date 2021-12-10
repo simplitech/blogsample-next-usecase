@@ -1,0 +1,286 @@
+##
+## CloudFormation template for network and VPC specification
+## Author: JoaoLippi
+## Since: 2021-12-09
+##
+## This template creates a Virtual Private Cloud (VPC) and all the required resources, like Internet Gateway and
+## Routing Table.
+## Provides with 6 different subnets, with 3 of those being public.
+##
+
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  # VPC and public internet gateway and routing table
+  Vpc:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: !Ref VpcCidrBlock
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: !Sub "VPC - ${AWS::StackName}"
+  InternetGateway:
+    Type: 'AWS::EC2::InternetGateway'
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub "Internet Gateway - ${AWS::StackName}"
+  VpcRouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref Vpc
+      Tags:
+        - Key: Name
+          Value: !Sub "VPC Route Table - ${AWS::StackName}"
+  InternetRoute:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      RouteTableId: !Ref VpcRouteTable
+      GatewayId: !Ref InternetGateway
+    DependsOn:
+      - IgAttachment
+  IgAttachment:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref Vpc
+
+  # Public subnets to be used by load balancer and application (ECS)
+  # Each subnet is in a different availability zone
+  PublicSubnet1:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref Vpc
+      AvailabilityZone: !Select
+        - 0
+        - !Split
+          - ","
+          - !FindInMap
+            - RegionMap
+            - Ref: AWS::Region
+            - AvailabilityZones
+      CidrBlock: !Ref PublicSubnet1IpBlock
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub "Public Subnet 1 - ${AWS::StackName}"
+  PublicSubnetRTA1:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      RouteTableId: !Ref VpcRouteTable
+      SubnetId: !Ref PublicSubnet1
+
+  PublicSubnet2:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref Vpc
+      AvailabilityZone: !Select
+        - 1
+        - !Split
+          - ","
+          - !FindInMap
+            - RegionMap
+            - Ref: AWS::Region
+            - AvailabilityZones
+      CidrBlock: !Ref PublicSubnet2IpBlock
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub "Public Subnet 2 - ${AWS::StackName}"
+  PublicSubnetRTA2:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      RouteTableId: !Ref VpcRouteTable
+      SubnetId: !Ref PublicSubnet2
+
+  PublicSubnet3:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref Vpc
+      AvailabilityZone: !Select
+        - 2
+        - !Split
+          - ","
+          - !FindInMap
+            - RegionMap
+            - Ref: AWS::Region
+            - AvailabilityZones
+      CidrBlock: !Ref PublicSubnet3IpBlock
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub "Public Subnet 3 - ${AWS::StackName}"
+  PublicSubnetRTA3:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      RouteTableId: !Ref VpcRouteTable
+      SubnetId: !Ref PublicSubnet3
+
+  # Private subnets to be used by the database (RDS)
+  # Each subnet is in a different availability zone
+  DatabaseSubnet1:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref Vpc
+      AvailabilityZone: !Select
+        - 0
+        - !Split
+          - ","
+          - !FindInMap
+            - RegionMap
+            - Ref: AWS::Region
+            - AvailabilityZones
+      CidrBlock: !Ref DatabaseSubnet1IpBlock
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub "Database Subnet 1 - ${AWS::StackName}"
+  DatabaseSubnet2:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref Vpc
+      AvailabilityZone: !Select
+        - 1
+        - !Split
+          - ","
+          - !FindInMap
+            - RegionMap
+            - Ref: AWS::Region
+            - AvailabilityZones
+      CidrBlock: !Ref DatabaseSubnet2IpBlock
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub "Database Subnet 2 - ${AWS::StackName}"
+  DatabaseSubnet3:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref Vpc
+      AvailabilityZone: !Select
+        - 2
+        - !Split
+          - ","
+          - !FindInMap
+            - RegionMap
+            - Ref: AWS::Region
+            - AvailabilityZones
+      CidrBlock: !Ref DatabaseSubnet3IpBlock
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub "Database Subnet 3 - ${AWS::StackName}"
+
+Parameters:
+  VpcCidrBlock:
+    Type: String
+    Default: 10.0.0.0/16
+    Description: Enter CIDR block corresponding to VPC's IPv4 range
+  PublicSubnet1IpBlock:
+    Type: String
+    Default: 10.0.0.0/20
+    Description: Enter public subnet 1 IP block within VPC's IPv4 range
+  PublicSubnet2IpBlock:
+    Type: String
+    Default: 10.0.16.0/20
+    Description: Enter public subnet 2 IP block within VPC's IPv4 range
+  PublicSubnet3IpBlock:
+    Type: String
+    Default: 10.0.32.0/20
+    Description: Enter public subnet 3 IP block within VPC's IPv4 range
+  DatabaseSubnet1IpBlock:
+    Type: String
+    Default: 10.0.48.0/20
+    Description: Enter database private subnet 1 IP block within VPC's IPv4 range
+  DatabaseSubnet2IpBlock:
+    Type: String
+    Default: 10.0.64.0/20
+    Description: Enter database private subnet 2 IP block within VPC's IPv4 range
+  DatabaseSubnet3IpBlock:
+    Type: String
+    Default: 10.0.80.0/20
+    Description: Enter database private subnet 3 IP block within VPC's IPv4 range
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "VPC Configuration"
+        Parameters:
+          - VpcCidrBlock
+      - Label:
+          default: "Public Subnet Configuration"
+        Parameters:
+          - PublicSubnet1IpBlock
+          - PublicSubnet2IpBlock
+          - PublicSubnet3IpBlock
+
+      - Label:
+          default: "Database Subnet Configuration"
+        Parameters:
+          - DatabaseSubnet1IpBlock
+          - DatabaseSubnet2IpBlock
+          - DatabaseSubnet3IpBlock
+
+    ParameterLabels:
+      VpcCidrBlock:
+        default: "VPC CIDR Block"
+      PublicSubnet1IpBlock:
+        default: "Public Subnet 1 CIDR Block"
+      PublicSubnet2IpBlock:
+        default: "Public Subnet 2 CIDR Block"
+      PublicSubnet3IpBlock:
+        default: "Public Subnet 3 CIDR Block"
+      DatabaseSubnet1IpBlock:
+        default: "Database Subnet 1 CIDR Block"
+      DatabaseSubnet2IpBlock:
+        default: "Database Subnet 2 CIDR Block"
+      DatabaseSubnet3IpBlock:
+        default: "Database Subnet 3 CIDR Block"
+
+Mappings:
+  RegionMap:
+    us-east-1:
+      AvailabilityZones: 'us-east-1a,us-east-1b,us-east-1c'
+    us-west-2:
+      AvailabilityZones: 'us-west-2a,us-west-2b,us-west-2c'
+    sa-east-1:
+      AvailabilityZones: 'sa-east-1a,sa-east-1b,sa-east-1c'
+
+Outputs:
+  VPC:
+    Description: ID of the VPC
+    Value: !Ref Vpc
+    Export:
+      Name: !Sub '${AWS::StackName}-vpc-id'
+  PublicSubnet1:
+    Description: Public subnet 1 ID
+    Value: !Ref PublicSubnet1
+    Export:
+      Name: !Sub '${AWS::StackName}-pub-subnet1-id'
+  PublicSubnet2:
+    Description: Public subnet 2 ID
+    Value: !Ref PublicSubnet2
+    Export:
+      Name: !Sub '${AWS::StackName}-pub-subnet2-id'
+  PublicSubnet3:
+    Description: Public subnet 3 ID
+    Value: !Ref PublicSubnet3
+    Export:
+      Name: !Sub '${AWS::StackName}-pub-subnet3-id'
+  DatabaseSubnet1:
+    Description: Database subnet 1 ID
+    Value: !Ref DatabaseSubnet1
+    Export:
+      Name: !Sub '${AWS::StackName}-db-subnet1-id'
+  DatabaseSubnet2:
+    Description: Database subnet 2 ID
+    Value: !Ref DatabaseSubnet2
+    Export:
+      Name: !Sub '${AWS::StackName}-db-subnet2-id'
+  DatabaseSubnet3:
+    Description: Database subnet 3 ID
+    Value: !Ref DatabaseSubnet3
+    Export:
+      Name: !Sub '${AWS::StackName}-db-subnet3-id'

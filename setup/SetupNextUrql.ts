@@ -4,7 +4,7 @@ import fetch from 'isomorphic-unfetch'
 import { getToken } from 'state/AuthState'
 
 // the URL to /api/graphql
-const GRAPHQL_ENDPOINT = 'http://localhost:3000/api/graphql'
+const GRAPHQL_ENDPOINT = process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT
 
 export default function SetupNextUrql(App: any) {
   App.getInitialProps = async (ctx: NextUrqlAppContext) => {

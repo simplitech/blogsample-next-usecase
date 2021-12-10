@@ -1,0 +1,374 @@
+##
+## CloudFormation template for application services and tasks
+## Author: JoaoLippi
+## Since: 2021-12-09
+##
+## This template provides resources for an application, including tasks, services and docker repositories.
+## It also creates a Rule in the Load Balancer's Listener, that needs to be updated manually afterwards
+##
+
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  # ECR - Docker repository
+  ApplicationRepository:
+    Type: 'AWS::ECR::Repository'
+    Properties:
+      RepositoryName: !Sub '${AWS::StackName}'
+
+  # Load Balancer - needs manual update
+  ApplicationTargetGroup:
+    Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
+    Properties:
+      HealthCheckEnabled: true
+      HealthCheckIntervalSeconds: 30
+      HealthCheckPath: !Ref HealthCheckPath
+      HealthCheckPort: traffic-port
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 5
+      UnhealthyThresholdCount: 2
+      Matcher:
+        HttpCode: 200
+      Name: !Sub '${AWS::StackName}-tg'
+      Port: 80
+      Protocol: HTTP
+      TargetType: instance
+      VpcId: !Ref VPC
+  ApplicationListenerRule:
+    Type: 'AWS::ElasticLoadBalancingV2::ListenerRule'
+    Properties:
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref ApplicationTargetGroup
+      Conditions:
+        - Field: source-ip
+          SourceIpConfig:
+            Values:
+              - '0.0.0.0/0'
+      ListenerArn: !Ref ListenerArn
+      Priority: !Ref RulePriority
+
+  # ECS - Cluster task and service settings
+  ApplicationTask:
+    Type: 'AWS::ECS::TaskDefinition'
+    DependsOn: ApplicationRepository
+    Properties:
+      ContainerDefinitions:
+        # Application container
+        - Cpu: 0
+          DockerLabels:
+            stack: !Sub '${AWS::StackName}'
+          Essential: true
+          HealthCheck:
+            Command:
+              - CMD-SHELL
+              - !Sub 'curl -f http://localhost:3000${HealthCheckPath} || exit 1'
+            Interval: 10
+            Retries: 3
+            StartPeriod: 30
+            Timeout: 60
+          Image: !Sub '${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${ApplicationRepository}:latest'
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Sub '/ecs/${AWS::StackName}-task'
+              awslogs-region: !Ref AWS::Region
+              awslogs-create-group: 'true'
+              awslogs-stream-prefix: ecs
+              awslogs-datetime-format: '%Y-%m-%d %H:%M:%S'
+          Memory: !Ref HardMemory
+          MemoryReservation: !Ref SoftMemory
+          Name: !Sub '${AWS::StackName}-container'
+          PortMappings:
+            - HostPort: 0
+              ContainerPort: 3000
+              Protocol: tcp
+          Secrets: !If
+            - UseSSM
+            - - Name: DB_URL
+                ValueFrom: !Sub '${DbName}-url'
+              - Name: DB_NAME
+                ValueFrom: !Sub '${DbName}-name'
+              - Name: DB_USER
+                ValueFrom: !Sub '${DbName}-user'
+              - Name: DB_PASS
+                ValueFrom: !Sub '${DbName}-pass'
+            - []
+      ExecutionRoleArn: !GetAtt TaskRole.Arn
+      Family: !Sub '${AWS::StackName}-task'
+      RequiresCompatibilities:
+        - EC2
+  ApplicationService:
+    Type: 'AWS::ECS::Service'
+    DependsOn: ApplicationListenerRule
+    Properties:
+      Cluster: !Ref ClusterName
+      DeploymentConfiguration:
+        MaximumPercent: !Ref MaxHealth
+        MinimumHealthyPercent: !Ref MinHealth
+      DeploymentController:
+        Type: ECS
+      DesiredCount: !Ref TaskAmount
+      HealthCheckGracePeriodSeconds: 0
+      LaunchType: EC2
+      LoadBalancers:
+        - ContainerName: !Sub '${AWS::StackName}-container'
+          ContainerPort: 3000
+          TargetGroupArn: !Ref ApplicationTargetGroup
+      Role: !Ref ServiceRoleArn
+      SchedulingStrategy: REPLICA
+      ServiceName: !Sub '${AWS::StackName}-service'
+      TaskDefinition: !Ref ApplicationTask
+
+  # ECS Task Roles and Policies
+  TaskSsmPolicy:
+    Type: 'AWS::IAM::ManagedPolicy'
+    Properties:
+      Description: Allow services to get parameters from SSM
+      ManagedPolicyName: !Sub 'ECS-${AWS::StackName}-GetParametersPolicy'
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'ssm:GetParameters'
+              - 'ssm:GetParameter'
+            Resource: !Sub 'arn:aws:ssm:*:${AWS::AccountId}:parameter/*'
+
+  TaskCloudWatchPolicy:
+    Type: 'AWS::IAM::ManagedPolicy'
+    Properties:
+      Description: Allow services to create and manage CloudWatch logs
+      ManagedPolicyName: !Sub 'ECS-${AWS::StackName}-CloudWatchPolicy'
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: 'logs:PutLogEvents'
+            Resource: 'arn:aws:logs:*:*:log-group:*:log-stream:*'
+          - Effect: Allow
+            Action:
+              - 'logs:CreateLogStream'
+              - 'logs:DescribeLogStreams'
+            Resource: 'arn:aws:logs:*:*:log-group:*'
+          - Effect: Allow
+            Action: 'logs:CreateLogGroup'
+            Resource: '*'
+  TaskRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs-tasks.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Description: Role for resources to manage ECS services
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser'
+        - !Ref TaskCloudWatchPolicy
+        - !Ref TaskSsmPolicy
+      RoleName: !Sub '${AWS::StackName}-task-role'
+
+  # CodeBuild role
+  CodeBuildDeployPolicy:
+    Type: 'AWS::IAM::ManagedPolicy'
+    Properties:
+      Description: Allow services to manage ECS and ECR deployment
+      ManagedPolicyName: !Sub 'ECS-${AWS::StackName}-DeployPolicy'
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: 'ecr:GetAuthorizationToken'
+            Resource: '*'
+          - Effect: Allow
+            Action:
+              - 'ecr:InitiateLayerUpload'
+              - 'ecr:UploadLayerPart'
+              - 'ecr:CompleteLayerUpload'
+              - 'ecr:BatchCheckLayerAvailability'
+              - 'ecr:PutImage'
+            Resource: !GetAtt ApplicationRepository.Arn
+          - Effect: Allow
+            Action: 'ecs:UpdateService'
+            Resource: !Sub 'arn:aws:ecs:${AWS::Region}:${AWS::AccountId}:service/${ClusterName}/${AWS::StackName}-service'
+  CodeBuildRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - codebuild.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Description: Role for resources to manage ECS services
+      ManagedPolicyArns: !If
+        - HasCodeBuildPolicy
+        - - !Ref CodeBuildPolicy
+          - !Ref CodeBuildDeployPolicy
+        - - !Ref CodeBuildDeployPolicy
+      RoleName: !Sub '${AWS::StackName}-codebuild-role'
+
+Parameters:
+  VPC:
+    Type: AWS::EC2::VPC::Id
+    Description: ID of the VPC to be used by this stack
+  ServiceRoleArn:
+    Type: String
+    Description: ARN for ECS Service execution role
+  ClusterName:
+    Type: String
+    Description: Name of ECS cluster
+  LoadBalancer:
+    Type: String
+    Description: ARN for Application Load Balancer
+  ListenerArn:
+    Type: String
+    Description: ARN for Load Balancer Listener
+  RulePriority:
+    Type: Number
+    MaxValue: 5000
+    MinValue: 1
+    Default: 1
+    Description: Load Balancer listener rule priority for this target group
+  HardMemory:
+    Type: Number
+    Default: 512
+    Description: Hard memory cap for container, in MBs
+  SoftMemory:
+    Type: Number
+    Default: 256
+    Description: Soft memory cap for container, in MBs
+  HealthCheckPath:
+    Type: String
+    Default: '/'
+    Description: 'Path for container health check (for example: /api/healthcheck)'
+  ShouldUseSSM:
+    Type: String
+    Default: false
+    AllowedValues:
+      - true
+      - false
+    Description: Checks if application should use database credentials from Parameter Store
+  DbName:
+    Type: String
+    Description: Name of the RDS database instance (optional, only required if using Parameter Store)
+  Environment:
+    Type: String
+    Default: production
+    AllowedValues:
+      - beta
+      - staging
+      - production
+    Description: Application environment type
+  TaskAmount:
+    Type: Number
+    Default: 0
+    MinValue: 0
+    MaxValue: 50
+    Description: Amount of tasks to run for the application service
+  MaxHealth:
+    Type: Number
+    MinValue: 0
+    Default: 200
+    Description: 'Maximum amount of tasks to be running at the same time, in percentage (example: 4 task * 200% = 8 tasks max)'
+  MinHealth:
+    Type: Number
+    MinValue: 0
+    Default: 100
+    Description: 'Minimum amount of tasks to be running at the same time, in percentage (example: 4 task * 25% = 1 tasks min)'
+  CodeBuildPolicy:
+    Type: String
+    Default: ''
+    Description: 'ARN for policy that allows access to S3 CodeBuild scripts bucket'
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "Application Configuration"
+        Parameters:
+          - Environment
+          - HardMemory
+          - SoftMemory
+          - HealthCheckPath
+      - Label:
+          default: "Service Configuration"
+        Parameters:
+          - ClusterName
+          - TaskAmount
+          - MaxHealth
+          - MinHealth
+          - ServiceRoleArn
+      - Label:
+          default: "Database Configuration"
+        Parameters:
+          - ShouldUseSSM
+          - DbName
+      - Label:
+          default: "Load Balancer Configuration"
+        Parameters:
+          - LoadBalancer
+          - ListenerArn
+          - RulePriority
+      - Label:
+          default: "Network Configuration"
+        Parameters:
+          - VPC
+      - Label:
+          default: "CodeBuild Configuration"
+        Parameters:
+          - CodeBuildPolicy
+
+    ParameterLabels:
+      ClusterName:
+        default: "Cluster Name"
+      HardMemory:
+        default: "Memory (Hard Cap)"
+      SoftMemory:
+        default: "Memory (Soft Cap)"
+      HealthCheckPath:
+        default: "Health Check Path"
+      ServiceRoleArn:
+        default: "Service Role ARN"
+      ShouldUseSSM:
+        default: "Use parameter store for database credentials?"
+      DbName:
+        default: "Database instance name (optional)"
+      LoadBalancer:
+        default: "Load Balancer ARN"
+      ListenerArn:
+        default: "Load Balancer Listener ARN"
+      RulePriority:
+        default: "Listener Rule Priority"
+      TaskAmount:
+        default: "Number of tasks"
+      MaxHealth:
+        default: "Maximum amount of tasks (%)"
+      MinHealth:
+        default: "Minimum amount of tasks (%)"
+      CodeBuildPolicy:
+        default: "S3 CodeBuild Scripts bucket policy ARN (optional)"
+
+Conditions:
+  UseSSM: !Equals [!Ref ShouldUseSSM, 'true']
+  HasCodeBuildPolicy: !Not [!Equals [!Ref CodeBuildPolicy, '']]
+
+Mappings:
+  LogLevelMap:
+    beta:
+      level: 'debug'
+      awslevel: 'debug'
+    staging:
+      level: 'debug'
+      awslevel: 'info'
+    production:
+      level: 'info'
+      awslevel: 'info'

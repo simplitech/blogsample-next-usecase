@@ -1,0 +1,82 @@
+# TODO: UC-21
+version: 0.2
+
+env:
+  variables:
+    DOCKER_IMAGE_NAME: beta-app
+    CLUSTER_NAME: dev-cluster
+    SERVICE_NAME: beta-app-service
+#    NODE_ENV: development
+#    LOCAL_DB_HOST: local-db
+#    LOCAL_DB_NAME: blogsample
+#    LOCAL_DB_USER: root
+#    LOCAL_DB_PASS: root
+#    DB_HOST: db.dev.simpli.com.br
+#    DB_NAME: blogsample
+#    DB_USER: admin
+#    DB_PASS: yqfjDVTU9J3d2FMd
+#    JWT_SECRET: <any secret here>
+#    NEXT_PUBLIC_GRAPHQL_ENDPOINT: https://usecase.dev.simpli.com.br/api/graphql
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 14
+    commands:
+      # Fetching AWS User ID
+      - export AWS_USER_ID=$(aws sts get-caller-identity --query 'Account' --output text)
+      
+      # Logging in on ECR AWS account
+      - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_USER_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+      
+      # Logging in on Docker account
+      - docker login -u simplibot -p miojodoido998
+      - docker run -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=blogsample -d --name local-db mysql:8
+
+  pre_build:
+    commands:
+      # Installs yarn
+      - yarn install --frozen-lockfile
+
+      # Makes local .env file
+      - echo "DATABASE_URL=\"mysql://root:root@localhost:3306/blogsample?useSSL=false\"" > .env
+      - echo "JWT_SECRET=\"<any secret here>\"" >> .env
+      - echo "NEXT_PUBLIC_GRAPHQL_ENDPOINT=\"https://usecase.dev.simpli.com.br/api/graphql\"" >> .env
+
+      # Generates prisma files from schema
+      - npx prisma db push
+      - npx prisma generate
+
+      # Runs server in background, to expose graphql api
+      - nohup yarn next dev &
+
+      # Awaits for server to start
+      - sleep 30
+
+      # Generates typescript types from graphql
+      - npx graphql-codegen
+
+  build:
+    commands:
+      # Makes application .env file
+      - rm .env
+      - echo "DATABASE_URL=\"mysql://admin:yqfjDVTU9J3d2FMd@db.dev.simpli.com.br:3306/blogsample?useSSL=false\"" > .env
+      - echo "JWT_SECRET=\"<any secret here>\"" >> .env
+      - echo "NEXT_PUBLIC_GRAPHQL_ENDPOINT=\"https://usecase.dev.simpli.com.br/api/graphql\"" >> .env
+
+      # Builds application
+      - yarn build
+        
+      # Builds docker image
+      - docker build -t ${DOCKER_IMAGE_NAME} .
+      
+      # Tags docker image
+      - docker tag ${DOCKER_IMAGE_NAME}:latest ${AWS_USER_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${DOCKER_IMAGE_NAME}:latest
+        
+  post_build:
+    commands:
+      # Uploads docker image to ECR
+      - docker push ${AWS_USER_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${DOCKER_IMAGE_NAME}:latest
+      
+      # Forces new service deployment
+      - aws ecs update-service --cluster ${CLUSTER_NAME} --service ${SERVICE_NAME} --force-new-deployment
