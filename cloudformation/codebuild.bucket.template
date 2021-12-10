@@ -1,0 +1,62 @@
+##
+## CloudFormation template for S3 bucket for CodeBuild scripts
+## Author: JoaoLippi
+## Since: 2021-12-09
+##
+## Creates a bucket to host CodeBuild scripts (for discord hook and git logs), and the corresponding permissions.
+## The resulting permission policy should be added to the CodeBuild project
+##
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  # Bucket
+  ScriptsBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Ref Name
+
+  # Policy for services access
+  ExternalAppBucketPolicy:
+    Type: 'AWS::IAM::ManagedPolicy'
+    Properties:
+      Description: Allow services to manage contents of S3 bucket
+      ManagedPolicyName: !Sub 'S3-${AWS::StackName}-AccessPolicy'
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - 's3:GetObject'
+              - 's3:ListBucket'
+            Resource:
+              - !Sub
+                - '${BucketArn}'
+                - BucketArn: !GetAtt ScriptsBucket.Arn
+              - !Sub
+                - '${BucketArn}/*'
+                - BucketArn: !GetAtt ScriptsBucket.Arn
+
+Parameters:
+  Name:
+    Type: String
+    Description: 'Name of the bucket to be created'
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "Bucket Configuration"
+        Parameters:
+          - Name
+
+Outputs:
+  BucketName:
+    Description: Name of the S3 bucket
+    Value: !Ref ScriptsBucket
+
+  BucketRegion:
+    Description: Region of the S3 bucket
+    Value: !Sub ${AWS::Region}
+
+  BucketAccessPolicyArn:
+    Description: ARN for Bucket Access Policy
+    Value: !Ref ExternalAppBucketPolicy

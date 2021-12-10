@@ -3,6 +3,7 @@ declare global {
     interface ProcessEnv {
       JWT_SECRET: string
       STORYBOOK_ZEPLIN_TOKEN: string
+      NEXT_PUBLIC_GRAPHQL_ENDPOINT: string
     }
   }
 }
