@@ -1,0 +1,168 @@
+##
+## CloudFormation template for S3 bucket for application
+## Author: JoaoLippi
+## Since: 2021-12-09
+##
+## This templates creates an S3 bucket and a corresponding CloudFront distribution.
+## Mainly used for static storage of files and images.
+##
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  # Bucket
+  AppBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Ref Name
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - '*'
+            AllowedMethods:
+              - 'PUT'
+            AllowedOrigins:
+              - '*'
+  AppBucketPolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref AppBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: Stmt1
+            Effect: 'Allow'
+            Principal:
+              AWS: !Sub 'arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CloudFrontOriginAccessId}'
+            Action: 's3:GetObject'
+            Resource: !Sub 'arn:aws:s3:::${AppBucket}/*'
+
+  # CloudFront Distribution
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Comment: !Sub 'CloudFront distribution for ${AWS::StackName} application bucket'
+        DefaultCacheBehavior:
+          AllowedMethods:
+            - GET
+            - HEAD
+          CachedMethods:
+            - GET
+            - HEAD
+          MinTTL: !Ref MinTTL
+          MaxTTL: !Ref MaxTTL
+          DefaultTTL: !Ref DefaultTTL
+          ForwardedValues:
+            QueryString: false
+          TargetOriginId: !Sub '${AWS::StackName}-bucket-dist'
+          ViewerProtocolPolicy: redirect-to-https
+        Enabled: true
+        Origins:
+          - DomainName: !GetAtt AppBucket.RegionalDomainName
+            Id: !Sub '${AWS::StackName}-bucket-dist'
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${CloudFrontOriginAccessId}'
+      Tags:
+        - Key: Name
+          Value: !Sub 'App Bucket Distribution - ${AWS::StackName}'
+  CloudFrontOriginAccessId:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Sub '${AWS::StackName}-oaid'
+
+  # Policy for application access
+  ExternalAppBucketPolicy:
+    Type: 'AWS::IAM::ManagedPolicy'
+    Properties:
+      Description: Allow services to manage contents of S3 bucket
+      ManagedPolicyName: !Sub 'S3-${AWS::StackName}-AccessPolicy'
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - 's3:ReplicateObject'
+              - 's3:PutObject'
+              - 's3:GetObjectAcl'
+              - 's3:GetObject'
+              - 's3:DeleteObjectVersion'
+              - 's3:RestoreObject'
+              - 's3:GetObjectVersionAcl'
+              - 's3:ListBucket'
+              - 's3:DeleteObject'
+              - 's3:GetObjectVersion'
+              - 's3:ListMultipartUploadParts'
+            Resource:
+              - !Sub
+                - '${BucketArn}'
+                - BucketArn: !GetAtt AppBucket.Arn
+              - !Sub
+                - '${BucketArn}/*'
+                - BucketArn: !GetAtt AppBucket.Arn
+          - Effect: Allow
+            Action:
+              - 's3:ListAllMyBuckets'
+              - 's3:HeadBucket'
+            Resource: '*'
+
+Parameters:
+  Name:
+    Type: String
+    Description: 'Name of the bucket to be created'
+
+  MinTTL:
+    Type: Number
+    MinValue: 0
+    Default: 0
+    Description: 'Minimum TTL (time-to-live) of objects in this distribution, in seconds'
+
+  MaxTTL:
+    Type: Number
+    MinValue: 0
+    Default: 15552000
+    Description: 'Maximum TTL (time-to-live) of objects in this distribution, in seconds'
+
+  DefaultTTL:
+    Type: Number
+    MinValue: 0
+    Default: 7776000
+    Description: 'Default TTL (time-to-live) of objects in this distribution, in seconds'
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "Bucket Configuration"
+        Parameters:
+          - Name
+
+      - Label:
+          default: "Distribution Configuration"
+        Parameters:
+          - MinTTL
+          - MaxTTL
+          - DefaultTTL
+
+    ParameterLabels:
+      MinTTL:
+        default: "Minimum TTL (seconds)"
+      MaxTTL:
+        default: "Maximum TTL (seconds)"
+      DefaultTTL:
+        default: "Default TTL (seconds)"
+
+Outputs:
+  CloudFrontDistUrl:
+    Description: URL of the CloudFront Distribution
+    Value: !GetAtt CloudFrontDistribution.DomainName
+
+  BucketName:
+    Description: Name of the S3 bucket
+    Value: !Ref AppBucket
+
+  BucketRegion:
+    Description: Region of the S3 bucket
+    Value: !Sub ${AWS::Region}
+  BucketAccessPolicyArn:
+    Description: ARN for Bucket Access Policy
+    Value: !Ref ExternalAppBucketPolicy

@@ -37,6 +37,8 @@ RUN yarn build
 FROM node:14-alpine AS runner
 WORKDIR /app
 
+RUN apk add curl
+
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
 

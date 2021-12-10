@@ -1,0 +1,285 @@
+##
+## CloudFormation template for ECS cluster, Load Balancer and Instance roles
+## Author: JoaoLippi
+## Since: 2021-12-09
+##
+## This template creates an ECS cluster and a Load Balancer.
+## The cluster is empty (no instances), but all the required roles for EC2 instances to be added to the cluster
+## are created
+##
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  # Cluster
+  Cluster:
+    Type: 'AWS::ECS::Cluster'
+    Properties:
+      ClusterName: !Sub '${AWS::StackName}'
+      ClusterSettings:
+        - Name: containerInsights
+          Value: enabled
+
+  # Load Balancer
+  LoadBalancerSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Security Group for Load Balancer
+      GroupName: !Sub '${AWS::StackName}-lb-sg'
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+      VpcId: !Ref VPC
+  LoadBalancer:
+    Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
+    Properties:
+      Name: !Sub '${AWS::StackName}-lb'
+      Scheme: internet-facing
+      SecurityGroups:
+        - !Ref LoadBalancerSecurityGroup
+      Subnets:
+        - !Ref PublicSubnet1Id
+        - !Ref PublicSubnet2Id
+        - !Ref PublicSubnet3Id
+      Type: application
+  Listener:
+    Type: 'AWS::ElasticLoadBalancingV2::Listener'
+    Properties:
+      DefaultActions:
+        - Type: fixed-response
+          FixedResponseConfig:
+            StatusCode: 503
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 80
+      Protocol: HTTP
+
+  # For instances in cluster
+  ECSSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Security Group for ECS instances
+      GroupName: !Sub '${AWS::StackName}-sg'
+      SecurityGroupIngress: !If
+        - HasAccessIp
+        - !If
+          - HasVpnSg
+          - - IpProtocol: -1
+              SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+              FromPort: 0
+              ToPort: 65535
+            - IpProtocol: tcp
+              FromPort: 22
+              ToPort: 22
+              CidrIp: !Sub '${IPForAccess}/32'
+            - IpProtocol: tcp
+              SourceSecurityGroupId: !Ref VpnSecurityGroup
+              FromPort: 22
+              ToPort: 22
+          - - IpProtocol: -1
+              SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+              FromPort: 0
+              ToPort: 65535
+            - IpProtocol: tcp
+              FromPort: 22
+              ToPort: 22
+              CidrIp: !Sub '${IPForAccess}/32'
+        - !If
+          - HasVpnSg
+          - - IpProtocol: -1
+              SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+              FromPort: 0
+              ToPort: 65535
+            - IpProtocol: tcp
+              SourceSecurityGroupId: !Ref VpnSecurityGroup
+              FromPort: 22
+              ToPort: 22
+          - - IpProtocol: -1
+              SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+              FromPort: 0
+              ToPort: 65535
+      VpcId: !Ref VPC
+  SpotFleetRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - spotfleet.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Description: Role for resources to manage EC2 Spot Fleet requests
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AmazonEC2SpotFleetTaggingRole'
+      RoleName: !Sub '${AWS::StackName}-spot-fleet-role'
+  ServiceRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Description: Role for resources to manage ECS services
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole'
+      RoleName: !Sub '${AWS::StackName}-service-role'
+  InstanceRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Description: Role for EC2 instances in an ECS cluster to access ECS
+      ManagedPolicyArns: !If
+        - HasBucketPolicy
+        - - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role
+          - arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
+          - !Ref InstanceSesPolicy
+          - !Ref BucketPolicyArn
+        - - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role
+          - arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
+          - !Ref InstanceSesPolicy
+      RoleName: !Sub '${AWS::StackName}-instance-role'
+  InstanceProfile:
+    Type: 'AWS::IAM::InstanceProfile'
+    Properties:
+      InstanceProfileName: !Sub '${AWS::StackName}-instance-profile'
+      Roles:
+        - !Ref InstanceRole
+
+  # Instance policy for SES
+  InstanceSesPolicy:
+    Type: 'AWS::IAM::ManagedPolicy'
+    Properties:
+      Description: Allow services to send emails through SES
+      ManagedPolicyName: !Sub 'ECS-${AWS::StackName}-SendEmailPolicy'
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'ses:SendEmail'
+              - 'ses:SendTemplatedEmail'
+              - 'ses:SendRawEmail'
+              - 'ses:SendBulkTemplatedEmail'
+            Resource: 'arn:aws:ses:*:*:identity/*'
+
+Parameters:
+  VPC:
+    Type: AWS::EC2::VPC::Id
+    Description: ID of the VPC to be used by this stack
+  PublicSubnet1Id:
+    Type: AWS::EC2::Subnet::Id
+    Description: ID of the public subnet 1
+  PublicSubnet2Id:
+    Type: AWS::EC2::Subnet::Id
+    Description: ID of the public subnet 2
+  PublicSubnet3Id:
+    Type: AWS::EC2::Subnet::Id
+    Description: ID of the public subnet 3
+  IPForAccess:
+    Type: String
+    Description: IP for accessing cluster EC2 instances via SSH directly
+  VpnSecurityGroup:
+    Type: String
+    Default: ''
+    Description: ID (sg-xxxxxxxx) of the security group to allow EC2 instances access through VPN
+  BucketPolicyArn:
+    Type: String
+    Description: 'ARN for policy that allows application to interact with S3 bucket'
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "Cluster Configuration"
+        Parameters:
+          - VPC
+          - PublicSubnet1Id
+          - PublicSubnet2Id
+          - PublicSubnet3Id
+          - IPForAccess
+          - VpnSecurityGroup
+      - Label:
+          default: 'Instance configuration'
+        Parameters:
+          - BucketPolicyArn
+
+    ParameterLabels:
+      PublicSubnet1Id:
+        default: "Public Subnet 1"
+      PublicSubnet2Id:
+        default: "Public Subnet 2"
+      PublicSubnet3Id:
+        default: "Public Subnet 3"
+      IPForAccess:
+        default: "IP for SSH (optional)"
+      VpnSecurityGroup:
+        default: "VPN Security Group (optional)"
+      BucketPolicyArn:
+        default: "Application Bucket Policy ARN (optional)"
+
+Conditions:
+  HasAccessIp: !Not [!Equals [!Ref IPForAccess, '']]
+  HasVpnSg: !Not [!Equals [!Ref VpnSecurityGroup, '']]
+  HasBucketPolicy: !Not [!Equals [!Ref BucketPolicyArn, '']]
+
+Outputs:
+  ServiceRole:
+    Description: ARN of the IAM cluster service role
+    Value: !GetAtt
+      - ServiceRole
+      - Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-service-role-arn'
+  SpotFleetRole:
+    Description: ARN of the IAM spot fleet request role
+    Value: !GetAtt
+       - SpotFleetRole
+       - Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-spot-fleet-role-arn'
+  InstanceProfile:
+    Description: ID of the IAM instance profile for EC2 instances
+    Value: !GetAtt
+      - InstanceProfile
+      - Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-instance-profile-arn'
+  Cluster:
+    Description: Name of the ECS cluster
+    Value: !Ref Cluster
+    Export:
+      Name: !Sub '${AWS::StackName}'
+  LoadBalancer:
+    Description: ID of the Application Load Balancer
+    Value: !Ref LoadBalancer
+    Export:
+      Name: !Sub '${AWS::StackName}-lb'
+  ECSSecurityGroup:
+    Description: ID of the Application Load Balancer
+    Value: !Ref ECSSecurityGroup
+    Export:
+      Name: !Sub '${AWS::StackName}-sg'
+  ListenerArn:
+    Description: ARN for Load Balancer Listener
+    Value: !Ref Listener
+    Export:
+      Name: !Sub '${AWS::StackName}-listener-arn'

@@ -1,5 +1,5 @@
 overwrite: true
-schema: 'http://localhost:3000/api/graphql' # GraphQL endpoint via the apollo server
+schema: 'https://usecase.dev.simpli.com.br/api/graphql' # GraphQL endpoint via the apollo server
 documents: 'graphql/hooks/*.ts' # parse graphql operations in matching files
 generates:
   generated/graphql.tsx: # location for generated types, hooks and components
