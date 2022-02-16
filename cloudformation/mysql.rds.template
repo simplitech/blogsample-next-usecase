@@ -1,0 +1,319 @@
+##
+## CloudFormation template for RDS MySQL 8.0 database
+## Author: JoaoLippi
+## Since: 2021-12-09
+##
+## This template provides resources for an RDS database, running MySQL 8.0.26,
+## and also creates parameters in the Parameter Store to be used by ECS Tasks
+##
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  # Accessibility
+  DBSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Security Group for RDS instance
+      GroupName: !Sub '${AWS::StackName}-sg'
+      SecurityGroupIngress: !If
+        - HasAccessIp
+        - !If
+          - HasVpnSg
+          - - IpProtocol: tcp
+              SourceSecurityGroupId: !Ref ECSSecurityGroup
+              FromPort: 3306
+              ToPort: 3306
+            - IpProtocol: tcp
+              FromPort: 3306
+              ToPort: 3306
+              CidrIp: !Sub '${IPForAccess}/32'
+            - IpProtocol: tcp
+              SourceSecurityGroupId: !Ref VpnSecurityGroup
+              FromPort: 3306
+              ToPort: 3306
+          - - IpProtocol: tcp
+              SourceSecurityGroupId: !Ref ECSSecurityGroup
+              FromPort: 3306
+              ToPort: 3306
+            - IpProtocol: tcp
+              FromPort: 3306
+              ToPort: 3306
+              CidrIp: !Sub '${IPForAccess}/32'
+        - !If
+          - HasVpnSg
+          - - IpProtocol: tcp
+              SourceSecurityGroupId: !Ref ECSSecurityGroup
+              FromPort: 3306
+              ToPort: 3306
+            - IpProtocol: tcp
+              SourceSecurityGroupId: !Ref VpnSecurityGroup
+              FromPort: 3306
+              ToPort: 3306
+          - - IpProtocol: tcp
+              SourceSecurityGroupId: !Ref ECSSecurityGroup
+              FromPort: 3306
+              ToPort: 3306
+      VpcId: !Ref VPC
+  DBSubnetGroup:
+    Type: 'AWS::RDS::DBSubnetGroup'
+    Properties:
+      DBSubnetGroupDescription: Subnet for RDS instance
+      DBSubnetGroupName: !Sub '${AWS::StackName}-subnet'
+      SubnetIds:
+        - !Ref DatabaseSubnet1
+        - !Ref DatabaseSubnet2
+        - !Ref DatabaseSubnet3
+
+  # Instance
+  DBInstance:
+    Type: 'AWS::RDS::DBInstance'
+    Properties:
+      AllocatedStorage: !Ref DBStorageSize
+      BackupRetentionPeriod: 7
+      CopyTagsToSnapshot: true
+      DBInstanceClass: !Ref DBSize
+      DBInstanceIdentifier: !Sub '${AWS::StackName}'
+      DBName: !Ref DBName
+      DBParameterGroupName: !Ref DBParameterGroup
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      EnableCloudwatchLogsExports:
+        - error
+        - general
+        - slowquery
+      Engine: mysql
+      EngineVersion: 8.0.26
+      MasterUsername: !Ref DBMasterUser
+      MasterUserPassword: !Ref DBMasterPass
+      MonitoringInterval: !If
+        - MonitordingEnabled
+        - 10
+        - 0
+      MonitoringRoleArn: !If
+        - MonitoringEnabled
+        - !GetAtt
+          - DBMonitoringRole
+          - Arn
+        - !Ref 'AWS::NoValue'
+      MultiAZ: !Ref IsMultiAZ
+      Port: 3306
+      PreferredMaintenanceWindow: 'mon:07:00-mon:08:00'
+      PubliclyAccessible: !Ref IsPublic
+      StorageEncrypted: !Ref IsEncrypted
+      StorageType: gp2
+      VPCSecurityGroups:
+        - !Ref DBSecurityGroup
+  DBParameterGroup:
+    Type: 'AWS::RDS::DBParameterGroup'
+    Properties:
+      Description: Parameter Group for RDS MySQL 8.0 instance
+      Family: mysql8.0
+      Parameters:
+        log_bin_trust_function_creators: 1
+        time_zone: !Ref Timezone
+        general_log: 1
+        slow_query_log: 1
+        log_output: FILE
+      Tags:
+        - Key: Name
+          Value: !Sub '${AWS::StackName}-pg'
+  DBMonitoringRole:
+    Type: 'AWS::IAM::Role'
+    Condition: MonitoringEnabled
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - monitoring.rds.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Description: Role for resources to manage RDS monitoring
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole'
+      RoleName: !Sub '${AWS::StackName}-monitoring-role'
+
+  # Parameter Store
+  DBUrlParameter:
+    Type: AWS::SSM::Parameter
+    DependsOn: DBInstance
+    Properties:
+      Description: !Sub 'URL for database from stack ${AWS::StackName}'
+      Name: !Sub '${AWS::StackName}-url'
+      Tags:
+        Database: !Sub '${AWS::StackName}'
+      Type: String
+      Value: !GetAtt DBInstance.Endpoint.Address
+  DBNameParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: !Sub 'Name for database from stack ${AWS::StackName}'
+      Name: !Sub '${AWS::StackName}-name'
+      Tags:
+        Database: !Sub '${AWS::StackName}'
+      Type: String
+      Value: !Ref DBName
+  DBUserParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: !Sub 'User for database from stack ${AWS::StackName}'
+      Name: !Sub '${AWS::StackName}-user'
+      Tags:
+        Database: !Sub '${AWS::StackName}'
+      Type: String
+      Value: !Ref DBMasterUser
+  DBPassParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: !Sub 'Password for database from stack ${AWS::StackName}'
+      Name: !Sub '${AWS::StackName}-pass'
+      Tags:
+        Database: !Sub '${AWS::StackName}'
+      Type: String
+      Value: !Ref DBMasterPass
+Parameters:
+  DBName:
+    Type: String
+    Description: Name of the database to be created
+  DBMasterUser:
+    Type: String
+    Default: admin
+    Description: The master user name for the DB instance
+  DBMasterPass:
+    Type: String
+    Description: The password for the master user. The password can include any printable ASCII character except "/", """, or "@". Must contain from 8 to 41 characters
+    NoEcho: true
+  DBSize:
+    Type: String
+    Description: Instance type image (size) for this RDS instance
+    Default: db.t3.medium
+  DBStorageSize:
+    Type: Number
+    MinValue: 20
+    MaxValue: 16384
+    Description: Amount of storage for this database
+    Default: 20
+  MonitoringEnabled:
+    Type: String
+    Default: true
+    AllowedValues:
+      - true
+      - false
+    Description: Enables monitoring of this RDS instance
+  IsPublic:
+    Type: String
+    Default: false
+    AllowedValues:
+      - true
+      - false
+    Description: Specifies if this RDS instance can be accessed through a public IP or if it's only accessible from resources within the same VPC
+  VPC:
+    Type: AWS::EC2::VPC::Id
+    Description: ID of the VPC to be used by this stack
+  DatabaseSubnet1:
+    Type: AWS::EC2::Subnet::Id
+    Description: ID for Database Subnet ID 1
+  DatabaseSubnet2:
+    Type: AWS::EC2::Subnet::Id
+    Description: ID for Database Subnet ID 2
+  DatabaseSubnet3:
+    Type: AWS::EC2::Subnet::Id
+    Description: ID for Database Subnet ID 3
+  IsMultiAZ:
+    Type: String
+    AllowedValues:
+      - true
+      - false
+    Default: false
+    Description: Allows for Multi-Availability Zone support
+  IsEncrypted:
+    Type: String
+    AllowedValues:
+      - true
+      - false
+    Default: false
+    Description: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html#Overview.Encryption.Availability'
+  IPForAccess:
+    Type: String
+    Description: IP for accessing this RDS database
+  ECSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
+    Description: Application Security Group ID to allow access
+  Timezone:
+    Type: String
+    Description: Database timezone (in compliance with IANA time zone database)
+    Default: America/Fortaleza
+  VpnSecurityGroup:
+    Type: String
+    Default: ''
+    Description: ID (sg-xxxxxxxx) of the security group to allow EC2 instances access through VPN
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "Database Configuration"
+        Parameters:
+          - DBName
+          - DBMasterUser
+          - DBMasterPass
+          - DBSize
+          - DBStorageSize
+          - MonitoringEnabled
+          - IsMultiAZ
+          - IsEncrypted
+          - Timezone
+      - Label:
+          default: "Access Configuration"
+        Parameters:
+          - VPC
+          - DatabaseSubnet1
+          - DatabaseSubnet2
+          - DatabaseSubnet3
+          - ECSSecurityGroup
+          - VpnSecurityGroup
+          - IsPublic
+          - IPForAccess
+    ParameterLabels:
+      DBName:
+        default: "Database Name"
+      DBMasterUser:
+        default: "Database Master User"
+      DBMasterPass:
+        default: "Database Master Password"
+      DBSize:
+        default: "Database Instance Size (type)"
+      DBStorageSize:
+        default: "Database Storage Size (in GB)"
+      MonitoringEnabled:
+        default: "Enable monitoring?"
+      DatabaseSubnet1:
+        default: "Database Subnet 1"
+      DatabaseSubnet2:
+        default: "Database Subnet 2"
+      DatabaseSubnet3:
+        default: "Database Subnet 3"
+      IsMultiAZ:
+        default: "Is Multi-Availability Zone?"
+      IsEncrypted:
+        default: "Is data encrypted at rest? (does not support db.t2.micro, check link for availability)"
+      ECSSecurityGroup:
+        default: "ECS Instances Security Group"
+      IPForAccess:
+        default: "IP for Access (optional)"
+      VpnSecurityGroup:
+        default: "VPN Security Group (optional)"
+
+Conditions:
+  MonitoringEnabled: !Equals [!Ref MonitoringEnabled, 'true']
+  HasAccessIp: !Not [!Equals [!Ref IPForAccess, '']]
+  HasVpnSg: !Not [!Equals [!Ref VpnSecurityGroup, '']]
+
+Mappings:
+  RegionMap:
+    us-east-1:
+      AvailabilityZones: 'us-east-1a,us-east-1b,us-east-1c'
+    us-west-2:
+      AvailabilityZones: 'us-west-2a,us-west-2b,us-west-2c'
+    sa-east-1:
+      AvailabilityZones: 'sa-east-1a,sa-east-1b,sa-east-1c'

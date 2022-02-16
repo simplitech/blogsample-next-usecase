@@ -1,0 +1,115 @@
+##
+## CloudFormation template for EC2 VPN instance
+## Author: JoaoLippi
+## Since: 2021-12-09
+##
+## This template provides an EC2 resource to be used as VPN, an instance located in the same VPC
+## as the application, but assigned to a public subnet, and assigned a public IP.
+## Access to this instance will still require permissions int he Security Group, and possession
+## of a private key.
+##
+
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  # EC2 Instance
+  VpnInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceSize
+      ImageId: !FindInMap
+        - RegionMap
+        - Ref: 'AWS::Region'
+        - AMI
+      KeyName: !Ref KeyPair
+      SecurityGroupIds:
+        - !Ref VpnSecurityGroup
+      SubnetId: !Ref PublicSubnet
+      Tags:
+        - Key: Name
+          Value: !Sub 'VPN - ${AWS::StackName}'
+
+  # Security Group
+  VpnSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Security Group for VPN
+      GroupName: !Sub '${AWS::StackName}-sg'
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Sub '${IpForSsh}/32'
+      VpcId: !Ref VPC
+
+Parameters:
+  VPC:
+    Type: AWS::EC2::VPC::Id
+    Description: ID of the VPC to be used by this stack
+  PublicSubnet:
+    Type: AWS::EC2::Subnet::Id
+    Description: ID of the public subnet to be used by this VPN
+  KeyPair:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Name of the key pair used to access the VPN
+  InstanceSize:
+    Type: String
+    Description: Instance type (size) for the EC2 instance
+    Default: t3.nano
+  IpForSsh:
+    Type: String
+    Description: IP for SSH access
+    Default: '127.0.0.1'
+    MinLength: 7
+    MaxLength: 15
+    AllowedPattern: '^\d{0,3}\.\d{0,3}\.\d{0,3}\.\d{0,3}$'
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "Instance Configuration"
+        Parameters:
+          - InstanceSize
+          - KeyPair
+          - IpForSsh
+      - Label:
+          default: "Network Configuration"
+        Parameters:
+          - VPC
+          - PublicSubnet
+
+    ParameterLabels:
+      InstanceSize:
+        default: "Instance size (type)"
+      KeyPair:
+        default: "Key Pair"
+      PublicSubnet:
+        default: "Public Subnet"
+      IpForSsh:
+        default: "IP for SSH"
+
+Mappings:
+  RegionMap:
+    us-east-1:
+      AMI: 'ami-0323c3dd2da7fb37d'
+    us-west-2:
+      AMI: 'ami-0d6621c01e8c2de2c'
+    sa-east-1:
+      AMI: 'ami-003449ffb2605a74c'
+
+Outputs:
+  PublicIp:
+    Description: Public IP of the VPN instance for external access
+    Value: !GetAtt VpnInstance.PublicIp
+
+  SSHCommand:
+    Description: SSH command line to access the VPN
+    Value:
+      Fn::Sub:
+        - 'ssh -i ${KeyPair}.pem ec2-user@${Ip}'
+        - KeyPair: !Ref KeyPair
+          Ip: !GetAtt VpnInstance.PublicIp
+
+  SecurityGroupId:
+    Description: ID of the security group created for the VPN
+    Value: !Ref VpnSecurityGroup

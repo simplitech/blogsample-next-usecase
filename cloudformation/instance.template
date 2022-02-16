@@ -1,0 +1,401 @@
+##
+## CloudFormation template for EC2 instances
+## Author: JoaoLippi
+## Since: 2021-12-09
+##
+## This template creates an EC2 instance and associates with the given ECS cluster.
+## The instance can either be On Demand or Spot Request
+##
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  # If not spot fleet request, will create an auto scaling group for EC2 instances
+  AutoScalingLaunchConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Condition: IsNotSpotRequest
+    Properties:
+      ImageId: !FindInMap
+        - RegionMap
+        - Ref: 'AWS::Region'
+        - AMI
+      InstanceType: !Ref InstanceSize
+      AssociatePublicIpAddress: true
+      IamInstanceProfile: !Ref InstanceProfileArn
+      KeyName: !Ref KeyPair
+      SecurityGroups:
+        - !Ref SecurityGroup
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvdcz
+          Ebs:
+            VolumeSize: 22
+            VolumeType: gp2
+      UserData: !Base64
+        'Fn::Join':
+          - ''
+          - - |
+              #!/bin/bash
+            - !Sub >
+              echo ECS_CLUSTER=${ClusterName} >>
+              /etc/ecs/ecs.config;
+            - |
+              echo ECS_BACKEND_HOST= >> /etc/ecs/ecs.config;
+            - |
+              export PATH=/usr/local/bin:$PATH
+            - |
+              yum -y install jq
+            - |
+              easy_install pip
+            - |
+              pip install awscli
+            - !Sub |
+              aws configure set default.region ${AWS::Region}
+            - >
+              cat <<EOF
+              >/etc/init/spot-instance-termination-notice-handler.conf
+            - >
+              description "Start spot instance termination
+              handlermonitoring script"
+            - |
+              author "Amazon Web Services"
+            - |
+              start on started ecs
+            - |
+              script
+            - >
+              echo \$\$
+              >/var/run/spot-instance-termination-notice-handler.pid
+            - >
+              exec/usr/local/bin/spot-instance-termination-notice-handler.sh
+            - |
+              end script
+            - |
+              pre-start script
+            - >
+              logger "[spot-instance-termination-notice-handler.sh]:
+              spotinstance termination notice handler started"
+            - |
+              end script
+            - |
+              EOF
+            - >
+              cat <<EOF
+              >/usr/local/bin/spot-instance-termination-notice-handler.sh
+            - |
+              #!/bin/bash
+            - |
+              while sleep 5; do
+            - >
+              if [ -z \$(curl
+              -Isfhttp://169.254.169.254/latest/meta-data/spot/termination-time)];then
+            - |
+              /bin/false
+            - |
+              else
+            - >
+              logger "[spot-instance-termination-notice-handler.sh]:
+              spotinstance termination notice detected"
+            - |
+              STATUS=DRAINING
+            - >
+              ECS_CLUSTER=\$(curl -s http://localhost:51678/v1/metadata |
+              jq .Cluster | tr -d \")
+            - >
+              CONTAINER_INSTANCE=\$(curl
+              -shttp://localhost:51678/v1/metadata |
+              jq.ContainerInstanceArn | tr -d \")
+            - >
+              logger
+              "[spot-instance-termination-notice-handler.sh]:putting
+              instance in state \$STATUS"
+            - |
+              /usr/local/bin/aws
+            - ecs update-container-instances-state --cluster \$ECS_CLUSTER
+            - |
+              -container-instances \$CONTAINER_INSTANCE --status\$STATUS
+            - >
+              logger
+              "[spot-instance-termination-notice-handler.sh]:putting
+              myself to sleep..."
+            - >
+              sleep 120 # exit loop as instance expires in 120 secs
+              afterterminating notification
+            - |
+              fi
+            - |
+              done
+            - |
+              EOF
+            - |
+              chmod +x
+            - /usr/local/bin/spot-instance-termination-notice-handler.sh
+  AutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Condition: IsNotSpotRequest
+    Properties:
+      VPCZoneIdentifier:
+        - !Ref ApplicationSubnet1
+        - !Ref ApplicationSubnet2
+        - !Ref ApplicationSubnet3
+      LaunchConfigurationName: !Ref AutoScalingLaunchConfig
+      MinSize: '0'
+      MaxSize: !Ref Instances
+      DesiredCapacity: !Ref Instances
+      Tags:
+        - Key: Name
+          Value: !Sub "ECS Instance - ${AWS::StackName}"
+          PropagateAtLaunch: true
+
+  # Otherwise, will use Spot Fleet Request for EC2 instances
+  SpotFleetRequest:
+    Type: 'AWS::EC2::SpotFleet'
+    Condition: IsSpotRequest
+    Properties:
+      SpotFleetRequestConfigData:
+        AllocationStrategy: lowestPrice
+        IamFleetRole: !Ref SpotFleetRequestRoleArn
+        TargetCapacity: !Ref Instances
+        TerminateInstancesWithExpiration: true
+        LaunchSpecifications:
+          - IamInstanceProfile:
+              Arn: !Ref InstanceProfileArn
+            ImageId: !FindInMap
+              - RegionMap
+              - Ref: 'AWS::Region'
+              - AMI
+            InstanceType: !Ref InstanceSize
+            KeyName: !Ref KeyPair
+            Monitoring:
+              Enabled: true
+            SecurityGroups:
+              - GroupId: !Ref SecurityGroup
+            SubnetId: !Join
+              - ','
+              - - !Ref ApplicationSubnet1
+                - !Ref ApplicationSubnet2
+                - !Ref ApplicationSubnet3
+            BlockDeviceMappings:
+              - DeviceName: /dev/xvdcz
+                Ebs:
+                  VolumeSize: 22
+                  VolumeType: gp2
+            TagSpecifications:
+              - ResourceType: instance
+                Tags:
+                  - Key: Name
+                    Value: !Sub "ECS Instance - ${AWS::StackName}"
+            UserData: !Base64
+              'Fn::Join':
+                - ''
+                - - |
+                    #!/bin/bash
+                  - !Sub >
+                    echo ECS_CLUSTER=${ClusterName} >>
+                    /etc/ecs/ecs.config;
+                  - |
+                    echo ECS_BACKEND_HOST= >> /etc/ecs/ecs.config;
+                  - |
+                    export PATH=/usr/local/bin:$PATH
+                  - |
+                    yum -y install jq
+                  - |
+                    easy_install pip
+                  - |
+                    pip install awscli
+                  - !Sub |
+                    aws configure set default.region ${AWS::Region}
+                  - >
+                    cat <<EOF
+                    >/etc/init/spot-instance-termination-notice-handler.conf
+                  - >
+                    description "Start spot instance termination
+                    handlermonitoring script"
+                  - |
+                    author "Amazon Web Services"
+                  - |
+                    start on started ecs
+                  - |
+                    script
+                  - >
+                    echo \$\$
+                    >/var/run/spot-instance-termination-notice-handler.pid
+                  - >
+                    exec/usr/local/bin/spot-instance-termination-notice-handler.sh
+                  - |
+                    end script
+                  - |
+                    pre-start script
+                  - >
+                    logger "[spot-instance-termination-notice-handler.sh]:
+                    spotinstance termination notice handler started"
+                  - |
+                    end script
+                  - |
+                    EOF
+                  - >
+                    cat <<EOF
+                    >/usr/local/bin/spot-instance-termination-notice-handler.sh
+                  - |
+                    #!/bin/bash
+                  - |
+                    while sleep 5; do
+                  - >
+                    if [ -z \$(curl
+                    -Isfhttp://169.254.169.254/latest/meta-data/spot/termination-time)];then
+                  - |
+                    /bin/false
+                  - |
+                    else
+                  - >
+                    logger "[spot-instance-termination-notice-handler.sh]:
+                    spotinstance termination notice detected"
+                  - |
+                    STATUS=DRAINING
+                  - >
+                    ECS_CLUSTER=\$(curl -s http://localhost:51678/v1/metadata |
+                    jq .Cluster | tr -d \")
+                  - >
+                    CONTAINER_INSTANCE=\$(curl
+                    -shttp://localhost:51678/v1/metadata |
+                    jq.ContainerInstanceArn | tr -d \")
+                  - >
+                    logger
+                    "[spot-instance-termination-notice-handler.sh]:putting
+                    instance in state \$STATUS"
+                  - |
+                    /usr/local/bin/aws
+                  - ecs update-container-instances-state --cluster \$ECS_CLUSTER
+                  - |
+                    -container-instances \$CONTAINER_INSTANCE --status\$STATUS
+                  - >
+                    logger
+                    "[spot-instance-termination-notice-handler.sh]:putting
+                    myself to sleep..."
+                  - >
+                    sleep 120 # exit loop as instance expires in 120 secs
+                    afterterminating notification
+                  - |
+                    fi
+                  - |
+                    done
+                  - |
+                    EOF
+                  - |
+                    chmod +x
+                  - /usr/local/bin/spot-instance-termination-notice-handler.sh
+Parameters:
+  SpotRequest:
+    Type: String
+    Default: true
+    AllowedValues:
+      - true
+      - false
+    Description: Decides if instances should spot fleet request or on-demand
+  ClusterName:
+    Type: String
+    Description: Name of the ECS cluster to attach the instances to
+  Instances:
+    Type: Number
+    Description: Amount of instances to be created
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
+    Description: ID of the security group to be attached to the instances
+  VPC:
+    Type: AWS::EC2::VPC::Id
+    Description: ID of the VPC to be used by this stack
+  ApplicationSubnet1:
+    Type: AWS::EC2::Subnet::Id
+    Description: ID of the first subnet to be used by this stack
+  ApplicationSubnet2:
+    Type: AWS::EC2::Subnet::Id
+    Description: ID of the second subnet to be used by this stack
+  ApplicationSubnet3:
+    Type: AWS::EC2::Subnet::Id
+    Description: ID of the third subnet to be used by this stack
+  KeyPair:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Name of the key pair used to access the EC2 instance
+  InstanceSize:
+    Type: String
+    Description: Instance type (size) for the EC2 instance
+    Default: t3.medium
+  InstanceProfileArn:
+    Type: String
+    Description: ARN for EC2 instance profile
+  SpotFleetRequestRoleArn:
+    Type: String
+    Description: ARN for Spot Fleet Request Role (only required if using Spot Request)
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "General Configuration"
+        Parameters:
+          - SpotRequest
+          - ClusterName
+          - Instances
+      - Label:
+          default: "Instance Configuration"
+        Parameters:
+          - InstanceSize
+          - KeyPair
+          - SecurityGroup
+      - Label:
+          default: "Network Configuration"
+        Parameters:
+          - VPC
+          - ApplicationSubnet1
+          - ApplicationSubnet2
+          - ApplicationSubnet3
+      - Label:
+          default: "Roles Configuration"
+        Parameters:
+          - InstanceProfileArn
+          - SpotFleetRequestRoleArn
+
+    ParameterLabels:
+      SpotRequest:
+        default: "Is instance a Spot Request?"
+      ClusterName:
+        default: "Cluster"
+      Instances:
+        default: "Amount of Instances"
+      InstanceSize:
+        default: "Instance size (type)"
+      KeyPair:
+        default: "Key Pair"
+      SecurityGroup:
+        default: "Security Group"
+      ApplicationSubnet1:
+        default: "Application Subnet 1"
+      ApplicationSubnet2:
+        default: "Application Subnet 2"
+      ApplicationSubnet3:
+        default: "Application Subnet 3"
+      InstanceProfileArn:
+        default: "Instance Profile ARN"
+      SpotFleetRequestRoleArn:
+        default: "Spot Fleet Request Role ARN (optional)"
+
+Conditions:
+  IsSpotRequest: !Equals [!Ref SpotRequest, 'true']
+  IsNotSpotRequest: !Equals [!Ref SpotRequest, 'false']
+
+Mappings:
+  RegionMap:
+    us-east-1:
+      AMI: 'ami-0fe19057e9cb4efd8'
+    us-west-2:
+      AMI: 'ami-04e6179c63d17513d'
+    sa-east-1:
+      AMI: 'ami-035b4cb75ab88f259'
+
+Outputs:
+  SpotFleetRequestId:
+    Condition: IsSpotRequest
+    Description: Spot fleet request ID for instances
+    Value: !Ref SpotFleetRequest
+  AutoScalingGroup:
+    Condition: IsNotSpotRequest
+    Description: Auto-scaling group name for instances
+    Value: !Ref AutoScalingGroup
+
